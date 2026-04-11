@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
     '@nextreport/engine-core',
     '@nextreport/renderer-html',
     '@nextreport/renderer-pdf',
+    '@nextreport/canvas',
+    '@nextreport/ui-designer',
+    '@nextreport/ui-viewer',
   ],
 }
 

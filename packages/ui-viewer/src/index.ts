@@ -1,2 +1,1 @@
-// Placeholder — implemented in Phase B/C
-export {}
+export { ReportViewer } from './ReportViewer.js'

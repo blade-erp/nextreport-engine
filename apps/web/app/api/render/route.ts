@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     if (format === 'pdf') {
       const html = renderToHtml(result)
       const pdfBytes = await renderToPdf(html)
-      return new NextResponse(pdfBytes, {
+      return new NextResponse(pdfBytes.buffer as ArrayBuffer, {
         status: 200,
         headers: {
           'Content-Type': 'application/pdf',
