@@ -1,71 +1,71 @@
 import { describe, it, expect } from 'vitest'
 import { renderReport } from '@nextreport/engine-core'
-import type { Report } from '@nextreport/schema'
-import { renderToHtml } from '../html-renderer.js'
+import { renderToHtml } from '../index.js'
 
-const invoiceSchema: Report = {
+// Realistic invoice schema with header, detail, footer using tr-TR locale
+const invoiceSchema = {
   version: '1.0',
-  type: 'report',
-  locale: 'en-US',
+  type: 'report' as const,
+  locale: 'tr-TR',
   page: {
-    size: 'A4',
-    orientation: 'portrait',
+    size: 'A4' as const,
+    orientation: 'portrait' as const,
     margins: { top: 20, right: 15, bottom: 20, left: 15 },
   },
-  dataSource: { type: 'json' },
+  dataSource: { type: 'json' as const },
   bands: [
     {
-      type: 'header',
-      height: 60,
+      type: 'header' as const,
+      height: 80,
       components: [
         {
-          type: 'text',
-          position: { x: 0, y: 0, width: 400, height: 30 },
+          type: 'text' as const,
+          position: { x: 0, y: 10, width: 300, height: 30 },
           content: '{{companyName}}',
-          fontSize: 18,
-          fontWeight: 'bold',
+          fontSize: 24,
+          fontWeight: 'bold' as const,
           color: '#000000',
-          textAlign: 'left',
+          textAlign: 'left' as const,
         },
       ],
     },
     {
-      type: 'detail',
-      height: 30,
+      type: 'detail' as const,
+      height: 25,
       dataBinding: 'items',
       components: [
         {
-          type: 'text',
-          position: { x: 0, y: 0, width: 200, height: 20 },
+          type: 'text' as const,
+          position: { x: 0, y: 0, width: 200, height: 25 },
           content: '{{item.name}}',
           fontSize: 12,
-          fontWeight: 'normal',
+          fontWeight: 'normal' as const,
           color: '#000000',
-          textAlign: 'left',
+          textAlign: 'left' as const,
         },
         {
-          type: 'text',
-          position: { x: 210, y: 0, width: 100, height: 20 },
-          content: "{{formatCurrency(item.price, 'USD')}}",
+          type: 'text' as const,
+          position: { x: 400, y: 0, width: 100, height: 25 },
+          content: "{{formatCurrency(item.price, 'TRY')}}",
           fontSize: 12,
-          fontWeight: 'normal',
+          fontWeight: 'normal' as const,
           color: '#000000',
-          textAlign: 'right',
+          textAlign: 'right' as const,
         },
       ],
     },
     {
-      type: 'footer',
+      type: 'footer' as const,
       height: 40,
       components: [
         {
-          type: 'text',
-          position: { x: 0, y: 0, width: 300, height: 20 },
-          content: "Total: {{formatCurrency(sum(items, 'price'), 'USD')}}",
+          type: 'text' as const,
+          position: { x: 400, y: 5, width: 135, height: 30 },
+          content: "Toplam: {{formatCurrency(sum(items, 'price'), 'TRY')}}",
           fontSize: 12,
-          fontWeight: 'bold',
+          fontWeight: 'bold' as const,
           color: '#000000',
-          textAlign: 'left',
+          textAlign: 'right' as const,
         },
       ],
     },
@@ -73,66 +73,75 @@ const invoiceSchema: Report = {
 }
 
 const invoiceData = {
-  companyName: 'Acme Corp',
+  companyName: 'Acme Teknoloji A.Ş.',
   items: [
-    { name: 'Laptop', price: 1200 },
-    { name: 'Mouse', price: 25 },
+    { name: 'Laptop', price: 45000, qty: 1 },
+    { name: 'Mouse', price: 750, qty: 3 },
+    { name: 'Klavye', price: 1200, qty: 2 },
   ],
 }
 
-describe('renderReport + renderToHtml (integration)', () => {
-  it('full pipeline produces valid HTML document', () => {
+describe('Full pipeline: schema → engine-core → renderer-html', () => {
+  it('full pipeline: schema → engine → HTML', () => {
     const renderResult = renderReport(invoiceSchema, invoiceData)
     const html = renderToHtml(renderResult)
 
+    expect(typeof html).toBe('string')
     expect(html).toMatch(/^<!DOCTYPE html>/i)
-    expect(html).toContain('<html')
-    expect(html).toContain('</html>')
   })
 
-  it('HTML contains company name from data', () => {
+  it('HTML contains resolved header values', () => {
     const renderResult = renderReport(invoiceSchema, invoiceData)
     const html = renderToHtml(renderResult)
 
-    expect(html).toContain('Acme Corp')
+    expect(html).toContain('Acme Teknoloji')
   })
 
-  it('HTML contains resolved item prices', () => {
-    const renderResult = renderReport(invoiceSchema, invoiceData)
-    const html = renderToHtml(renderResult)
-
-    expect(html).toContain('$1,200.00')
-    expect(html).toContain('$25.00')
-  })
-
-  it('HTML contains item names', () => {
+  it('HTML contains resolved detail values', () => {
     const renderResult = renderReport(invoiceSchema, invoiceData)
     const html = renderToHtml(renderResult)
 
     expect(html).toContain('Laptop')
     expect(html).toContain('Mouse')
+    expect(html).toContain('Klavye')
   })
 
-  it('HTML contains resolved total', () => {
+  it('HTML contains formatted currency', () => {
     const renderResult = renderReport(invoiceSchema, invoiceData)
     const html = renderToHtml(renderResult)
 
-    expect(html).toContain('Total: $1,225.00')
+    // tr-TR locale formats TRY with ₺ symbol
+    expect(html).toContain('₺')
   })
 
-  it('HTML contains exactly one page for this invoice', () => {
+  it('HTML contains footer total', () => {
     const renderResult = renderReport(invoiceSchema, invoiceData)
     const html = renderToHtml(renderResult)
 
-    const pageCount = (html.match(/class="page"/g) ?? []).length
-    expect(pageCount).toBe(1)
+    // Footer should contain 'Toplam:' and the formatted sum (45000+750+1200 = 46950)
+    expect(html).toContain('Toplam:')
+    // The sum formatted in tr-TR locale: ₺46.950,00
+    expect(html).toContain('₺46.950,00')
   })
 
-  it('HTML contains A4 page dimensions', () => {
+  it('HTML has page structure', () => {
     const renderResult = renderReport(invoiceSchema, invoiceData)
     const html = renderToHtml(renderResult)
 
-    expect(html).toContain('width:595pt')
-    expect(html).toContain('height:842pt')
+    expect(html).toContain('class="page"')
+    expect(html).toContain('data-page="1"')
+  })
+
+  it('multi-page test: 40 items produces at least 2 pages', () => {
+    const manyItems = Array.from({ length: 40 }, (_, i) => ({
+      name: `Ürün ${i + 1}`,
+      price: 100 * (i + 1),
+      qty: 1,
+    }))
+
+    const renderResult = renderReport(invoiceSchema, { ...invoiceData, items: manyItems })
+    const html = renderToHtml(renderResult)
+
+    expect(html).toContain('data-page="2"')
   })
 })

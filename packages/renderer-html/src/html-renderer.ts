@@ -40,7 +40,7 @@ export function renderToHtml(result: RenderResult, options: HtmlRenderOptions = 
         'overflow:hidden',
         'margin:0 auto',
       ].join(';')
-      return `  <div class="page" style="${pageStyle}">\n    ${elementsHtml}\n  </div>`
+      return `  <div class="page" data-page="${page.number}" style="${pageStyle}">\n    ${elementsHtml}\n  </div>`
     })
     .join('\n')
 
