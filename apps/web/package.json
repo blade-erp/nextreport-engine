@@ -2,10 +2,10 @@
   "name": "@nextreport/web",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
-    "dev": "echo 'dev placeholder'",
-    "build": "echo 'build placeholder'"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
     "@nextreport/schema": "workspace:*",
@@ -14,9 +14,14 @@
     "@nextreport/renderer-pdf": "workspace:*",
     "@nextreport/canvas": "workspace:*",
     "@nextreport/ui-designer": "workspace:*",
-    "@nextreport/ui-viewer": "workspace:*"
+    "@nextreport/ui-viewer": "workspace:*",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
   },
   "devDependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
     "typescript": "^5.8.3"
   }
 }
