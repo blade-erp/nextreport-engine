@@ -1,0 +1,35 @@
+import type { ResolvedElement } from '@nextreport/engine-core'
+
+export function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+export function renderText(element: ResolvedElement): string {
+  const { x, y, width, height } = element.position
+  const props = element.properties
+
+  const content = typeof props.content === 'string' ? props.content : ''
+  const fontSize = typeof props.fontSize === 'number' ? props.fontSize : 12
+  const fontWeight = typeof props.fontWeight === 'string' ? props.fontWeight : 'normal'
+  const color = typeof props.color === 'string' ? props.color : '#000000'
+  const textAlign = typeof props.textAlign === 'string' ? props.textAlign : 'left'
+
+  const style = [
+    'position:absolute',
+    `left:${x}pt`,
+    `top:${y}pt`,
+    `width:${width}pt`,
+    `height:${height}pt`,
+    `font-size:${fontSize}pt`,
+    `font-weight:${fontWeight}`,
+    `color:${color}`,
+    `text-align:${textAlign}`,
+  ].join(';')
+
+  return `<div style="${style}">${escapeHtml(content)}</div>`
+}
