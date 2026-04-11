@@ -5,13 +5,13 @@
     Design visually. Render via API. Integrate anywhere.
   </p>
   <p align="center">
+    <a href="#why-nextreport">Why?</a> &bull;
     <a href="#quick-start">Quick Start</a> &bull;
     <a href="#architecture">Architecture</a> &bull;
-    <a href="#packages">Packages</a> &bull;
-    <a href="#api-reference">API</a> &bull;
     <a href="#report-schema-dsl">Schema DSL</a> &bull;
+    <a href="#api-reference">API</a> &bull;
     <a href="#contributing">Contributing</a> &bull;
-    [Roadmap](docs/ROADMAP.md)
+    <a href="docs/ROADMAP.md">Roadmap</a>
   </p>
 </p>
 
@@ -23,8 +23,56 @@ NextReport Engine is an open-source, headless reporting engine with a visual des
 
 - **Frontend developers** — Embed the viewer or designer in React/Next.js apps with zero config
 - **Backend developers** — Generate PDF/HTML reports via a stateless REST API from Java, .NET, Python, or any HTTP client
+- **SaaS builders** — Add reporting to your product without building a rendering engine from scratch
 - **Business users** — Design reports visually with drag & drop, no code required
 - **AI/Agent builders** — Generate reports programmatically with a JSON schema that LLMs can produce natively
+- **Teams migrating from legacy tools** — Replace JasperReports, FastReport, or Crystal Reports with a modern, maintainable stack
+
+## Why NextReport?
+
+### The Problem
+
+Reporting in 2026 is stuck between two bad options:
+
+**Enterprise tools are powerful but painful.** JasperReports has a steep learning curve, relies on XML-based schemas (JRXML), and its desktop designer feels like software from a different era. Crystal Reports is similar — capable but heavy. The development experience is far from what modern teams expect.
+
+**Modern alternatives are closed or expensive.** FastReport and Stimulsoft offer better UX, but they're proprietary and come with per-developer or per-server licensing. ActiveReportsJS is enterprise-grade but locked to the GrapeCity ecosystem. If your budget is limited or you need to customize deeply, these are dead ends.
+
+**The open-source gap is real.** On the JavaScript/TypeScript side, there is no mature, full-featured reporting engine. Plenty of projects attempt a piece of the puzzle — a PDF library here, a drag-and-drop builder there — but a report is actually **five systems working together:** a layout engine, a visual designer, an expression engine, a data binding layer, and a multi-format renderer. Projects that tackle only one or two of these fail to deliver a usable product.
+
+### What Makes This Different
+
+NextReport Engine is built on the insight that **all five systems must be designed as one coherent architecture**, but **with strict boundaries** so they can evolve independently.
+
+- **Schema-driven core** — The JSON DSL is the contract between all systems. The engine doesn't know about the designer. The renderer doesn't know about the canvas. They all speak schema.
+- **Developer-first, then visual** — The API and schema work standalone. The designer is a visual layer on top, not a requirement. You can generate reports from code, from an API call, or from an AI agent — the designer is optional.
+- **Built for the modern web stack** — TypeScript, React, Next.js, Tailwind. Not a Java applet. Not a desktop app. Not a legacy ActiveX control. Native web, from the ground up.
+- **Open source to the core** — The engine, designer, viewer, renderers, expression engine — all open. No "community edition" that's missing the features you actually need.
+
+### Comparison
+
+| | NextReport | JasperReports | FastReport | Stimulsoft | ActiveReportsJS |
+|---|:---:|:---:|:---:|:---:|:---:|
+| **Open Source** | Full | Partial | No | No | No |
+| **Web-Native** | Yes | No (Java) | Partial | Yes | Yes |
+| **Visual Designer** | Yes | Desktop only | Desktop + Web | Web | Web |
+| **Modern UX** | Yes | No | Moderate | Yes | Moderate |
+| **API-First** | Yes | No | No | Partial | Partial |
+| **React Integration** | Native | None | None | Wrapper | Wrapper |
+| **AI/LLM-Ready Schema** | JSON (native) | XML (JRXML) | Proprietary | Proprietary | Proprietary |
+| **Pricing** | Free | Free / Paid | Paid | Paid | Paid |
+| **Learning Curve** | Low | High | Medium | Medium | Medium |
+| **Self-Hosted** | Yes | Yes | Yes | Yes | Yes |
+
+### Who Adopts This?
+
+Based on the market gap, NextReport is most valuable for:
+
+- **SaaS products** that need embedded reporting without licensing costs
+- **Internal tool teams** building admin dashboards, invoice systems, or data exports
+- **Startups** that can't justify enterprise reporting licenses but need more than an HTML-to-PDF hack
+- **Java/.NET teams** migrating away from JasperReports who want a modern web-based alternative with a clean REST API
+- **AI/automation builders** who need a reporting DSL that language models can generate natively
 
 ## Features
 
