@@ -22,9 +22,9 @@
       "height": 28,
       "dataBinding": "employees",
       "components": [
-        { "type": "text", "position": { "x": 0, "y": 4, "width": 200, "height": 20 }, "content": "{{employees.name}}", "fontSize": 12, "fontWeight": "normal", "color": "#000000", "textAlign": "left" },
-        { "type": "text", "position": { "x": 210, "y": 4, "width": 150, "height": 20 }, "content": "{{employees.department}}", "fontSize": 12, "fontWeight": "normal", "color": "#000000", "textAlign": "left" },
-        { "type": "text", "position": { "x": 370, "y": 4, "width": 180, "height": 20 }, "content": "{{employees.email}}", "fontSize": 12, "fontWeight": "normal", "color": "#000000", "textAlign": "left" }
+        { "type": "text", "position": { "x": 0, "y": 4, "width": 200, "height": 20 }, "content": "{{employee.name}}", "fontSize": 12, "fontWeight": "normal", "color": "#000000", "textAlign": "left" },
+        { "type": "text", "position": { "x": 210, "y": 4, "width": 150, "height": 20 }, "content": "{{employee.department}}", "fontSize": 12, "fontWeight": "normal", "color": "#000000", "textAlign": "left" },
+        { "type": "text", "position": { "x": 370, "y": 4, "width": 180, "height": 20 }, "content": "{{employee.email}}", "fontSize": 12, "fontWeight": "normal", "color": "#000000", "textAlign": "left" }
       ]
     },
     {
