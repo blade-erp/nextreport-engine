@@ -11,3 +11,16 @@ export type { PageSize, Orientation, Margins, Page } from './page.schema.js'
 
 export { FieldTypeSchema, FieldSchema, DataSourceSchema } from './data-source.schema.js'
 export type { FieldType, Field, DataSource } from './data-source.schema.js'
+
+export {
+  TextComponentSchema,
+  TableColumnSchema,
+  TableComponentSchema,
+  ComponentSchema,
+} from './component.schema.js'
+export type {
+  TextComponent,
+  TableColumn,
+  TableComponent,
+  Component,
+} from './component.schema.js'
