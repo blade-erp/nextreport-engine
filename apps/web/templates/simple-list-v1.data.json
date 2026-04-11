@@ -1,0 +1,10 @@
+{
+  "employees": [
+    { "name": "Ahmet Yılmaz", "department": "Engineering", "email": "ahmet@acme.com" },
+    { "name": "Elif Demir", "department": "Design", "email": "elif@acme.com" },
+    { "name": "Mehmet Kaya", "department": "Engineering", "email": "mehmet@acme.com" },
+    { "name": "Zeynep Aksoy", "department": "Marketing", "email": "zeynep@acme.com" },
+    { "name": "Can Öztürk", "department": "Engineering", "email": "can@acme.com" },
+    { "name": "Ayşe Çelik", "department": "Design", "email": "ayse@acme.com" }
+  ]
+}

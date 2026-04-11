@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "type": "report",
+  "locale": "tr-TR",
+  "page": {
+    "size": "A4",
+    "orientation": "portrait",
+    "margins": { "top": 30, "right": 25, "bottom": 30, "left": 25 }
+  },
+  "dataSource": { "type": "json" },
+  "bands": [
+    {
+      "type": "header",
+      "height": 70,
+      "components": [
+        { "type": "text", "position": { "x": 0, "y": 8, "width": 535, "height": 32 }, "content": "Employee List", "fontSize": 22, "fontWeight": "bold", "color": "#1a1a1a" },
+        { "type": "text", "position": { "x": 0, "y": 46, "width": 535, "height": 18 }, "content": "Department Report", "fontSize": 12, "fontWeight": "normal", "color": "#888888" }
+      ]
+    },
+    {
+      "type": "detail",
+      "height": 28,
+      "dataBinding": "employees",
+      "components": [
+        { "type": "text", "position": { "x": 0, "y": 4, "width": 200, "height": 20 }, "content": "{{employees.name}}", "fontSize": 12, "fontWeight": "normal", "color": "#000000", "textAlign": "left" },
+        { "type": "text", "position": { "x": 210, "y": 4, "width": 150, "height": 20 }, "content": "{{employees.department}}", "fontSize": 12, "fontWeight": "normal", "color": "#000000", "textAlign": "left" },
+        { "type": "text", "position": { "x": 370, "y": 4, "width": 180, "height": 20 }, "content": "{{employees.email}}", "fontSize": 12, "fontWeight": "normal", "color": "#000000", "textAlign": "left" }
+      ]
+    },
+    {
+      "type": "footer",
+      "height": 35,
+      "components": [
+        { "type": "text", "position": { "x": 0, "y": 8, "width": 535, "height": 20 }, "content": "Total: {{count(employees)}} employees", "fontSize": 12, "fontWeight": "normal", "color": "#000000", "textAlign": "right" }
+      ]
+    }
+  ]
+}
