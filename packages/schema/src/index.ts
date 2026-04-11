@@ -24,3 +24,11 @@ export type {
   TableComponent,
   Component,
 } from './component.schema.js'
+
+export { BandTypeSchema, BandSchema } from './band.schema.js'
+export type { BandType, Band } from './band.schema.js'
+
+export { ReportSchema } from './report.schema.js'
+export type { Report } from './report.schema.js'
+
+export { getReportJsonSchema } from './json-schema-export.js'
