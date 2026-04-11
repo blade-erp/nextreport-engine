@@ -51,18 +51,25 @@ NextReport Engine is built on the insight that **all five systems must be design
 
 ### Comparison
 
-| | NextReport | JasperReports | FastReport | Stimulsoft | ActiveReportsJS |
-|---|:---:|:---:|:---:|:---:|:---:|
-| **Open Source** | Full | Partial | No | No | No |
-| **Web-Native** | Yes | No (Java) | Partial | Yes | Yes |
-| **Visual Designer** | Yes | Desktop only | Desktop + Web | Web | Web |
-| **Modern UX** | Yes | No | Moderate | Yes | Moderate |
-| **API-First** | Yes | No | No | Partial | Partial |
-| **React Integration** | Native | None | None | Wrapper | Wrapper |
-| **AI/LLM-Ready Schema** | JSON (native) | XML (JRXML) | Proprietary | Proprietary | Proprietary |
-| **Pricing** | Free | Free / Paid | Paid | Paid | Paid |
-| **Learning Curve** | Low | High | Medium | Medium | Medium |
-| **Self-Hosted** | Yes | Yes | Yes | Yes | Yes |
+| | NextReport | JasperReports | FastReport | Stimulsoft | ActiveReportsJS | jsreport | Syncfusion |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Open Source** | Full | Partial | No | No | No | Partial | No |
+| **Web-Native** | Yes | No (Java) | Partial | Yes | Yes | Yes (Node.js) | Partial (.NET backend) |
+| **Visual Designer** | WYSIWYG | Desktop only | Desktop + Web | Web | Web | Code-based | Web (RDL) |
+| **Modern UX** | Yes | No | Moderate | Yes | Moderate | Developer-oriented | Enterprise |
+| **API-First** | Yes | No | No | Partial | Partial | Yes | Needs .NET server |
+| **React Integration** | Native | None | None | Wrapper | Wrapper | None (standalone) | Wrapper (.NET dep) |
+| **Report Schema** | JSON | XML (JRXML) | Proprietary | Proprietary | Proprietary | HTML/Handlebars | XML (RDL/RDLC) |
+| **AI/LLM-Ready** | Yes (JSON DSL) | No | No | No | No | No | No |
+| **Pricing** | Free | Free / Paid | Paid | Paid | Paid | Free (5 templates) / Paid | Free (small teams) / Paid |
+| **Learning Curve** | Low | High | Medium | Medium | Medium | Medium | Medium-High |
+| **Self-Hosted** | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+
+**Key differences explained:**
+
+- **jsreport** is the closest open-source alternative. It's a mature Node.js platform (200K+ installations) with a template-engine approach — you write HTML/Handlebars templates rather than designing visually. It's powerful for developers comfortable with code-driven reports, but lacks a true WYSIWYG designer. Free tier is limited to 5 stored templates; enterprise starts at $495/instance.
+
+- **Syncfusion (Bold Reports)** offers a full-featured enterprise reporting suite with 30+ data connectors and RDL/RDLC format (Microsoft standard). However, it requires a .NET backend for report processing — the React component is a viewer wrapper, not a standalone engine. Community license is free for teams under $1M revenue; paid plans start around $450/year.
 
 ### Who Adopts This?
 
