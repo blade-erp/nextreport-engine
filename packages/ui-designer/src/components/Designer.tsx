@@ -1,11 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { DesignerToolbar } from './DesignerToolbar.js'
 import { Toolbox } from './Toolbox.js'
 import { BandManager } from './BandManager.js'
+import { DataSourceTree } from './DataSourceTree.js'
 import { CanvasArea } from './CanvasArea.js'
 import { PropertyPanel } from './PropertyPanel.js'
+import { PreviewPanel } from './PreviewPanel.js'
 
 export function Designer() {
+  const [showPreview, setShowPreview] = useState(false)
+
+  const togglePreview = () => setShowPreview((v) => !v)
+
   return (
     <div
       style={{
@@ -16,7 +22,9 @@ export function Designer() {
         fontFamily: 'system-ui, -apple-system, sans-serif',
       }}
     >
-      <DesignerToolbar />
+      <DesignerToolbar showPreview={showPreview} togglePreview={togglePreview} />
+
+      {/* Main content row */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         {/* Left panel */}
         <div
@@ -26,10 +34,13 @@ export function Designer() {
             borderRight: '1px solid #3d3d5c',
             overflowY: 'auto',
             flexShrink: 0,
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           <Toolbox />
           <BandManager />
+          <DataSourceTree />
         </div>
 
         {/* Canvas */}
@@ -48,6 +59,9 @@ export function Designer() {
           <PropertyPanel />
         </div>
       </div>
+
+      {/* Live preview panel — rendered below when toggled */}
+      {showPreview && <PreviewPanel />}
     </div>
   )
 }

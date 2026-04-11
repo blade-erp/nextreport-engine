@@ -1,7 +1,12 @@
 import React from 'react'
 import { useDesignerStore } from '../store/index.js'
 
-export function DesignerToolbar() {
+interface DesignerToolbarProps {
+  showPreview: boolean
+  togglePreview: () => void
+}
+
+export function DesignerToolbar({ showPreview, togglePreview }: DesignerToolbarProps) {
   const canUndo = useDesignerStore((s) => s.canUndo)
   const canRedo = useDesignerStore((s) => s.canRedo)
   const undo = useDesignerStore((s) => s.undo)
@@ -20,7 +25,7 @@ export function DesignerToolbar() {
     URL.revokeObjectURL(url)
   }
 
-  const handlePreview = () => {
+  const handleOpenViewer = () => {
     sessionStorage.setItem('preview-report', JSON.stringify(report))
     sessionStorage.setItem('preview-data', JSON.stringify(useDesignerStore.getState().sampleData))
     window.open('/viewer?source=designer', '_blank')
@@ -52,6 +57,22 @@ export function DesignerToolbar() {
     color: '#fff',
   }
 
+  const activePreviewBtnStyle: React.CSSProperties = {
+    ...btnStyle,
+    background: '#4caf50',
+    borderColor: '#4caf50',
+    color: '#fff',
+  }
+
+  const secondaryBtnStyle: React.CSSProperties = {
+    ...btnStyle,
+    fontSize: 11,
+    padding: '4px 8px',
+    background: 'transparent',
+    color: '#aaa',
+    borderColor: '#3d3d5c',
+  }
+
   return (
     <div
       style={{
@@ -78,7 +99,7 @@ export function DesignerToolbar() {
           onClick={undo}
           title="Undo"
         >
-          ↩ Undo
+          &#8617; Undo
         </button>
         <button
           style={canRedo ? btnStyle : disabledBtnStyle}
@@ -86,11 +107,11 @@ export function DesignerToolbar() {
           onClick={redo}
           title="Redo"
         >
-          Redo ↪
+          Redo &#8618;
         </button>
         <div style={{ width: 1, height: 20, background: '#3d3d5c', margin: '0 4px' }} />
         <button style={btnStyle} onClick={decreaseZoom} title="Zoom out">
-          −
+          &minus;
         </button>
         <span style={{ color: '#ccc', fontSize: 13, minWidth: 50, textAlign: 'center' }}>
           {Math.round(zoom * 100)}%
@@ -101,12 +122,23 @@ export function DesignerToolbar() {
       </div>
 
       {/* Right: Preview / Export */}
-      <div style={{ display: 'flex', gap: 8 }}>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
         <button style={btnStyle} onClick={handleExportJson}>
           Export JSON
         </button>
-        <button style={accentBtnStyle} onClick={handlePreview}>
-          Preview
+        <button
+          style={showPreview ? activePreviewBtnStyle : accentBtnStyle}
+          onClick={togglePreview}
+          title={showPreview ? 'Hide live preview panel' : 'Show live preview panel'}
+        >
+          {showPreview ? 'Hide Preview' : 'Preview'}
+        </button>
+        <button
+          style={secondaryBtnStyle}
+          onClick={handleOpenViewer}
+          title="Open full-page viewer in new tab"
+        >
+          Open Viewer
         </button>
       </div>
     </div>
