@@ -6,13 +6,23 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
+    "react": "latest",
+    "react-dom": "latest",
+    "zustand": "^5.0.0",
+    "immer": "^10.0.0",
+    "@nextreport/canvas": "workspace:*",
     "@nextreport/schema": "workspace:*",
-    "@nextreport/canvas": "workspace:*"
+    "@nextreport/engine-core": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.8.3"
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.0"
   }
 }

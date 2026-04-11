@@ -1,2 +1,2 @@
-// Placeholder — implemented in Phase B/C
-export {}
+export { useDesignerStore } from './store/index.js'
+export type { DesignerStore, DocumentSlice, DataSlice, SelectionSlice, ViewportSlice, HistorySlice } from './store/index.js'
