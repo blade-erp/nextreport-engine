@@ -1,4 +1,4 @@
-import { tokenize, Token, TokenType } from './tokenizer.js'
+import { tokenize, type Token, TokenType } from './tokenizer.js'
 
 // AST node types
 export interface LiteralNode {

@@ -1,4 +1,4 @@
-import { parseTemplate, Expression } from './parser.js'
+import { parseTemplate, type Expression } from './parser.js'
 import { getFunction } from './functions/registry.js'
 
 // Side-effect imports to register all built-in functions
