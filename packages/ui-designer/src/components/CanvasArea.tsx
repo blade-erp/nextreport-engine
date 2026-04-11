@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useDesignerStore } from '../store/index.js'
 import type { TextComponent, TableComponent } from '@nextreport/schema'
+import type { ResolvedElement } from '@nextreport/engine-core'
 
 const BAND_COLORS: Record<string, string> = {
   header: '#4caf50',
@@ -9,10 +10,10 @@ const BAND_COLORS: Record<string, string> = {
 }
 
 /**
- * Simple MVP expression resolver: replaces {{key}} tokens with values from data.
- * Full engine expression evaluation is used at render time; this is preview only.
+ * Fallback expression resolver: replaces {{key}} tokens with values from data.
+ * Used when engine-core renderReport is unavailable (SSR, import failure, etc.).
  */
-function resolveContent(content: unknown, sampleData: Record<string, unknown>): string {
+function resolveContentFallback(content: unknown, sampleData: Record<string, unknown>): string {
   if (content === undefined || content === null) return ''
   const str = String(content)
   return str.replace(/\{\{([^}]+)\}\}/g, (_, key: string) => {
@@ -20,6 +21,39 @@ function resolveContent(content: unknown, sampleData: Record<string, unknown>): 
     const value = sampleData[trimmed]
     return value !== undefined ? String(value) : `{{${trimmed}}}`
   })
+}
+
+/**
+ * Build a lookup map: "bandIndex:compIndex" => ResolvedElement
+ * for the first page of render output (non-repeating / header / footer).
+ * Detail bands that repeat get keyed by their first occurrence only.
+ */
+function buildResolvedMap(
+  elements: ResolvedElement[],
+  bands: Array<{ type: string; components: unknown[] }>,
+): Map<string, ResolvedElement> {
+  const map = new Map<string, ResolvedElement>()
+  // Track how many detail instances have been seen so we can map them back
+  // to band indices. For header/footer we match 1:1.
+  const bandCounters = new Map<number, number>()
+
+  let elemIdx = 0
+  for (let bandIdx = 0; bandIdx < bands.length; bandIdx++) {
+    const band = bands[bandIdx]
+    const compCount = band.components.length
+
+    // Get elements for this band slot
+    for (let compIdx = 0; compIdx < compCount; compIdx++) {
+      if (elemIdx < elements.length) {
+        map.set(`${bandIdx}:${compIdx}`, elements[elemIdx])
+        elemIdx++
+      }
+    }
+
+    bandCounters.set(bandIdx, (bandCounters.get(bandIdx) ?? 0) + 1)
+  }
+
+  return map
 }
 
 export function CanvasArea() {
@@ -30,6 +64,46 @@ export function CanvasArea() {
   const selectComponent = useDesignerStore((s) => s.selectComponent)
   const selectBand = useDesignerStore((s) => s.selectBand)
   const zoom = useDesignerStore((s) => s.zoom)
+
+  /**
+   * Try to run renderReport synchronously to get fully-resolved element properties
+   * (supports function expressions like {{formatCurrency(price, 'TRY')}}).
+   * Falls back gracefully on any error.
+   */
+  const resolvedMap = useMemo((): Map<string, ResolvedElement> | null => {
+    if (Object.keys(sampleData).length === 0) return null
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { renderReport } = require('@nextreport/engine-core') as typeof import('@nextreport/engine-core')
+      const ir = renderReport(report, sampleData)
+      // Flatten all page elements into one list (use first page only for canvas display)
+      const allElements = ir.pages.flatMap((p) => p.elements)
+      return buildResolvedMap(allElements, report.bands as Array<{ type: string; components: unknown[] }>)
+    } catch {
+      return null
+    }
+  }, [report, sampleData])
+
+  /**
+   * Resolve display text for a text component at the given band/comp position.
+   * Prefers engine-resolved value; falls back to regex resolver.
+   */
+  function resolveDisplayText(
+    bandIndex: number,
+    compIndex: number,
+    content: unknown,
+  ): string {
+    if (resolvedMap) {
+      const el = resolvedMap.get(`${bandIndex}:${compIndex}`)
+      if (el && el.properties.content !== undefined) {
+        return String(el.properties.content)
+      }
+    }
+    if (Object.keys(sampleData).length > 0) {
+      return resolveContentFallback(content, sampleData)
+    }
+    return content === undefined || content === null ? '' : String(content)
+  }
 
   const paperWidth = 595
 
@@ -128,10 +202,7 @@ export function CanvasArea() {
                   >
                     {component.type === 'text' && (() => {
                       const tc = component as TextComponent
-                      const hasSampleData = Object.keys(sampleData).length > 0
-                      const displayText = hasSampleData
-                        ? resolveContent(tc.content, sampleData)
-                        : tc.content
+                      const displayText = resolveDisplayText(bandIndex, compIndex, tc.content)
                       return (
                         <span
                           style={{
@@ -183,7 +254,7 @@ export function CanvasArea() {
               fontSize: 14,
             }}
           >
-            No bands — add one from the left panel
+            No bands &mdash; add one from the left panel
           </div>
         )}
       </div>
