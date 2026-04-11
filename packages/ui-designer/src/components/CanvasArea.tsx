@@ -12,8 +12,10 @@ const BAND_COLORS: Record<string, string> = {
  * Simple MVP expression resolver: replaces {{key}} tokens with values from data.
  * Full engine expression evaluation is used at render time; this is preview only.
  */
-function resolveContent(content: string, sampleData: Record<string, unknown>): string {
-  return content.replace(/\{\{([^}]+)\}\}/g, (_, key: string) => {
+function resolveContent(content: unknown, sampleData: Record<string, unknown>): string {
+  if (content === undefined || content === null) return ''
+  const str = String(content)
+  return str.replace(/\{\{([^}]+)\}\}/g, (_, key: string) => {
     const trimmed = key.trim()
     const value = sampleData[trimmed]
     return value !== undefined ? String(value) : `{{${trimmed}}}`

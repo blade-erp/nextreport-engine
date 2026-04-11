@@ -13,9 +13,9 @@
       "type": "header",
       "height": 100,
       "components": [
-        { "type": "text", "position": { "x": 0, "y": 10, "width": 300, "height": 36 }, "properties": { "content": "{{companyName}}", "fontSize": 28, "fontWeight": "bold", "color": "#1a1a1a" } },
-        { "type": "text", "position": { "x": 0, "y": 55, "width": 200, "height": 20 }, "properties": { "content": "Invoice #{{invoiceNumber}}", "fontSize": 14, "color": "#666666" } },
-        { "type": "text", "position": { "x": 350, "y": 55, "width": 185, "height": 20 }, "properties": { "content": "Date: {{formatDate(invoiceDate, 'DD.MM.YYYY')}}", "fontSize": 12, "color": "#666666", "textAlign": "right" } }
+        { "type": "text", "position": { "x": 0, "y": 10, "width": 300, "height": 36 }, "content": "{{companyName}}", "fontSize": 28, "fontWeight": "bold", "color": "#1a1a1a" },
+        { "type": "text", "position": { "x": 0, "y": 55, "width": 200, "height": 20 }, "content": "Invoice #{{invoiceNumber}}", "fontSize": 14, "color": "#666666" },
+        { "type": "text", "position": { "x": 350, "y": 55, "width": 185, "height": 20 }, "content": "Date: {{formatDate(invoiceDate, 'DD.MM.YYYY')}}", "fontSize": 12, "color": "#666666", "textAlign": "right" }
       ]
     },
     {
@@ -23,17 +23,17 @@
       "height": 30,
       "dataBinding": "items",
       "components": [
-        { "type": "text", "position": { "x": 0, "y": 2, "width": 250, "height": 25 }, "properties": { "content": "{{item.name}}", "fontSize": 12 } },
-        { "type": "text", "position": { "x": 260, "y": 2, "width": 80, "height": 25 }, "properties": { "content": "{{item.quantity}}", "fontSize": 12, "textAlign": "center" } },
-        { "type": "text", "position": { "x": 350, "y": 2, "width": 100, "height": 25 }, "properties": { "content": "{{formatCurrency(item.unitPrice, 'TRY')}}", "fontSize": 12, "textAlign": "right" } },
-        { "type": "text", "position": { "x": 460, "y": 2, "width": 75, "height": 25 }, "properties": { "content": "{{formatCurrency(item.total, 'TRY')}}", "fontSize": 12, "fontWeight": "bold", "textAlign": "right" } }
+        { "type": "text", "position": { "x": 0, "y": 2, "width": 250, "height": 25 }, "content": "{{item.name}}", "fontSize": 12 },
+        { "type": "text", "position": { "x": 260, "y": 2, "width": 80, "height": 25 }, "content": "{{item.quantity}}", "fontSize": 12, "textAlign": "center" },
+        { "type": "text", "position": { "x": 350, "y": 2, "width": 100, "height": 25 }, "content": "{{formatCurrency(item.unitPrice, 'TRY')}}", "fontSize": 12, "textAlign": "right" },
+        { "type": "text", "position": { "x": 460, "y": 2, "width": 75, "height": 25 }, "content": "{{formatCurrency(item.total, 'TRY')}}", "fontSize": 12, "fontWeight": "bold", "textAlign": "right" }
       ]
     },
     {
       "type": "footer",
       "height": 50,
       "components": [
-        { "type": "text", "position": { "x": 350, "y": 10, "width": 185, "height": 30 }, "properties": { "content": "Total: {{formatCurrency(sum(items, 'total'), 'TRY')}}", "fontSize": 16, "fontWeight": "bold", "textAlign": "right" } }
+        { "type": "text", "position": { "x": 350, "y": 10, "width": 185, "height": 30 }, "content": "Total: {{formatCurrency(sum(items, 'total'), 'TRY')}}", "fontSize": 16, "fontWeight": "bold", "textAlign": "right" }
       ]
     }
   ]
