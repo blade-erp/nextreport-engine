@@ -1,0 +1,22 @@
+{
+  "name": "@nextreport/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'dev placeholder'",
+    "build": "echo 'build placeholder'"
+  },
+  "dependencies": {
+    "@nextreport/schema": "workspace:*",
+    "@nextreport/engine-core": "workspace:*",
+    "@nextreport/renderer-html": "workspace:*",
+    "@nextreport/renderer-pdf": "workspace:*",
+    "@nextreport/canvas": "workspace:*",
+    "@nextreport/ui-designer": "workspace:*",
+    "@nextreport/ui-viewer": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
