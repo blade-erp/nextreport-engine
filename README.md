@@ -11,7 +11,7 @@
     <a href="#api-reference">API</a> &bull;
     <a href="#report-schema-dsl">Schema DSL</a> &bull;
     <a href="#contributing">Contributing</a> &bull;
-    <a href="docs/ROADMAP.md">Roadmap</a>
+    [Roadmap](docs/ROADMAP.md)
   </p>
 </p>
 
