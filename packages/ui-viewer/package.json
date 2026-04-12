@@ -18,8 +18,8 @@
     "lint": "eslint src/"
   },
   "dependencies": {
-    "react": "latest",
-    "react-dom": "latest",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "@nextreport/renderer-html": "workspace:*",
     "@nextreport/schema": "workspace:*",
     "@nextreport/engine-core": "workspace:*"

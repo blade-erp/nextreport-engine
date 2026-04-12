@@ -21,8 +21,8 @@
     "lint": "eslint src/"
   },
   "dependencies": {
-    "react": "latest",
-    "react-dom": "latest",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "zustand": "^5.0.0",
     "immer": "^11.1.4",
     "@nextreport/canvas": "workspace:*",

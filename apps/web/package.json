@@ -17,16 +17,16 @@
     "@nextreport/canvas": "workspace:*",
     "@nextreport/ui-designer": "workspace:*",
     "@nextreport/ui-viewer": "workspace:*",
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest"
+    "next": "^16.2.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "typescript": "^6.0.2",
-    "tailwindcss": "latest",
-    "@tailwindcss/postcss": "latest",
-    "postcss": "latest"
+    "tailwindcss": "^4.2.2",
+    "@tailwindcss/postcss": "^4.2.2",
+    "postcss": "^8.5.9"
   }
 }
