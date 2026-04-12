@@ -79,14 +79,18 @@ pnpm run dev
 
 ## Step 2: Understand the API
 
-NextReport exposes four endpoints:
+NextReport exposes these endpoints:
 
-| Method | Endpoint             | Purpose                                |
-| ------ | -------------------- | -------------------------------------- |
-| `POST` | `/api/render`        | Render a report to HTML or PDF         |
-| `POST` | `/api/validate`      | Validate a report schema               |
-| `POST` | `/api/preview`       | Lightweight render (first page only)   |
-| `GET`  | `/api/templates/:id` | Load a built-in template + sample data |
+| Method   | Endpoint             | Purpose                              |
+| -------- | -------------------- | ------------------------------------ |
+| `POST`   | `/api/render`        | Render a report to HTML or PDF       |
+| `POST`   | `/api/validate`      | Validate a report schema             |
+| `POST`   | `/api/preview`       | Lightweight render (first page only) |
+| `GET`    | `/api/templates`     | List all templates                   |
+| `POST`   | `/api/templates`     | Create a new template                |
+| `GET`    | `/api/templates/:id` | Load a template + sample data        |
+| `PUT`    | `/api/templates/:id` | Update a template                    |
+| `DELETE` | `/api/templates/:id` | Delete a template                    |
 
 ### The key concept
 
@@ -508,6 +512,60 @@ Binary PDF stream, Content-Type: `application/pdf`
 }
 ```
 
+### GET /api/templates
+
+List all templates (both new and legacy format).
+
+**Response:**
+
+```json
+{
+  "templates": [
+    {
+      "id": "invoice-v1",
+      "name": "invoice-v1",
+      "description": "",
+      "version": "1.0",
+      "createdAt": "",
+      "updatedAt": ""
+    },
+    {
+      "id": "a73c9a8c-...",
+      "name": "My Custom Invoice",
+      "description": "With logo and QR",
+      "version": "1.0",
+      "createdAt": "2026-04-12T...",
+      "updatedAt": "2026-04-12T..."
+    }
+  ]
+}
+```
+
+### POST /api/templates
+
+Create a new template programmatically.
+
+**Request:**
+
+```json
+{
+  "name": "Invoice with QR",
+  "description": "Invoice template with company logo and QR code",
+  "template": { "type": "report", "bands": [...] },
+  "sampleData": { "companyName": "Acme", "items": [...] }
+}
+```
+
+**Response (201):**
+
+```json
+{
+  "meta": { "id": "uuid", "name": "Invoice with QR", "version": "1.0", "createdAt": "...", "updatedAt": "..." },
+  "template": { ... },
+  "sampleData": { ... }
+}
+```
+
 ### GET /api/templates/:id
 
 **Response:**
@@ -518,6 +576,77 @@ Binary PDF stream, Content-Type: `application/pdf`
   "sampleData": { "companyName": "Acme", "items": [...] }
 }
 ```
+
+### PUT /api/templates/:id
+
+Update an existing template (all fields optional).
+
+### DELETE /api/templates/:id
+
+Delete a template. Returns `{ "success": true }`.
+
+---
+
+## Image and Barcode Components
+
+Templates can include image and barcode components. As a Java developer, you don't need to generate these — just provide the data:
+
+```json
+{
+  "type": "image",
+  "position": { "x": 400, "y": 10, "width": 100, "height": 80 },
+  "src": "{{companyLogo}}",
+  "alt": "Company Logo",
+  "objectFit": "contain"
+}
+```
+
+Your data provides the URL:
+
+```java
+data.put("companyLogo", "https://yourcdn.com/logo.png");
+// Or base64: data.put("companyLogo", "data:image/png;base64,iVBOR...");
+```
+
+Barcode/QR codes are generated server-side as SVG:
+
+```json
+{
+  "type": "barcode",
+  "position": { "x": 0, "y": 5, "width": 100, "height": 100 },
+  "value": "{{invoiceNumber}}",
+  "format": "qr",
+  "color": "#000000"
+}
+```
+
+Your data just provides the value:
+
+```java
+data.put("invoiceNumber", "INV-2026-001"); // Engine generates QR code SVG from this
+```
+
+Supported formats: `qr` (QR Code) and `code128` (Code128 barcode).
+
+---
+
+## Group and Page Bands
+
+Templates can use group bands for grouped reports (e.g., employees by department with subtotals) and page bands for repeating headers/footers.
+
+As a Java developer, you don't need to handle grouping — the engine does it. Just provide flat arrays:
+
+```java
+// The engine groups by "department" automatically when the template has groupBy: "department"
+List<Map<String, Object>> employees = List.of(
+    Map.of("name", "Alice", "department", "Engineering", "salary", 80000),
+    Map.of("name", "Bob", "department", "Engineering", "salary", 90000),
+    Map.of("name", "Carol", "department", "Marketing", "salary", 70000)
+);
+data.put("employees", employees);
+```
+
+Page bands with `{{pageNumber}}` and `{{totalPages}}` are resolved automatically by the layout engine.
 
 ---
 

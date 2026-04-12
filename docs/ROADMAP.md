@@ -1,13 +1,13 @@
 # NextReportEngine — Product Roadmap
 
-**Last updated:** 2026-04-12
-**Current version:** v0.1 (MVP)
+**Last updated:** 2026-04-13
+**Current version:** v0.2.1
 
 ---
 
 ## MVP (v0.1) — Tamamlandı
 
-**Durum:** Tamamlandı | 32 commit | 190 test | 7 package + 1 app
+**Durum:** Tamamlandı | 64 commit | 346 test | 7 package + 1 app
 
 ### Teslim Edilenler
 
@@ -39,105 +39,69 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 
 ---
 
-## Phase 2 — Platform Genişletme
+## Phase 2 — Engine Maturity (v0.2)
 
-**Hedef:** Engine'i production-ready hale getir, plugin sistemi ekle, performans iyileştir.
+**Hedef:** Engine'i production-ready hale getir.
+**Durum:** Tamamlandı | v0.2.0 + v0.2.1 | 428 test
 
-### 2.1 Plugin System & Component Marketplace
+### 2.1 Template CRUD API — Tamamlandı (v0.2.0)
 
-**Neden:** MVP'de 2 component var (Text, Table). Kullanıcılar ve topluluk yeni component'ler ekleyebilmeli.
+- Filesystem-based storage (metadata envelope format)
+- POST/GET/PUT/DELETE endpoints
+- Backward compatible with legacy template format
+- Designer Save/Load entegrasyonu
 
-**Scope:**
+### 2.2 Image Component — Tamamlandı (v0.2.0)
 
-- Component lazy loading (dynamic import)
-- Plugin manifest format tanımı
-- Plugin discovery ve registration API
-- Community component'ler: Image, Barcode (QR/Code128), Chart, Shape, Line/Separator
-- Plugin development SDK + documentation
+- URL-based ve base64 inline image desteği
+- Expression-bound src: `{{companyLogo}}`
+- objectFit: contain, cover, fill
+- HTML renderer ile absolute positioning
 
-**Teknik:**
+### 2.3 Barcode/QR Component — Tamamlandı (v0.2.0)
 
-```
-@nextreport/plugin-sdk        → Plugin geliştirme araçları
-@nextreport/component-image   → Image component (URL, base64)
-@nextreport/component-barcode → QR, Code128, EAN13
-@nextreport/component-chart   → Basic charts (bar, line, pie)
-```
+- QR Code ve Code128 format desteği
+- bwip-js ile SVG rendering (DOM-independent, PDF-compatible)
+- Expression-bound value: `{{orderId}}`
+- Custom foreground/background renkleri
 
-**Boundary'ler:** Her plugin kendi package'ı. Engine-core plugin'i bilmez, sadece ComponentRegistry interface'ini bilir. Plugin kendini register eder.
+### 2.4 Group Header/Footer Bands — Tamamlandı (v0.2.0)
 
-### 2.2 Advanced Layout Engine
+- `groupBy` field on band schema
+- Band-processor grouping logic (\_groupKey, \_groupItems, \_groupIndex)
+- Subtotal aggregation: `sum(_groupItems, 'salary')`
+- Nested grouping desteği
 
-**Neden:** MVP'de basit absolute positioning var. Gerçek dünya raporları daha karmaşık layout'lar gerektirir.
+### 2.5 Page Header/Footer Bands — Tamamlandı (v0.2.0)
 
-**Scope:**
+- Her sayfada tekrarlayan header/footer
+- `{{pageNumber}}` ve `{{totalPages}}` expression'ları
+- Layout calculator'da two-pass pagination
 
-- Group header/footer band'ları (gruplama + subtotal)
-- Nested detail band'lar (master-detail raporları)
-- Conditional band visibility (expression-based show/hide)
-- Relative positioning mode (band-relative vs absolute)
-- Auto-height band'lar (content'e göre uzayan)
-- Column layout (multi-column detail band'lar)
-- Keep-together (element grubunun sayfa arasında bölünmemesi)
+### 2.6 Designer UX — Tamamlandı (v0.2.0)
 
-**Teknik:** Layout calculator'a yeni stratejiler eklenir. Engine-core internal modül boundary'si korunur.
+- Drag & drop component placement (toolbox → canvas)
+- 8-directional resize handles
+- Keyboard shortcuts (Ctrl+Z, Ctrl+Y, Delete, Escape)
+- Template save/load (CRUD API entegrasyonu)
+- Import JSON from file
+- Image + Barcode toolbox ve property panel
+- All 7 band types in band manager with color coding
 
-### 2.3 PDF Optimization
+### Kalan Phase 2 İşleri (Gelecek)
 
-**Neden:** MVP'de Puppeteer ile HTML→PDF yapılıyor. Yavaş, memory-heavy, server'da Chrome gerekli.
-
-**Scope:**
-
-- Dedicated PDF library entegrasyonu (pdfmake veya jsPDF)
-- Puppeteer fallback olarak kalır (complex CSS rendering için)
-- PDF/A compliance (arşivleme)
-- PDF metadata (title, author, keywords)
-- Font embedding
-- Vector graphics (SVG support)
-
-**Teknik:** `@nextreport/renderer-pdf-native` yeni package. IR'dan doğrudan PDF üretir. Puppeteer-based renderer hala mevcut ama opsiyonel.
-
-### 2.4 Template Versioning & CRUD
-
-**Neden:** MVP'de template'ler filesystem'de static JSON. Production'da CRUD, versioning, ve paylaşım gerekli.
-
-**Scope:**
-
-- Database entegrasyonu (PostgreSQL + Prisma)
-- Template CRUD API (create, read, update, delete, list)
-- Template versioning (v1, v2, ... + rollback)
-- Template categories/tags
-- Template thumbnail generation (otomatik preview image)
-- Template import/export (JSON dosyası)
-
-**Teknik:** `apps/web` katmanına database eklenir. Engine-core etkilenmez (stateless kalır).
-
-### 2.5 Queue + Worker Separation
-
-**Neden:** Heavy render işleri (büyük PDF'ler) Next.js process'ini bloklar.
-
-**Scope:**
-
-- BullMQ job queue
-- Worker process (ayrı Node.js instance)
-- Async render API (job ID döner, polling/webhook ile sonuç)
-- Rate limiting
-- Priority queue (small reports fast, large reports queued)
-
-**Teknik:** API route render isteğini queue'ya koyar, worker engine-core + renderer çağırır. Engine-core değişmez.
-
-### 2.6 Designer UX İyileştirmeleri
-
-**Scope:**
-
-- Full Konva canvas integration (DOM-based preview'den geçiş)
-- Drag & drop component placement (toolbox'tan canvas'a sürükleme)
-- Resize handles (component boyutlandırma)
-- Snap-to-grid / alignment guides
-- Keyboard shortcuts (Ctrl+Z undo, Delete remove, etc.)
-- Multi-select (Shift+click ile birden fazla component seçme)
-- Copy/paste component
-- Data field drag-to-canvas (sol panelden sürükle → otomatik {{expression}})
+- [ ] Plugin system & component marketplace
+- [ ] Full Konva canvas integration (DOM-based preview yerine)
+- [ ] Snap-to-grid / alignment guides
+- [ ] Multi-select (Shift+click)
+- [ ] Copy/paste component (Ctrl+C/V)
+- [ ] Data field drag-to-canvas
+- [ ] Nested detail band'lar (master-detail)
+- [ ] Conditional band visibility (expression-based show/hide)
+- [ ] Auto-height band'lar
+- [ ] Native PDF generation (Puppeteer-free)
+- [ ] Queue + worker separation (BullMQ)
+- [ ] Database-backed template storage (PostgreSQL + Prisma)
 
 ---
 
@@ -282,15 +246,15 @@ Bu phase'lere bağlı olmayan, sürekli yapılması gereken iyileştirmeler:
 
 ## Release Cadence
 
-| Version | Phase           | Tahmini Scope                            |
-| ------- | --------------- | ---------------------------------------- |
-| v0.1    | MVP             | Tamamlandı                               |
-| v0.2    | 2.1 + 2.2       | Plugin system + advanced layout          |
-| v0.3    | 2.3 + 2.4       | PDF optimization + template versioning   |
-| v0.4    | 2.5 + 2.6       | Queue/worker + designer UX               |
-| v1.0    | 3.1 + 3.2 + 3.3 | Auth + collaboration + standalone engine |
-| v1.5    | 3.4             | SaaS mode                                |
-| v2.0    | 4.x             | AI integration + MCP server              |
+| Version | Phase           | Scope                                                        | Durum      |
+| ------- | --------------- | ------------------------------------------------------------ | ---------- |
+| v0.1    | MVP             | Schema, engine, renderers, designer, viewer, CI/CD           | Tamamlandı |
+| v0.2    | Engine Maturity | Image, Barcode, Group/Page bands, Template CRUD, Designer UX | Tamamlandı |
+| v0.3    | —               | Plugin system, native PDF, conditional visibility            | Planlandı  |
+| v0.4    | —               | Queue/worker, DB storage, nested details                     | Planlandı  |
+| v1.0    | 3.x             | Auth + collaboration + standalone engine                     | Planlandı  |
+| v1.5    | 3.4             | SaaS mode                                                    | Planlandı  |
+| v2.0    | 4.x             | AI integration + MCP server                                  | Planlandı  |
 
 ---
 

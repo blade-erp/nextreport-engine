@@ -221,11 +221,37 @@ export default function ReportDesignerPage() {
 
 ### Designer features
 
-- **Left panel:** Component toolbox (Text, Table) + Band manager + Data source field tree
-- **Center:** Canvas showing the report with band-colored sections
-- **Right panel:** Property editor (content, font, color, position)
-- **Toolbar:** Undo/Redo, Zoom, Live Preview toggle, Export JSON, Open Viewer
+- **Left panel:** Component toolbox (Text, Table, Image, Barcode) + Band manager (7 band types) + Data source field tree
+- **Center:** Canvas with drag & drop placement, component move (drag), 8-directional resize handles
+- **Right panel:** Property editor — type-specific panels for Text (content, font, color, align), Image (src, alt, objectFit), Barcode (value, format, color), and Position & Size for all types
+- **Toolbar:** Save/Load (CRUD API), Import JSON, Export JSON, Undo/Redo, Zoom, Live Preview toggle, Open Viewer
+- **Keyboard shortcuts:** Ctrl+Z (undo), Ctrl+Y (redo), Delete/Backspace (remove component), Escape (deselect)
+- **Band manager:** All 7 band types with color-coded dots — Header, Detail, Footer, Group-Header, Group-Footer, Page-Header, Page-Footer
 - **Live Preview:** Toggleable bottom panel showing rendered HTML in real-time
+
+### Save/Load templates via CRUD API
+
+The designer toolbar has built-in Save and Load buttons that use the Template CRUD API. You can also do it programmatically:
+
+```tsx
+import { useDesignerStore } from '@nextreport/ui-designer'
+
+// Save current report to Template CRUD API
+const report = useDesignerStore.getState().report
+const sampleData = useDesignerStore.getState().sampleData
+
+await fetch('/api/templates', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'My Invoice', template: report, sampleData }),
+})
+
+// Load a template
+const res = await fetch('/api/templates/invoice-v1')
+const { template, sampleData: data } = await res.json()
+useDesignerStore.getState().setReport(template)
+useDesignerStore.getState().setSampleData(data)
+```
 
 ### Get the report JSON from the designer
 
@@ -236,7 +262,7 @@ import { useDesignerStore } from '@nextreport/ui-designer'
 const report = useDesignerStore.getState().report
 const json = JSON.stringify(report, null, 2)
 
-// Save to your backend
+// Save to your own backend
 await fetch('/api/save-template', {
   method: 'POST',
   body: json,
@@ -327,11 +353,25 @@ useDesignerStore.getState().setSampleData(customerData)
 | `uppercase`      | `{{uppercase(name)}}`                              | `ACME CORP`              |
 | `if`             | `{{if(total > 100, 'VIP', 'Standard')}}`           | `VIP` or `Standard`      |
 
+### Component types
+
+```json
+// Image — URL, base64, or expression-bound
+{ "type": "image", "position": {...}, "src": "https://... or {{companyLogo}}", "alt": "Logo", "objectFit": "contain" }
+
+// Barcode / QR Code — expression-bound value, SVG rendering
+{ "type": "barcode", "position": {...}, "value": "{{orderId}}", "format": "qr", "color": "#000000" }
+```
+
 ### Band types
 
 - `header` — rendered once at top
 - `detail` — repeated for each item in `dataBinding` array (`items` → iterator: `item`)
 - `footer` — rendered once at bottom
+- `group-header` — before each group (use `groupBy` field + `_groupKey` in expressions)
+- `group-footer` — after each group (use `sum(_groupItems, 'field')` for subtotals)
+- `page-header` — top of every page
+- `page-footer` — bottom of every page (use `{{pageNumber}}` / `{{totalPages}}`)
 
 ### Page configuration
 

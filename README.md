@@ -85,12 +85,15 @@ Based on the market gap, NextReport is most valuable for:
 
 ## Features
 
-- **Visual Report Designer** — Three-panel layout with component toolbox, canvas area, and property editor. Undo/redo, zoom, live preview.
+- **Visual Report Designer** — Three-panel layout with component toolbox, canvas area, and property editor. Drag & drop from toolbox, resize handles, keyboard shortcuts (Ctrl+Z, Delete, Escape), undo/redo, zoom, live preview.
+- **4 Component Types** — Text, Table, Image (URL/base64), and Barcode/QR Code (Code128, QR). All expression-bound.
+- **7 Band Types** — Header, Detail, Footer, Group Header/Footer (with `groupBy` and subtotals), Page Header/Footer (with `{{pageNumber}}`/`{{totalPages}}`).
 - **Runtime Viewer** — Render reports in the browser with pagination, print, and PDF export.
-- **Headless API** — Stateless REST endpoints for rendering, validation, and preview. Send JSON, get HTML or PDF.
+- **Headless API** — Stateless REST endpoints for rendering, validation, preview, and template CRUD. Send JSON, get HTML or PDF.
+- **Template Management** — Full CRUD API for templates with metadata (name, description, version, timestamps). Save/load from designer.
 - **Schema-Driven DSL** — Reports are defined as JSON. Human-readable, version-controllable, LLM-friendly.
 - **Expression Engine** — Template expressions with 9 built-in functions: `formatCurrency`, `formatDate`, `formatNumber`, `sum`, `count`, `uppercase`, `lowercase`, `concat`, `if`.
-- **Pluggable Renderers** — HTML and PDF out of the box. Add new output formats without touching the core.
+- **Pluggable Renderers** — HTML and PDF out of the box. Barcode/QR rendered as inline SVG via bwip-js. Add new output formats without touching the core.
 - **Canvas Abstraction** — Port/adapter pattern isolates the canvas library. Swap rendering backends without changing application code.
 - **Type-Safe** — Written in TypeScript with Zod schemas. Full type inference from schema to render output.
 - **Locale-Aware** — Currency, date, and number formatting respects report locale. `formatCurrency(price, 'TRY')` with `locale: "tr-TR"` outputs `₺45.000,00`.
@@ -216,7 +219,7 @@ Open http://localhost:3000 in your browser.
 ### Run Tests
 
 ```bash
-pnpm test       # 190 tests across all packages
+pnpm test       # 428 tests across all packages
 pnpm run lint   # ESLint with engine isolation rules
 pnpm run build  # Production build
 ```
@@ -410,15 +413,24 @@ Reports are defined as JSON:
 
 ### Band Types
 
-| Type           | Behavior                                      | MVP     |
-| -------------- | --------------------------------------------- | ------- |
-| `header`       | Rendered once at the top                      | Yes     |
-| `detail`       | Repeated for each item in `dataBinding` array | Yes     |
-| `footer`       | Rendered once at the bottom                   | Yes     |
-| `group-header` | Before each group (when grouping data)        | Planned |
-| `group-footer` | After each group (subtotals)                  | Planned |
-| `page-header`  | Top of every page                             | Planned |
-| `page-footer`  | Bottom of every page                          | Planned |
+| Type           | Behavior                                                     | Status |
+| -------------- | ------------------------------------------------------------ | ------ |
+| `header`       | Rendered once at the top                                     | v0.1   |
+| `detail`       | Repeated for each item in `dataBinding` array                | v0.1   |
+| `footer`       | Rendered once at the bottom                                  | v0.1   |
+| `group-header` | Before each group (`groupBy` field, `_groupKey` context)     | v0.2   |
+| `group-footer` | After each group (subtotals via `sum(_groupItems, 'field')`) | v0.2   |
+| `page-header`  | Top of every page                                            | v0.2   |
+| `page-footer`  | Bottom of every page (`{{pageNumber}}` / `{{totalPages}}`)   | v0.2   |
+
+### Component Types
+
+| Type      | Properties                                      | Status |
+| --------- | ----------------------------------------------- | ------ |
+| `text`    | content, fontSize, fontWeight, color, textAlign | v0.1   |
+| `table`   | dataBinding, columns (header, field, width)     | v0.1   |
+| `image`   | src (URL/base64/expression), alt, objectFit     | v0.2   |
+| `barcode` | value (expression), format (qr/code128), color  | v0.2   |
 
 ### Expression Syntax
 
@@ -531,6 +543,38 @@ Lightweight render — first page only, always HTML.
 { "success": true, "output": "<!DOCTYPE html>...", "metadata": { "totalPages": 1 } }
 ```
 
+### GET /api/templates
+
+List all templates.
+
+```json
+// Response
+{
+  "templates": [
+    {
+      "id": "...",
+      "name": "Invoice",
+      "description": "...",
+      "version": "1.0",
+      "createdAt": "...",
+      "updatedAt": "..."
+    }
+  ]
+}
+```
+
+### POST /api/templates
+
+Create a new template.
+
+```json
+// Request
+{ "name": "My Invoice", "description": "...", "template": { "type": "report", ... }, "sampleData": { ... } }
+
+// Response (201)
+{ "meta": { "id": "uuid", "name": "My Invoice", ... }, "template": { ... }, "sampleData": { ... } }
+```
+
 ### GET /api/templates/:id
 
 Load a template and its sample data.
@@ -538,6 +582,24 @@ Load a template and its sample data.
 ```json
 // Response
 { "template": { ... }, "sampleData": { ... } }
+```
+
+### PUT /api/templates/:id
+
+Update an existing template.
+
+```json
+// Request (all fields optional)
+{ "name": "Updated Name", "template": { ... }, "sampleData": { ... } }
+```
+
+### DELETE /api/templates/:id
+
+Delete a template.
+
+```json
+// Response
+{ "success": true }
 ```
 
 ## Engine Pipeline
@@ -616,7 +678,7 @@ interface ComponentCoreDefinition {
 }
 ```
 
-Components needed: Image, Barcode, Chart, Shape, Divider/Line, Page Number.
+Built-in: Text, Table, Image, Barcode. Components needed: Chart, Shape, Divider/Line, Signature.
 
 **2. Add an Expression Function**
 
@@ -633,7 +695,7 @@ registerFunction('avg', (args) => {
 })
 ```
 
-Functions needed: `avg`, `min`, `max`, `join`, `substring`, `replace`, `round`, `abs`, `now`, `pageNumber`.
+Functions needed: `avg`, `min`, `max`, `join`, `substring`, `replace`, `round`, `abs`, `now`.
 
 **3. Add a Renderer**
 
@@ -676,7 +738,7 @@ pnpm run dev        # Start dev server
 
 1. Fork the repo and create a feature branch
 2. Write tests for your changes
-3. Ensure `pnpm test` passes (all 190+ tests)
+3. Ensure `pnpm test` passes (all 428+ tests)
 4. Ensure `pnpm typecheck` passes
 5. Submit a PR with a clear description
 
@@ -698,12 +760,14 @@ pnpm run dev        # Start dev server
 
 See [ROADMAP.md](docs/ROADMAP.md) for the full product roadmap.
 
+**v0.2 delivered:** Image/Barcode components, Group/Page bands, Template CRUD API, Designer UX (drag & drop, resize, keyboard shortcuts).
+
 **Coming next:**
 
 - Plugin system & component marketplace
-- Advanced layout (grouping, nested details, auto-height)
 - Native PDF generation (no Puppeteer dependency)
-- Template versioning with database storage
+- Conditional band visibility (expression-based show/hide)
+- Database-backed template storage (PostgreSQL + Prisma)
 - AI report generation via MCP server
 
 ## License
