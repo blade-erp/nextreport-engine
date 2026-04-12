@@ -151,7 +151,7 @@ jobs:
     name: Docker Build (verify)
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [lint-and-format, typecheck, test]
+    needs: [typecheck, test]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
