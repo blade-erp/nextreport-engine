@@ -1,6 +1,6 @@
-import { zodToJsonSchema } from 'zod-to-json-schema'
+import { toJSONSchema } from 'zod'
 import { ReportSchema } from './report.schema.js'
 
 export function getReportJsonSchema() {
-  return zodToJsonSchema(ReportSchema, { name: 'ReportSchema', $refStrategy: 'none' })
+  return toJSONSchema(ReportSchema)
 }

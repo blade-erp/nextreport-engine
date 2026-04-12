@@ -23,7 +23,11 @@ export type DesignerStore = DocumentSlice &
   ViewportSlice &
   HistorySlice
 
-export const useDesignerStore = create<DesignerStore>()(
+// The explicit cast to `unknown` + `DesignerStoreType` avoids a TypeScript declaration-emit
+// error (TS4023) caused by immer v11 not exporting `WritableNonArrayDraft` as a public type.
+type DesignerStoreType = ReturnType<ReturnType<typeof create<DesignerStore>>>
+
+const _store = create<DesignerStore>()(
   immer((...a) => ({
     ...createDocumentSlice(...a),
     ...createDataSlice(...a),
@@ -32,3 +36,5 @@ export const useDesignerStore = create<DesignerStore>()(
     ...createHistorySlice(...a),
   })),
 )
+
+export const useDesignerStore = _store as unknown as DesignerStoreType

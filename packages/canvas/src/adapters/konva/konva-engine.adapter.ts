@@ -40,16 +40,19 @@ export class KonvaEngineAdapter implements CanvasEnginePort {
     node.id(config.id)
     node.draggable(config.draggable ?? false)
 
+    // Cast to Konva.Node for event binding — Konva v10 union overloads are incompatible
+    const eventNode = node as unknown as Konva.Node
+
     // Wire events on the node
-    node.on('click', () => {
+    eventNode.on('click', () => {
       this.selectionCallback?.(config.id)
     })
 
-    node.on('dragstart', () => {
+    eventNode.on('dragstart', () => {
       this.selectionCallback?.(config.id)
     })
 
-    node.on('dragend', () => {
+    eventNode.on('dragend', () => {
       const changes: Partial<CanvasObjectConfig> = {
         x: node.x(),
         y: node.y(),
@@ -62,7 +65,7 @@ export class KonvaEngineAdapter implements CanvasEnginePort {
       }
     })
 
-    node.on('dragmove', () => {
+    eventNode.on('dragmove', () => {
       const changes: Partial<CanvasObjectConfig> = {
         x: node.x(),
         y: node.y(),

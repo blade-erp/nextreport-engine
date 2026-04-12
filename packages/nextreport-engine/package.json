@@ -59,14 +59,13 @@
     "url": "https://github.com/nextreport/engine/issues"
   },
   "dependencies": {
-    "zod": "^3.25.0",
-    "zod-to-json-schema": "^3.24.0"
+    "zod": "^4.3.6"
   },
   "optionalDependencies": {
-    "puppeteer": "^23.0.0"
+    "puppeteer": "^24.40.0"
   },
   "peerDependencies": {
-    "zod": "^3.25.0"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@nextreport/schema": "workspace:*",

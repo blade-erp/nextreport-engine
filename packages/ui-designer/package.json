@@ -24,17 +24,17 @@
     "react": "latest",
     "react-dom": "latest",
     "zustand": "^5.0.0",
-    "immer": "^10.0.0",
+    "immer": "^11.1.4",
     "@nextreport/canvas": "workspace:*",
     "@nextreport/schema": "workspace:*",
     "@nextreport/engine-core": "workspace:*",
     "@nextreport/renderer-html": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "@vitest/coverage-v8": "^3.2.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitest/coverage-v8": "^4.1.4",
     "typescript": "^6.0.2",
-    "vitest": "^3.2.0"
+    "vitest": "^4.1.4"
   }
 }
