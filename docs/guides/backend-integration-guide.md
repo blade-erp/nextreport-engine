@@ -15,9 +15,9 @@ NextReport runs as a **separate service** that your Java app calls via REST API.
 
 ```
 ┌──────────────────┐    REST API     ┌──────────────────┐
-│   Your Java App   │ ──────────────▶ │  NextReport       │
-│   (Spring Boot)   │ ◀────────────── │  Engine           │
-│                   │   HTML / PDF    │  (Docker)          │
+│   Your Java App  │ ──────────────▶ │  NextReport      │
+│   (Spring Boot)  │ ◀────────────── │  Engine          │
+│                  │   HTML / PDF    │  (Docker)        │
 └──────────────────┘                 └──────────────────┘
 ```
 
