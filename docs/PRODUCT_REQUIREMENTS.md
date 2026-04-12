@@ -2,7 +2,6 @@
 
 **Project:** NextReportEngine
 **Version:** v0.1 (MVP)
-**Last Updated:** 2026-04-12
 **Status:** MVP Implemented
 
 ---
@@ -16,7 +15,7 @@ A modern, web-native, UX-first reporting engine that provides:
 ### Promise
 
 - A schema-driven document engine for humans and AI with JSON
-- Design visually. Render via API. Integrate anywhere — React, Angular, Next.js, Java, Python, .NET, or AI agents.
+- Design visually. Render via API. Integrate anywhere — React, Angular, Next.js, Java, Python, .NET, etc... or AI agents and LLM friendly.
 
 ### Goals
 
@@ -98,7 +97,7 @@ Invoice / PDF generator with visual editor.
 
 | Layer | Technology | Version |
 |-------|-----------|---------|
-| Language | TypeScript | 5.8+ |
+| Language | TypeScript | 6+ |
 | Framework | Next.js (App Router) | 16.2.3 |
 | UI Library | React | 19.2 |
 | UI Components | shadcn/ui | 4.2.0 |
