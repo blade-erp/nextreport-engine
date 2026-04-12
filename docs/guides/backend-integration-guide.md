@@ -7,6 +7,7 @@
 ## Overview
 
 You have a Java/Spring Boot application and need to:
+
 - Generate PDF invoices from your business data
 - Validate report templates
 - Serve HTML reports to your frontend
@@ -46,10 +47,16 @@ services:
   nextreport:
     image: ghcr.io/nextreport/engine:latest
     ports:
-      - "3000:3000"
+      - '3000:3000'
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -74,12 +81,12 @@ pnpm run dev
 
 NextReport exposes four endpoints:
 
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| `POST` | `/api/render` | Render a report to HTML or PDF |
-| `POST` | `/api/validate` | Validate a report schema |
-| `POST` | `/api/preview` | Lightweight render (first page only) |
-| `GET` | `/api/templates/:id` | Load a built-in template + sample data |
+| Method | Endpoint             | Purpose                                |
+| ------ | -------------------- | -------------------------------------- |
+| `POST` | `/api/render`        | Render a report to HTML or PDF         |
+| `POST` | `/api/validate`      | Validate a report schema               |
+| `POST` | `/api/preview`       | Lightweight render (first page only)   |
+| `GET`  | `/api/templates/:id` | Load a built-in template + sample data |
 
 ### The key concept
 
@@ -380,7 +387,7 @@ services:
   app:
     build: .
     ports:
-      - "8080:8080"
+      - '8080:8080'
     environment:
       - NEXTREPORT_URL=http://nextreport:3000
     depends_on:
@@ -391,10 +398,16 @@ services:
   nextreport:
     image: ghcr.io/nextreport/engine:latest
     ports:
-      - "3000:3000"
+      - '3000:3000'
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -512,15 +525,15 @@ Binary PDF stream, Content-Type: `application/pdf`
 
 These are the formatting functions available in templates. As a Java developer, you don't call these directly — they're used inside template expressions. But knowing them helps you understand what data to provide:
 
-| Expression in Template | What Your Data Needs | Example Output |
-|----------------------|---------------------|----------------|
-| `{{companyName}}` | `"companyName": "Acme"` | Acme |
-| `{{formatCurrency(item.price, 'TRY')}}` | `"price": 45000` (number) | ₺45.000,00 |
-| `{{formatCurrency(item.price, 'USD')}}` | `"price": 1200` | $1,200.00 |
-| `{{formatDate(invoiceDate, 'DD.MM.YYYY')}}` | `"invoiceDate": "2026-04-12"` | 12.04.2026 |
-| `{{sum(items, 'total')}}` | items[] with "total" field | 93750 |
-| `{{count(items)}}` | items[] array | 2 |
-| `{{if(total > 10000, 'VIP', 'Standard')}}` | `"total": 93750` | VIP |
+| Expression in Template                      | What Your Data Needs          | Example Output |
+| ------------------------------------------- | ----------------------------- | -------------- |
+| `{{companyName}}`                           | `"companyName": "Acme"`       | Acme           |
+| `{{formatCurrency(item.price, 'TRY')}}`     | `"price": 45000` (number)     | ₺45.000,00     |
+| `{{formatCurrency(item.price, 'USD')}}`     | `"price": 1200`               | $1,200.00      |
+| `{{formatDate(invoiceDate, 'DD.MM.YYYY')}}` | `"invoiceDate": "2026-04-12"` | 12.04.2026     |
+| `{{sum(items, 'total')}}`                   | items[] with "total" field    | 93750          |
+| `{{count(items)}}`                          | items[] array                 | 2              |
+| `{{if(total > 10000, 'VIP', 'Standard')}}`  | `"total": 93750`              | VIP            |
 
 ---
 

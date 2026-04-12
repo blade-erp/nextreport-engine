@@ -12,15 +12,15 @@ A complete MVP of NextReport Engine — a modern, schema-driven document renderi
 
 ### Final Stats
 
-| Metric | Value |
-|--------|-------|
-| Commits | 64 |
-| Tests | 346 (across 34 test files) |
-| Source files | 70+ |
-| Packages | 8 (7 library + 1 app) |
-| npm package | `@nextreport/engine@0.1.0` (42.9 KB) |
-| Docker image | `ghcr.io/nextreport/engine:0.1.0` (949 MB) |
-| GitHub release | v0.1.0 |
+| Metric         | Value                                      |
+| -------------- | ------------------------------------------ |
+| Commits        | 64                                         |
+| Tests          | 346 (across 34 test files)                 |
+| Source files   | 70+                                        |
+| Packages       | 8 (7 library + 1 app)                      |
+| npm package    | `@nextreport/engine@0.1.0` (42.9 KB)       |
+| Docker image   | `ghcr.io/nextreport/engine:0.1.0` (949 MB) |
+| GitHub release | v0.1.0                                     |
 
 ---
 
@@ -51,6 +51,7 @@ Output: `docs/superpowers/specs/2026-04-12-nextreport-engine-design.md` (later m
 ### Phase 2: Implementation (4 development phases)
 
 **Phase A — Foundation (Schema + Engine Core):**
+
 - Turborepo monorepo scaffold with pnpm workspaces
 - `@nextreport/schema`: Zod schemas for report DSL (Position, Page, DataSource, Component, Band, Report)
 - `@nextreport/engine-core`: 4-stage pipeline (validate → expression → band → layout → IR)
@@ -58,18 +59,21 @@ Output: `docs/superpowers/specs/2026-04-12-nextreport-engine-design.md` (later m
 - Type coercion for cross-language compatibility
 
 **Phase B — Output (Renderers + API):**
+
 - `@nextreport/renderer-html`: IR → self-contained HTML with inline styles
 - `@nextreport/renderer-pdf`: HTML → PDF via Puppeteer
 - `apps/web`: Next.js App Router with API routes (/render, /validate, /preview, /templates/:id)
 - Invoice and Simple List templates
 
 **Phase C — Visual (Canvas + Designer + Viewer):**
+
 - `@nextreport/canvas`: Port interfaces + Konva adapter (strict isolation)
 - `@nextreport/ui-designer`: 3-panel layout, Zustand store (5 slices), toolbox, band manager, data tree, property panel, live preview
 - `@nextreport/ui-viewer`: ReportViewer with pagination, print, PDF export
 - Designer and Viewer pages in Next.js
 
 **Phase D — Polish:**
+
 - Onboarding wizard (3-step: template → data → designer)
 - Live preview panel with debounced rendering
 - Data source field tree
@@ -109,39 +113,45 @@ Output: `docs/superpowers/specs/2026-04-12-nextreport-engine-design.md` (later m
 These decisions were made deliberately and should be maintained:
 
 ### Engine Isolation Rule
+
 `engine-core` and renderers NEVER import React, Next.js, or Konva. Enforced by ESLint `no-restricted-imports` at error level. This enables Phase 3 standalone engine split without code changes.
 
 ### Konva Adapter Rule
+
 Konva is imported ONLY in `packages/canvas/src/adapters/konva/`. Everything else uses port interfaces. Canvas library can be swapped by changing one directory.
 
 ### Component Registry Pattern
+
 Components register themselves via interface. Engine-core never imports concrete components. Path to plugin marketplace.
 
 ### Schema as Contract
+
 JSON DSL is the universal interface between all subsystems. Designer, engine, renderers, API — all speak schema. AI agents can generate schema natively (function syntax chosen for LLM compatibility).
 
 ### God-Package Prevention
+
 Engine-core internal modules (pipeline, expression, band-processor, layout) are NOT exported. Only `renderReport` and `validateReport` are public API. If a module grows, extract to separate package.
 
 ### Phase Migration Readiness
+
 MVP: Next.js API Routes → Phase 2: queue + worker → Phase 3: standalone Fastify/Hono engine. Boundaries drawn from day one so each migration is just an HTTP adapter change.
 
 ---
 
 ## Current Tech Stack
 
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| Language | TypeScript | 6.0.2 |
-| Framework | Next.js (App Router) | 16.2.3 |
-| UI | React 19.2.5, TailwindCSS 4.2.2 |
-| Monorepo | Turborepo 2.9.6, pnpm 10.33.0 |
-| Canvas | Konva.js 10.2.5 (via adapter) |
-| State | Zustand 5.0.12 + Immer 11.1.4 |
-| Schema | Zod 4.3.6 (native toJSONSchema) |
-| PDF | Puppeteer 24.40.0 |
-| Testing | Vitest 4.1.4 + @vitest/coverage-v8 |
-| Quality | ESLint 10, Prettier 3.8.2, SonarCloud |
+| Layer     | Technology                            | Version |
+| --------- | ------------------------------------- | ------- |
+| Language  | TypeScript                            | 6.0.2   |
+| Framework | Next.js (App Router)                  | 16.2.3  |
+| UI        | React 19.2.5, TailwindCSS 4.2.2       |
+| Monorepo  | Turborepo 2.9.6, pnpm 10.33.0         |
+| Canvas    | Konva.js 10.2.5 (via adapter)         |
+| State     | Zustand 5.0.12 + Immer 11.1.4         |
+| Schema    | Zod 4.3.6 (native toJSONSchema)       |
+| PDF       | Puppeteer 24.40.0                     |
+| Testing   | Vitest 4.1.4 + @vitest/coverage-v8    |
+| Quality   | ESLint 10, Prettier 3.8.2, SonarCloud |
 
 ---
 
@@ -208,12 +218,14 @@ nextreport-engine/
 ## How to Continue
 
 ### Next session priorities:
+
 1. **Test the npm package** — verify `npm install @nextreport/engine` works in a clean project
 2. **Phase 2 planning** — plugin system, advanced layout, or PDF optimization
 3. **E2E tests** — Playwright tests for designer UI flows
 4. **Community prep** — CONTRIBUTING.md, issue templates, discussions setup
 
 ### Commands cheat sheet:
+
 ```bash
 pnpm run dev          # Start everything
 pnpm test             # 346 tests
@@ -233,6 +245,7 @@ http://localhost:3000/viewer?template=invoice-v1
 ```
 
 ### Key URLs:
+
 - **GitHub:** https://github.com/nextreport/engine
 - **Release:** https://github.com/nextreport/engine/releases/tag/v0.1.0
 - **npm:** https://www.npmjs.com/package/@nextreport/engine

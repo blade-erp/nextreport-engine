@@ -7,17 +7,18 @@
 ## Overview
 
 You have a React/Next.js application and need to:
+
 - Generate invoices, reports, or documents
 - Show a visual report designer to your users
 - Preview and export reports as PDF
 
 NextReport gives you three integration levels — pick what you need:
 
-| Level | What You Get | Install |
-|-------|-------------|---------|
-| **Headless** | Render reports in code, no UI | `npm install @nextreport/engine` |
-| **Viewer** | Embed a read-only report viewer | Clone repo, import `ReportViewer` |
-| **Full Designer** | Visual drag & drop report builder | Clone repo, import `Designer` |
+| Level             | What You Get                      | Install                           |
+| ----------------- | --------------------------------- | --------------------------------- |
+| **Headless**      | Render reports in code, no UI     | `npm install @nextreport/engine`  |
+| **Viewer**        | Embed a read-only report viewer   | Clone repo, import `ReportViewer` |
+| **Full Designer** | Visual drag & drop report builder | Clone repo, import `Designer`     |
 
 ---
 
@@ -178,6 +179,7 @@ export default function InvoicePage() {
 ### Viewer features
 
 The viewer provides out of the box:
+
 - **Pagination** — navigate between pages with prev/next buttons
 - **Print** — triggers `window.print()` with print-optimized CSS
 - **PDF Export** — calls `/api/render` with `format: "pdf"`, downloads the file
@@ -314,16 +316,16 @@ useDesignerStore.getState().setSampleData(customerData)
 
 ### Expression functions available
 
-| Function | Example | Result |
-|----------|---------|--------|
-| `formatCurrency` | `{{formatCurrency(price, 'USD')}}` | `$1,200.00` |
-| `formatCurrency` | `{{formatCurrency(price, 'TRY')}}` (locale: tr-TR) | `₺1.200,00` |
-| `formatDate` | `{{formatDate(date, 'DD.MM.YYYY')}}` | `12.04.2026` |
-| `formatNumber` | `{{formatNumber(rate, 2)}}` | `3.14` |
-| `sum` | `{{sum(items, 'price')}}` | Total of all item prices |
-| `count` | `{{count(items)}}` | Number of items |
-| `uppercase` | `{{uppercase(name)}}` | `ACME CORP` |
-| `if` | `{{if(total > 100, 'VIP', 'Standard')}}` | `VIP` or `Standard` |
+| Function         | Example                                            | Result                   |
+| ---------------- | -------------------------------------------------- | ------------------------ |
+| `formatCurrency` | `{{formatCurrency(price, 'USD')}}`                 | `$1,200.00`              |
+| `formatCurrency` | `{{formatCurrency(price, 'TRY')}}` (locale: tr-TR) | `₺1.200,00`              |
+| `formatDate`     | `{{formatDate(date, 'DD.MM.YYYY')}}`               | `12.04.2026`             |
+| `formatNumber`   | `{{formatNumber(rate, 2)}}`                        | `3.14`                   |
+| `sum`            | `{{sum(items, 'price')}}`                          | Total of all item prices |
+| `count`          | `{{count(items)}}`                                 | Number of items          |
+| `uppercase`      | `{{uppercase(name)}}`                              | `ACME CORP`              |
+| `if`             | `{{if(total > 100, 'VIP', 'Standard')}}`           | `VIP` or `Standard`      |
 
 ### Band types
 

@@ -32,6 +32,7 @@ pnpm --filter @nextreport/engine-core exec vitest run src/__tests__/expression.t
 **Monorepo layout:** `packages/*` (7 internal + 1 publishable) and `apps/web` (Next.js).
 
 **Dependency graph (strict, ESLint-enforced):**
+
 ```
 schema (Zod, zero deps) ← engine-core ← renderer-html ← renderer-pdf
                           ↑                               ↑
