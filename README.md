@@ -73,12 +73,6 @@ NextReport Engine is built on the insight that **all five systems must be design
 | **Learning Curve**    |      Low       |     High      |    Medium     |   Medium    |     Medium      |          Medium           |        Medium-High        |
 | **Self-Hosted**       |      Yes       |      Yes      |      Yes      |     Yes     |       Yes       |            Yes            |            Yes            |
 
-**Key differences explained:**
-
-- **jsreport** is the closest open-source alternative. It's a mature Node.js platform (200K+ installations) with a template-engine approach — you write HTML/Handlebars templates rather than designing visually. It's powerful for developers comfortable with code-driven reports, but lacks a true WYSIWYG designer. Free tier is limited to 5 stored templates; enterprise starts at $495/instance.
-
-- **Syncfusion (Bold Reports)** offers a full-featured enterprise reporting suite with 30+ data connectors and RDL/RDLC format (Microsoft standard). However, it requires a .NET backend for report processing — the React component is a viewer wrapper, not a standalone engine. Community license is free for teams under $1M revenue; paid plans start around $450/year.
-
 ### Who Adopts This?
 
 Based on the market gap, NextReport is most valuable for:
@@ -295,13 +289,13 @@ External consumers send **simple, flat JSON data** — they never need to know a
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                   apps/web (Next.js)                 │
-│    Designer UI  │  Viewer UI  │  API Routes          │
-└────────┬────────┴──────┬──────┴──────┬───────────────┘
+│                   apps/web (Next.js)                │
+│    Designer UI  │  Viewer UI  │  API Routes         │
+└────────┬────────┴──────┬──────┴──────┬──────────────┘
          │               │             │
     ┌────┴────┐   ┌──────┴──────┐  ┌───┴────────────┐
-    │  ui-    │   │  ui-viewer  │  │  renderer-html  │
-    │designer │   │             │  │  renderer-pdf   │
+    │  ui-    │   │  ui-viewer  │  │  renderer-html │
+    │designer │   │             │  │  renderer-pdf  │
     └────┬────┘   └──────┬──────┘  └───┬────────────┘
          │               │             │
     ┌────┴────┐          │        ┌────┴────┐
