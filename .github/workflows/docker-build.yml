@@ -1,0 +1,70 @@
+name: Docker Build (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Image tag / version (e.g. 1.2.3 or my-feature). Defaults to "manual".'
+        required: false
+        default: 'manual'
+      push:
+        description: 'Push the image to GHCR after building?'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+permissions:
+  packages: write # push to GHCR
+  contents: read
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ghcr.io/nextreport/engine
+
+jobs:
+  docker-build:
+    name: Build & Push Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve image tag
+        id: tag
+        run: |
+          INPUT_VERSION="${{ inputs.version }}"
+          # Sanitise: strip leading 'v' and fall back to 'manual'
+          VERSION="${INPUT_VERSION:-manual}"
+          VERSION="${VERSION#v}"
+          echo "tag=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: ${{ inputs.push == 'true' }}
+          tags: ${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Image details
+        run: |
+          echo "Built image: $IMAGE_NAME:$TAG"
+          echo "Pushed: $PUSH"
+        env:
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          TAG: ${{ steps.tag.outputs.tag }}
+          PUSH: ${{ inputs.push }}
