@@ -694,7 +694,7 @@ The `@nextreport/engine` package bundles schema, engine-core, renderer-html, and
 
 ```tsx
 import { ReportViewer } from '@nextreport/ui-viewer'
-<ReportViewer report={schema} data={data} />
+;<ReportViewer report={schema} data={data} />
 ```
 
 ### Any Language via REST API

@@ -129,29 +129,48 @@ const schema = {
   dataSource: { type: 'json' as const },
   bands: [
     {
-      type: 'header' as const, height: 60,
+      type: 'header' as const,
+      height: 60,
       components: [
-        { type: 'text' as const, position: { x: 0, y: 10, width: 300, height: 30 },
-          content: '{{companyName}}', fontSize: 24, fontWeight: 'bold' as const }
-      ]
+        {
+          type: 'text' as const,
+          position: { x: 0, y: 10, width: 300, height: 30 },
+          content: '{{companyName}}',
+          fontSize: 24,
+          fontWeight: 'bold' as const,
+        },
+      ],
     },
     {
-      type: 'detail' as const, height: 25, dataBinding: 'items',
+      type: 'detail' as const,
+      height: 25,
+      dataBinding: 'items',
       components: [
-        { type: 'text' as const, position: { x: 0, y: 0, width: 200, height: 25 },
-          content: '{{item.name}}' },
-        { type: 'text' as const, position: { x: 300, y: 0, width: 100, height: 25 },
-          content: '{{formatCurrency(item.price, "USD")}}' }
-      ]
+        {
+          type: 'text' as const,
+          position: { x: 0, y: 0, width: 200, height: 25 },
+          content: '{{item.name}}',
+        },
+        {
+          type: 'text' as const,
+          position: { x: 300, y: 0, width: 100, height: 25 },
+          content: '{{formatCurrency(item.price, "USD")}}',
+        },
+      ],
     },
     {
-      type: 'footer' as const, height: 30,
+      type: 'footer' as const,
+      height: 30,
       components: [
-        { type: 'text' as const, position: { x: 300, y: 0, width: 100, height: 25 },
-          content: 'Total: {{formatCurrency(sum(items, "price"), "USD")}}', fontWeight: 'bold' as const }
-      ]
-    }
-  ]
+        {
+          type: 'text' as const,
+          position: { x: 300, y: 0, width: 100, height: 25 },
+          content: 'Total: {{formatCurrency(sum(items, "price"), "USD")}}',
+          fontWeight: 'bold' as const,
+        },
+      ],
+    },
+  ],
 }
 
 // Your data
@@ -160,7 +179,7 @@ const data = {
   items: [
     { name: 'Widget', price: 29.99 },
     { name: 'Gadget', price: 49.99 },
-  ]
+  ],
 }
 
 // Validate
