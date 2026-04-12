@@ -1,6 +1,6 @@
 {
   "name": "@nextreport/ui-viewer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Report viewer React component for NextReport Engine. Pagination, print, and PDF export.",
   "license": "MIT",
   "type": "module",
