@@ -17,10 +17,11 @@ Self-hosted, free forever             Managed, subscription-based
 ```
 
 Developer deneyimi:
+
 ```
 1. nextreport.io → Sign up
 2. Dashboard → Create Organization → Get API key
-3. Dashboard → Design template (visual designer)  
+3. Dashboard → Design template (visual designer)
 4. Any language:
    POST https://api.nextreport.io/v1/render
    Authorization: Bearer nrk_xxx
@@ -138,18 +139,18 @@ Sıfır kurulum. Sıfır Docker. Sıfır Chromium. Sıfır deployment.
 
 ## Tech Stack (Platform-specific)
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Next.js (same stack as engine) |
-| Auth | NextAuth.js or Clerk |
-| Database | PostgreSQL + Prisma |
-| Queue | BullMQ + Redis |
-| Storage | S3-compatible (templates, rendered outputs) |
-| Billing | Stripe |
-| Monitoring | PostHog or custom |
-| Infra | Docker, Kubernetes or Railway/Fly.io |
-| CDN | CloudFlare |
-| Engine | @nextreport/engine (OSS — npm package) |
+| Layer      | Technology                                  |
+| ---------- | ------------------------------------------- |
+| Frontend   | Next.js (same stack as engine)              |
+| Auth       | NextAuth.js or Clerk                        |
+| Database   | PostgreSQL + Prisma                         |
+| Queue      | BullMQ + Redis                              |
+| Storage    | S3-compatible (templates, rendered outputs) |
+| Billing    | Stripe                                      |
+| Monitoring | PostHog or custom                           |
+| Infra      | Docker, Kubernetes or Railway/Fly.io        |
+| CDN        | CloudFlare                                  |
+| Engine     | @nextreport/engine (OSS — npm package)      |
 
 ---
 
@@ -175,20 +176,20 @@ nextreport/platform     → SaaS platform (yeni repo)
 
 ## Pricing Model
 
-| | Free | Pro | Enterprise |
-|---|---|---|---|
-| Renders/month | 100 | 10,000 | Unlimited |
-| Templates | 3 | Unlimited | Unlimited |
-| Team members | 1 | 10 | Unlimited |
-| PDF export | Yes | Yes | Yes |
-| Visual designer | Yes | Yes | Yes |
-| Template marketplace | Browse | Browse + Publish | Browse + Publish + Premium |
-| API access | Yes | Yes | Yes + Webhooks |
-| Custom branding | No | Yes | Yes |
-| SSO/SAML | No | No | Yes |
-| SLA | No | No | 99.9% |
-| Support | Community | Email | Dedicated |
-| Price | $0 | $29/mo | Custom |
+|                      | Free      | Pro              | Enterprise                 |
+| -------------------- | --------- | ---------------- | -------------------------- |
+| Renders/month        | 100       | 10,000           | Unlimited                  |
+| Templates            | 3         | Unlimited        | Unlimited                  |
+| Team members         | 1         | 10               | Unlimited                  |
+| PDF export           | Yes       | Yes              | Yes                        |
+| Visual designer      | Yes       | Yes              | Yes                        |
+| Template marketplace | Browse    | Browse + Publish | Browse + Publish + Premium |
+| API access           | Yes       | Yes              | Yes + Webhooks             |
+| Custom branding      | No        | Yes              | Yes                        |
+| SSO/SAML             | No        | No               | Yes                        |
+| SLA                  | No        | No               | 99.9%                      |
+| Support              | Community | Email            | Dedicated                  |
+| Price                | $0        | $29/mo           | Custom                     |
 
 ---
 
@@ -215,6 +216,7 @@ Mevcut engine kullanıcıları platform'a nasıl geçer:
 ## Implementation Phases
 
 ### Phase 3.1 — Foundation (MVP Platform)
+
 - User registration + login
 - Organization creation
 - API key generation
@@ -223,6 +225,7 @@ Mevcut engine kullanıcıları platform'a nasıl geçer:
 - Simple dashboard
 
 ### Phase 3.2 — Production Ready
+
 - Billing integration (Stripe)
 - Queue-based rendering
 - Usage metering
@@ -230,6 +233,7 @@ Mevcut engine kullanıcıları platform'a nasıl geçer:
 - Audit log
 
 ### Phase 3.3 — Growth
+
 - Template marketplace
 - Team management (roles)
 - Observability dashboard
@@ -237,6 +241,7 @@ Mevcut engine kullanıcıları platform'a nasıl geçer:
 - Custom branding
 
 ### Phase 3.4 — Enterprise
+
 - SSO/SAML
 - Dedicated infrastructure
 - SLA guarantees
@@ -255,6 +260,7 @@ Platform is a SEPARATE repository (`nextreport/platform`), not part of the engin
 4. **Tech stack differences** — Platform needs DB, auth, billing — engine doesn't.
 
 Platform DEPENDS ON engine as an npm package:
+
 ```json
 { "dependencies": { "@nextreport/engine": "^0.1.5" } }
 ```
@@ -263,4 +269,4 @@ Engine never depends on platform. One-way dependency.
 
 ---
 
-*This document is a strategic plan, not a committed roadmap. Timeline and scope may change based on engine maturity and community feedback.*
+_This document is a strategic plan, not a committed roadmap. Timeline and scope may change based on engine maturity and community feedback._

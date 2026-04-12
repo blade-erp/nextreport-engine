@@ -11,6 +11,7 @@
 **Neden:** En büyük friction noktası. Backend developer yeni template ekleyemiyor, designer'dan export edip manuel kopyalaması gerekiyor.
 
 **Scope:**
+
 - `POST /api/templates` — yeni template kaydet
 - `GET /api/templates` — template listele
 - `PUT /api/templates/:id` — güncelle
@@ -24,6 +25,7 @@
 **Neden:** Faturada logo olmadan production kullanım zor.
 
 **Scope:**
+
 - URL-based image (`https://...`)
 - Base64 inline image
 - Position + size (absolute, like text)
@@ -36,6 +38,7 @@
 **Neden:** Invoice, shipping label, inventory — QR/barcode olmadan eksik.
 
 **Scope:**
+
 - QR Code generation
 - Code128 barcode
 - Expression-bound value: `{{ orderId }}` → QR code
@@ -46,6 +49,7 @@
 **Neden:** "Departman bazlı çalışan listesi + departman subtotal" gibi raporlar yapılamıyor.
 
 **Scope:**
+
 - `group-header` band — gruplama başlığı
 - `group-footer` band — grup sonu (subtotal, count)
 - `groupBy` field on detail band
@@ -57,6 +61,7 @@
 **Neden:** Her sayfada tekrarlayan header (şirket adı) ve footer (sayfa numarası) gerekli.
 
 **Scope:**
+
 - `page-header` band — her sayfa başında
 - `page-footer` band — her sayfa sonunda
 - `{{pageNumber}}` ve `{{totalPages}}` expression'ları
@@ -65,6 +70,7 @@
 ## 2.6 Designer UX Improvements
 
 **Scope:**
+
 - Drag & drop component placement (toolbox → canvas)
 - Resize handles (component boyutlandırma)
 - Keyboard shortcuts (Ctrl+Z, Delete, Ctrl+C/V)
