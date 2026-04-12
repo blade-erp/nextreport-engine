@@ -1,15 +1,25 @@
 {
   "name": "@nextreport/renderer-pdf",
   "version": "0.1.0",
-  "private": true,
+  "description": "PDF renderer for NextReport Engine. Converts HTML to PDF via Puppeteer.",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nextreport/engine.git",
+    "directory": "packages/renderer-pdf"
   },
   "scripts": {
     "build": "tsc",

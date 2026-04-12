@@ -102,28 +102,28 @@ importers:
 
   packages/canvas:
     dependencies:
-      '@nextreport/schema':
-        specifier: workspace:*
-        version: link:../schema
       konva:
         specifier: ^10.2.5
         version: 10.2.5
-      react:
-        specifier: ^19.2.5
-        version: 19.2.5
-      react-dom:
-        specifier: ^19.2.5
-        version: 19.2.5(react@19.2.5)
       react-konva:
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.14)(konva@10.2.5)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
     devDependencies:
+      '@nextreport/schema':
+        specifier: workspace:*
+        version: link:../schema
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.2.5
+        version: 19.2.5
+      react-dom:
+        specifier: ^19.2.5
+        version: 19.2.5(react@19.2.5)
       typescript:
         specifier: ^6.0.2
         version: 6.0.2
@@ -250,12 +250,6 @@ importers:
       immer:
         specifier: ^11.1.4
         version: 11.1.4
-      react:
-        specifier: ^19.2.5
-        version: 19.2.5
-      react-dom:
-        specifier: ^19.2.5
-        version: 19.2.5(react@19.2.5)
       zustand:
         specifier: ^5.0.0
         version: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.5)
@@ -269,6 +263,12 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^4.1.4
         version: 4.1.4(vitest@4.1.4)
+      react:
+        specifier: ^19.2.5
+        version: 19.2.5
+      react-dom:
+        specifier: ^19.2.5
+        version: 19.2.5(react@19.2.5)
       typescript:
         specifier: ^6.0.2
         version: 6.0.2
@@ -287,12 +287,6 @@ importers:
       '@nextreport/schema':
         specifier: workspace:*
         version: link:../schema
-      react:
-        specifier: ^19.2.5
-        version: 19.2.5
-      react-dom:
-        specifier: ^19.2.5
-        version: 19.2.5(react@19.2.5)
     devDependencies:
       '@types/react':
         specifier: ^19.2.14
@@ -300,6 +294,12 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.2.5
+        version: 19.2.5
+      react-dom:
+        specifier: ^19.2.5
+        version: 19.2.5(react@19.2.5)
       typescript:
         specifier: ^6.0.2
         version: 6.0.2

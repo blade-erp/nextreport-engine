@@ -1,16 +1,23 @@
 {
   "name": "@nextreport/ui-viewer",
   "version": "0.1.0",
-  "private": true,
+  "description": "Report viewer React component for NextReport Engine. Pagination, print, and PDF export.",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
     }
   },
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
@@ -18,15 +25,25 @@
     "lint": "eslint src/"
   },
   "dependencies": {
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
+    "@nextreport/engine-core": "workspace:*",
     "@nextreport/renderer-html": "workspace:*",
-    "@nextreport/schema": "workspace:*",
-    "@nextreport/engine-core": "workspace:*"
+    "@nextreport/schema": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "typescript": "^6.0.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nextreport/engine",
+    "directory": "packages/ui-viewer"
+  },
+  "homepage": "https://github.com/nextreport/engine#readme"
 }
