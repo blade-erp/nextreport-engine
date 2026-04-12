@@ -194,7 +194,8 @@ export function CanvasArea() {
     }
   }
 
-  // Component dragging (move)
+  // Component dragging (move) — two-phase: pending (waiting for threshold) → active (real drag)
+  const DRAG_THRESHOLD = 3
   const [dragging, setDragging] = useState<{
     bandIndex: number
     compIndex: number
@@ -202,6 +203,7 @@ export function CanvasArea() {
     startY: number
     origX: number
     origY: number
+    active: boolean
   } | null>(null)
 
   const handleComponentMouseDown = (e: React.MouseEvent, bandIndex: number, compIndex: number) => {
@@ -216,6 +218,7 @@ export function CanvasArea() {
       startY: e.clientY,
       origX: comp.position.x,
       origY: comp.position.y,
+      active: false,
     })
   }
 
@@ -223,18 +226,27 @@ export function CanvasArea() {
     if (!dragging) return
 
     const handleMouseMove = (e: MouseEvent) => {
-      const dx = (e.clientX - dragging.startX) / zoom
-      const dy = (e.clientY - dragging.startY) / zoom
+      const dx = e.clientX - dragging.startX
+      const dy = e.clientY - dragging.startY
+
+      // Require minimum movement before starting actual drag
+      if (!dragging.active) {
+        if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return
+        setDragging({ ...dragging, active: true })
+      }
+
       updateComponentPosition(dragging.bandIndex, dragging.compIndex, {
-        x: Math.max(0, Math.round(dragging.origX + dx)),
-        y: Math.max(0, Math.round(dragging.origY + dy)),
+        x: Math.max(0, Math.round(dragging.origX + dx / zoom)),
+        y: Math.max(0, Math.round(dragging.origY + dy / zoom)),
       })
     }
 
     const handleMouseUp = () => {
-      const comp = report.bands[dragging.bandIndex]?.components[dragging.compIndex]
-      if (comp && (comp.position.x !== dragging.origX || comp.position.y !== dragging.origY)) {
-        pushHistory()
+      if (dragging.active) {
+        const comp = report.bands[dragging.bandIndex]?.components[dragging.compIndex]
+        if (comp && (comp.position.x !== dragging.origX || comp.position.y !== dragging.origY)) {
+          pushHistory()
+        }
       }
       setDragging(null)
     }
@@ -445,6 +457,7 @@ export function CanvasArea() {
                   <div
                     key={compIndex}
                     onMouseDown={(e) => handleComponentMouseDown(e, bandIndex, compIndex)}
+                    onClick={(e) => e.stopPropagation()}
                     style={{
                       position: 'absolute',
                       left: pos.x * zoom,
@@ -454,7 +467,7 @@ export function CanvasArea() {
                       border: isSelected ? '2px dashed #2196f3' : '1px dashed #bdbdbd',
                       boxSizing: 'border-box',
                       background: isSelected ? 'rgba(33,150,243,0.06)' : 'transparent',
-                      cursor: dragging ? 'grabbing' : 'grab',
+                      cursor: dragging?.active ? 'grabbing' : 'grab',
                       display: 'flex',
                       alignItems: 'center',
                       overflow: 'hidden',
