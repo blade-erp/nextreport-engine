@@ -17,7 +17,7 @@ on:
           - 'false'
 
 permissions:
-  packages: write # push to GHCR
+  packages: write
   contents: read
 
 env:
@@ -30,13 +30,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -44,15 +44,15 @@ jobs:
 
       - name: Resolve image tag
         id: tag
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
-          INPUT_VERSION="${{ inputs.version }}"
-          # Sanitise: strip leading 'v' and fall back to 'manual'
           VERSION="${INPUT_VERSION:-manual}"
           VERSION="${VERSION#v}"
           echo "tag=${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: ${{ inputs.push == 'true' }}
@@ -61,10 +61,10 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Image details
-        run: |
-          echo "Built image: $IMAGE_NAME:$TAG"
-          echo "Pushed: $PUSH"
         env:
-          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          IMAGE_NAME_VAL: ${{ env.IMAGE_NAME }}
           TAG: ${{ steps.tag.outputs.tag }}
           PUSH: ${{ inputs.push }}
+        run: |
+          echo "Built image: $IMAGE_NAME_VAL:$TAG"
+          echo "Pushed: $PUSH"

@@ -22,15 +22,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
         with:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -49,15 +49,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
         with:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -73,42 +73,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
         with:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Install system dependencies for Puppeteer / Chromium
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            chromium-browser \
-            fonts-liberation \
-            fonts-noto-color-emoji
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium for Puppeteer
+        run: npx puppeteer browsers install chrome
+        working-directory: packages/renderer-pdf
 
       - name: Run tests
         run: pnpm test
         env:
-          # Point Puppeteer at the system Chromium to avoid downloading it
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
-          PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
-          # Required for Chromium to run in a sandboxed CI environment
-          CHROMIUM_FLAGS: '--no-sandbox --disable-setuid-sandbox'
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results
           path: |
@@ -120,18 +112,17 @@ jobs:
   build-docker:
     name: Docker Build (verify)
     runs-on: ubuntu-latest
-    # Only run on push to main, not on PRs — saves runner time
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [lint-and-format, typecheck, test]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image (no push — verification only)
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: false
