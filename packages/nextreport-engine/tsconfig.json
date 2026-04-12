@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["src/**/*.ts"],
+  "references": [
+    { "path": "../schema" },
+    { "path": "../engine-core" },
+    { "path": "../renderer-html" },
+    { "path": "../renderer-pdf" }
+  ]
+}

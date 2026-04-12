@@ -17,5 +17,6 @@ packages/*/src/**/*.d.ts.map
 .playwright-mcp/
 screenshots/
 superpowers/
+npmjs-token
 
 
