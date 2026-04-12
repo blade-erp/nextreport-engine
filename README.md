@@ -17,6 +17,14 @@
 
 ---
 
+<p align="center">
+  <img src="docs/assets/designer-screenshot.png" alt="NextReport Designer — Visual report builder with live preview" width="900" />
+  <br/>
+  <em>Visual Designer with component toolbox, band manager, data fields, property editor, and live preview</em>
+</p>
+
+---
+
 NextReport Engine is an open-source, headless reporting engine with a visual designer and runtime viewer. It replaces legacy reporting tools (JasperReports, FastReport, Crystal Reports) with a modern, web-native stack.
 
 **Who is this for?**
