@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { useDesignerStore } from '../store/index.js'
 import type { TextComponent, TableComponent } from '@nextreport/schema'
 import type { ResolvedElement } from '@nextreport/engine-core'
+import type { RenderResult } from '@nextreport/engine-core'
 
 const BAND_COLORS: Record<string, string> = {
   header: '#4caf50',
@@ -66,22 +67,31 @@ export function CanvasArea() {
   const zoom = useDesignerStore((s) => s.zoom)
 
   /**
-   * Try to run renderReport synchronously to get fully-resolved element properties
+   * Async-load engine-core and render to get fully-resolved element properties
    * (supports function expressions like {{formatCurrency(price, 'TRY')}}).
    * Falls back gracefully on any error.
    */
-  const resolvedMap = useMemo((): Map<string, ResolvedElement> | null => {
-    if (Object.keys(sampleData).length === 0) return null
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { renderReport } = require('@nextreport/engine-core') as typeof import('@nextreport/engine-core')
-      const ir = renderReport(report, sampleData)
-      // Flatten all page elements into one list (use first page only for canvas display)
-      const allElements = ir.pages.flatMap((p) => p.elements)
-      return buildResolvedMap(allElements, report.bands as Array<{ type: string; components: unknown[] }>)
-    } catch {
-      return null
+  const [resolvedMap, setResolvedMap] = useState<Map<string, ResolvedElement> | null>(null)
+
+  useEffect(() => {
+    if (Object.keys(sampleData).length === 0) {
+      setResolvedMap(null)
+      return
     }
+    let cancelled = false
+    import('@nextreport/engine-core').then(({ renderReport }) => {
+      if (cancelled) return
+      try {
+        const ir = renderReport(report, sampleData)
+        const allElements = ir.pages.flatMap((p: { elements: ResolvedElement[] }) => p.elements)
+        setResolvedMap(buildResolvedMap(allElements, report.bands as Array<{ type: string; components: unknown[] }>))
+      } catch {
+        setResolvedMap(null)
+      }
+    }).catch(() => {
+      if (!cancelled) setResolvedMap(null)
+    })
+    return () => { cancelled = true }
   }, [report, sampleData])
 
   /**

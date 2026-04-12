@@ -105,7 +105,7 @@ Based on the market gap, NextReport is most valuable for:
 
 ### Prerequisites
 
-- Node.js >= 22
+- Node.js >= 24
 - pnpm 10.33+
 
 ### Install and Run
