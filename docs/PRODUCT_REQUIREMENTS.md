@@ -804,8 +804,3 @@ Phase 2+: UI i18n (designer and viewer in multiple languages), RTL support.
 - [README.md](../README.md) — Project overview, quick start, contributing guide
 - [ROADMAP.md](ROADMAP.md) — Detailed product roadmap with timeline
 - [VISION.md](VISION.md) — Market analysis, strategy, business model thinking
-- [Technical Design Spec](superpowers/specs/2026-04-12-nextreport-engine-design.md) — Detailed technical specification
-- [Phase A Plan](superpowers/plans/2026-04-12-phase-a-foundation.md) — Foundation implementation plan
-- [Phase B Plan](superpowers/plans/2026-04-12-phase-b-output.md) — Output layer implementation plan
-- [Phase C Plan](superpowers/plans/2026-04-12-phase-c-visual.md) — Visual layer implementation plan
-- [Phase D Plan](superpowers/plans/2026-04-12-phase-d-polish.md) — Polish implementation plan
