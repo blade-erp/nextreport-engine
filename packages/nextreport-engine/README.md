@@ -111,7 +111,7 @@ Based on the market gap, NextReport is most valuable for:
 ### Install and Run
 
 ```bash
-git clone https://github.com/your-org/nextreport-engine.git
+git clone https://github.com/nextreport/engine.git
 cd nextreport-engine
 pnpm install
 pnpm run dev
@@ -564,7 +564,7 @@ Create a `.json` template + `.data.json` sample data in `apps/web/templates/`. G
 ### Development Setup
 
 ```bash
-git clone https://github.com/your-org/nextreport-engine.git
+git clone https://github.com/nextreport/engine.git
 cd nextreport-engine
 pnpm install
 pnpm test           # Run all 190 tests

@@ -688,7 +688,7 @@ const html = renderToHtml(ir)
 The `@nextreport/engine` package bundles schema, engine-core, renderer-html, and renderer-pdf into a single installable package with ESM, CJS, and full TypeScript declarations.
 
 - **npm:** https://www.npmjs.com/package/@nextreport/engine
-- **GitHub:** https://github.com/cevheri/nextreport-engine
+- **GitHub:** https://github.com/nextreport/engine
 
 ### React / Next.js (Viewer Component)
 

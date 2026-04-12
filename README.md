@@ -188,7 +188,7 @@ To run the complete platform with visual designer, viewer, and API server:
 ### Clone and Run
 
 ```bash
-git clone https://github.com/cevheri/nextreport-engine.git
+git clone https://github.com/nextreport/engine.git
 cd nextreport-engine
 pnpm install
 pnpm run dev
@@ -643,7 +643,7 @@ Create a `.json` template + `.data.json` sample data in `apps/web/templates/`. G
 ### Development Setup
 
 ```bash
-git clone https://github.com/cevheri/nextreport-engine.git
+git clone https://github.com/nextreport/engine.git
 cd nextreport-engine
 pnpm install
 pnpm test           # Run all 190 tests

@@ -52,11 +52,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cevheri/nextreport-engine"
+    "url": "https://github.com/nextreport/engine"
   },
-  "homepage": "https://github.com/cevheri/nextreport-engine#readme",
+  "homepage": "https://github.com/nextreport/engine#readme",
   "bugs": {
-    "url": "https://github.com/cevheri/nextreport-engine/issues"
+    "url": "https://github.com/nextreport/engine/issues"
   },
   "dependencies": {
     "zod": "^3.25.0",
