@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDesignerStore } from '../store/index.js'
 
 interface DesignerToolbarProps {
@@ -14,6 +14,11 @@ export function DesignerToolbar({ showPreview, togglePreview }: DesignerToolbarP
   const zoom = useDesignerStore((s) => s.zoom)
   const setZoom = useDesignerStore((s) => s.setZoom)
   const report = useDesignerStore((s) => s.report)
+  const setReport = useDesignerStore((s) => s.setReport)
+  const setSampleData = useDesignerStore((s) => s.setSampleData)
+
+  const [saving, setSaving] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const handleExportJson = () => {
     const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' })
@@ -23,6 +28,85 @@ export function DesignerToolbar({ showPreview, togglePreview }: DesignerToolbarP
     a.download = 'report.json'
     a.click()
     URL.revokeObjectURL(url)
+  }
+
+  const handleImportJson = () => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.json'
+    input.onchange = async () => {
+      const file = input.files?.[0]
+      if (!file) return
+      try {
+        const text = await file.text()
+        const parsed = JSON.parse(text)
+        setReport(parsed)
+      } catch {
+        // Invalid file
+      }
+    }
+    input.click()
+  }
+
+  const handleSave = async () => {
+    const name = prompt('Template name:')
+    if (!name) return
+
+    setSaving(true)
+    try {
+      const sampleData = useDesignerStore.getState().sampleData
+      const res = await fetch('/api/templates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, template: report, sampleData }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        alert(`Saved as: ${data.meta.name} (${data.meta.id})`)
+      }
+    } catch {
+      // Save failed
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleLoad = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/templates')
+      if (!res.ok) return
+      const { templates } = await res.json()
+      if (!templates?.length) {
+        alert('No saved templates found')
+        return
+      }
+
+      const list = templates
+        .map(
+          (t: { id: string; name: string }, i: number) =>
+            `${i + 1}. ${t.name} (${t.id.slice(0, 8)}...)`,
+        )
+        .join('\n')
+      const choice = prompt(`Select template (enter number):\n\n${list}`)
+      if (!choice) return
+
+      const idx = parseInt(choice, 10) - 1
+      const selected = templates[idx]
+      if (!selected) return
+
+      const detail = await fetch(`/api/templates/${selected.id}`)
+      if (!detail.ok) return
+      const data = await detail.json()
+      setReport(data.template)
+      if (data.sampleData && Object.keys(data.sampleData).length > 0) {
+        setSampleData(data.sampleData)
+      }
+    } catch {
+      // Load failed
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleOpenViewer = () => {
@@ -97,7 +181,7 @@ export function DesignerToolbar({ showPreview, togglePreview }: DesignerToolbarP
           style={canUndo ? btnStyle : disabledBtnStyle}
           disabled={!canUndo}
           onClick={undo}
-          title="Undo"
+          title="Undo (Ctrl+Z)"
         >
           &#8617; Undo
         </button>
@@ -105,7 +189,7 @@ export function DesignerToolbar({ showPreview, togglePreview }: DesignerToolbarP
           style={canRedo ? btnStyle : disabledBtnStyle}
           disabled={!canRedo}
           onClick={redo}
-          title="Redo"
+          title="Redo (Ctrl+Y)"
         >
           Redo &#8618;
         </button>
@@ -121,10 +205,20 @@ export function DesignerToolbar({ showPreview, togglePreview }: DesignerToolbarP
         </button>
       </div>
 
-      {/* Right: Preview / Export */}
+      {/* Right: Save / Load / Preview / Export */}
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <button style={accentBtnStyle} onClick={handleSave} disabled={saving}>
+          {saving ? 'Saving...' : 'Save'}
+        </button>
+        <button style={btnStyle} onClick={handleLoad} disabled={loading}>
+          {loading ? 'Loading...' : 'Load'}
+        </button>
+        <div style={{ width: 1, height: 20, background: '#3d3d5c', margin: '0 2px' }} />
         <button style={btnStyle} onClick={handleExportJson}>
           Export JSON
+        </button>
+        <button style={secondaryBtnStyle} onClick={handleImportJson}>
+          Import
         </button>
         <button
           style={showPreview ? activePreviewBtnStyle : accentBtnStyle}

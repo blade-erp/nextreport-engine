@@ -14,41 +14,52 @@ export function calculateLayout(bands: ProcessedBand[], pageConfig: PageConfig):
   const dims = PAGE_DIMENSIONS[pageConfig.size]
   if (!dims) throw new Error(`Unknown page size: ${pageConfig.size}`)
 
-  let _pageWidth = dims.width
+  let pageWidth = dims.width
   let pageHeight = dims.height
 
-  // Swap dimensions for landscape orientation
   if (pageConfig.orientation === 'landscape') {
-    _pageWidth = dims.height
+    pageWidth = dims.height
     pageHeight = dims.width
   }
 
+  // Suppress unused variable lint — pageWidth used in future features
+  void pageWidth
+
   const { top: marginTop, bottom: marginBottom, left: marginLeft } = pageConfig.margins
 
-  const usableHeight = pageHeight - marginTop - marginBottom
+  // Separate page-header/footer from content bands
+  const pageHeaderBands = bands.filter((b) => b.bandType === 'page-header')
+  const pageFooterBands = bands.filter((b) => b.bandType === 'page-footer')
+  const contentBands = bands.filter(
+    (b) => b.bandType !== 'page-header' && b.bandType !== 'page-footer',
+  )
 
-  const pages: Page[] = []
+  const pageHeaderHeight = pageHeaderBands.reduce((sum, b) => sum + b.height, 0)
+  const pageFooterHeight = pageFooterBands.reduce((sum, b) => sum + b.height, 0)
+
+  const usableHeight = pageHeight - marginTop - marginBottom - pageHeaderHeight - pageFooterHeight
+
+  // First pass: paginate content bands
+  const rawPages: ResolvedElement[][] = []
   let currentY = 0
   let currentPageElements: ResolvedElement[] = []
-  let pageNumber = 1
 
-  for (const band of bands) {
-    // Check if we need a page break
+  for (const band of contentBands) {
     if (currentY + band.height > usableHeight && currentPageElements.length > 0) {
-      pages.push({ number: pageNumber, elements: currentPageElements })
-      pageNumber++
+      rawPages.push(currentPageElements)
       currentPageElements = []
       currentY = 0
     }
 
-    // Place each element in absolute coordinates
+    const contentStartY = marginTop + pageHeaderHeight
+
     for (const element of band.elements) {
       currentPageElements.push({
         ...element,
         position: {
           ...element.position,
           x: marginLeft + element.position.x,
-          y: marginTop + currentY + element.position.y,
+          y: contentStartY + currentY + element.position.y,
         },
       })
     }
@@ -56,10 +67,86 @@ export function calculateLayout(bands: ProcessedBand[], pageConfig: PageConfig):
     currentY += band.height
   }
 
-  // Flush remaining elements
   if (currentPageElements.length > 0) {
-    pages.push({ number: pageNumber, elements: currentPageElements })
+    rawPages.push(currentPageElements)
   }
 
+  // Ensure at least one page (for page headers/footers even with no content)
+  if (rawPages.length === 0 && (pageHeaderBands.length > 0 || pageFooterBands.length > 0)) {
+    rawPages.push([])
+  }
+
+  const totalPages = rawPages.length
+
+  // Second pass: inject page-header/footer elements into each page with page variables
+  const pages: Page[] = rawPages.map((elements, index) => {
+    const pageNumber = index + 1
+    const allElements: ResolvedElement[] = []
+
+    // Page header at top of page
+    let headerY = marginTop
+    for (const band of pageHeaderBands) {
+      for (const element of band.elements) {
+        allElements.push({
+          ...element,
+          position: {
+            ...element.position,
+            x: marginLeft + element.position.x,
+            y: headerY + element.position.y,
+          },
+          properties: resolvePageVariables(element.properties, pageNumber, totalPages),
+        })
+      }
+      headerY += band.height
+    }
+
+    // Content elements
+    allElements.push(
+      ...elements.map((el) => ({
+        ...el,
+        properties: resolvePageVariables(el.properties, pageNumber, totalPages),
+      })),
+    )
+
+    // Page footer at bottom of page
+    let footerY = pageHeight - marginBottom - pageFooterHeight
+    for (const band of pageFooterBands) {
+      for (const element of band.elements) {
+        allElements.push({
+          ...element,
+          position: {
+            ...element.position,
+            x: marginLeft + element.position.x,
+            y: footerY + element.position.y,
+          },
+          properties: resolvePageVariables(element.properties, pageNumber, totalPages),
+        })
+      }
+      footerY += band.height
+    }
+
+    return { number: pageNumber, elements: allElements }
+  })
+
   return pages
+}
+
+function resolvePageVariables(
+  properties: Record<string, unknown>,
+  pageNumber: number,
+  totalPages: number,
+): Record<string, unknown> {
+  const resolved: Record<string, unknown> = {}
+
+  for (const [key, value] of Object.entries(properties)) {
+    if (typeof value === 'string') {
+      resolved[key] = value
+        .replace(/\{\{pageNumber\}\}/g, String(pageNumber))
+        .replace(/\{\{totalPages\}\}/g, String(totalPages))
+    } else {
+      resolved[key] = value
+    }
+  }
+
+  return resolved
 }

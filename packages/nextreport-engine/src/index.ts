@@ -17,6 +17,8 @@ export {
   TextComponentSchema,
   TableComponentSchema,
   TableColumnSchema,
+  ImageComponentSchema,
+  BarcodeComponentSchema,
   PositionSchema,
   getReportJsonSchema,
 } from '@nextreport/schema'
@@ -36,6 +38,8 @@ export type {
   TextComponent,
   TableComponent,
   TableColumn,
+  ImageComponent,
+  BarcodeComponent,
   Position,
 } from '@nextreport/schema'
 

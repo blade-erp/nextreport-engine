@@ -27,8 +27,29 @@ export const TableComponentSchema = z.object({
 })
 export type TableComponent = z.infer<typeof TableComponentSchema>
 
+export const ImageComponentSchema = z.object({
+  type: z.literal('image'),
+  position: PositionSchema,
+  src: z.string(),
+  alt: z.string().default(''),
+  objectFit: z.enum(['contain', 'cover', 'fill']).default('contain'),
+})
+export type ImageComponent = z.infer<typeof ImageComponentSchema>
+
+export const BarcodeComponentSchema = z.object({
+  type: z.literal('barcode'),
+  position: PositionSchema,
+  value: z.string(),
+  format: z.enum(['qr', 'code128']).default('qr'),
+  color: z.string().default('#000000'),
+  backgroundColor: z.string().default('#ffffff'),
+})
+export type BarcodeComponent = z.infer<typeof BarcodeComponentSchema>
+
 export const ComponentSchema = z.discriminatedUnion('type', [
   TextComponentSchema,
   TableComponentSchema,
+  ImageComponentSchema,
+  BarcodeComponentSchema,
 ])
 export type Component = z.infer<typeof ComponentSchema>

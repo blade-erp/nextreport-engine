@@ -1,6 +1,6 @@
 {
   "name": "@nextreport/renderer-html",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "HTML renderer for NextReport Engine. Converts intermediate representation to self-contained HTML.",
   "license": "MIT",
   "type": "module",
@@ -31,10 +31,12 @@
     "lint": "eslint src/"
   },
   "dependencies": {
+    "@nextreport/engine-core": "workspace:*",
     "@nextreport/schema": "workspace:*",
-    "@nextreport/engine-core": "workspace:*"
+    "bwip-js": "^4.9.0"
   },
   "devDependencies": {
+    "@types/bwip-js": "^3.2.3",
     "@vitest/coverage-v8": "^4.1.4",
     "typescript": "^6.0.2",
     "vitest": "^4.1.4"

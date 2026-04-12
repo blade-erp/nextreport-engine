@@ -6,9 +6,21 @@ const BAND_COLORS: Record<string, string> = {
   header: '#4caf50',
   detail: '#e91e63',
   footer: '#3f51b5',
+  'group-header': '#ff9800',
+  'group-footer': '#ff5722',
+  'page-header': '#00bcd4',
+  'page-footer': '#009688',
 }
 
-const BAND_TYPES: BandType[] = ['header', 'detail', 'footer']
+const BAND_TYPES: BandType[] = [
+  'header',
+  'detail',
+  'footer',
+  'group-header',
+  'group-footer',
+  'page-header',
+  'page-footer',
+]
 
 export function BandManager() {
   const report = useDesignerStore((s) => s.report)

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDesignerStore } from '../store/index.js'
-import type { TextComponent } from '@nextreport/schema'
+import type { TextComponent, ImageComponent, BarcodeComponent } from '@nextreport/schema'
 
 const SECTION: React.CSSProperties = {
   padding: '12px 12px 8px',
@@ -207,6 +207,117 @@ export function PropertyPanel() {
                       {align.charAt(0).toUpperCase() + align.slice(1)}
                     </button>
                   ))}
+                </div>
+              </div>
+            </div>
+          )
+        })()}
+
+      {/* Image component properties */}
+      {component.type === 'image' &&
+        (() => {
+          const ic = component as ImageComponent
+          return (
+            <div style={SECTION}>
+              <div style={LABEL}>Image</div>
+
+              <div style={FIELD_GROUP}>
+                <label style={FIELD_LABEL}>Source (URL or base64)</label>
+                <input
+                  style={INPUT}
+                  type="text"
+                  value={ic.src}
+                  onChange={(e) => handleProp('src', e.target.value)}
+                  placeholder="https://... or {{companyLogo}}"
+                />
+              </div>
+
+              <div style={FIELD_GROUP}>
+                <label style={FIELD_LABEL}>Alt Text</label>
+                <input
+                  style={INPUT}
+                  type="text"
+                  value={ic.alt}
+                  onChange={(e) => handleProp('alt', e.target.value)}
+                  placeholder="Description"
+                />
+              </div>
+
+              <div style={FIELD_GROUP}>
+                <label style={FIELD_LABEL}>Object Fit</label>
+                <div style={{ display: 'flex', gap: 4 }}>
+                  {(['contain', 'cover', 'fill'] as const).map((fit) => (
+                    <button
+                      key={fit}
+                      style={TOGGLE_BTN(ic.objectFit === fit)}
+                      onClick={() => handleProp('objectFit', fit)}
+                    >
+                      {fit.charAt(0).toUpperCase() + fit.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )
+        })()}
+
+      {/* Barcode component properties */}
+      {component.type === 'barcode' &&
+        (() => {
+          const bc = component as BarcodeComponent
+          return (
+            <div style={SECTION}>
+              <div style={LABEL}>Barcode</div>
+
+              <div style={FIELD_GROUP}>
+                <label style={FIELD_LABEL}>Value</label>
+                <input
+                  style={INPUT}
+                  type="text"
+                  value={bc.value}
+                  onChange={(e) => handleProp('value', e.target.value)}
+                  placeholder="{{orderId}} or static value"
+                />
+              </div>
+
+              <div style={FIELD_GROUP}>
+                <label style={FIELD_LABEL}>Format</label>
+                <div style={{ display: 'flex', gap: 4 }}>
+                  <button
+                    style={TOGGLE_BTN(bc.format === 'qr')}
+                    onClick={() => handleProp('format', 'qr')}
+                  >
+                    QR Code
+                  </button>
+                  <button
+                    style={TOGGLE_BTN(bc.format === 'code128')}
+                    onClick={() => handleProp('format', 'code128')}
+                  >
+                    Code128
+                  </button>
+                </div>
+              </div>
+
+              <div style={FIELD_GROUP}>
+                <label style={FIELD_LABEL}>Color</label>
+                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                  <span
+                    style={{
+                      width: 22,
+                      height: 22,
+                      borderRadius: 3,
+                      background: bc.color,
+                      border: '1px solid #3d3d5c',
+                      flexShrink: 0,
+                    }}
+                  />
+                  <input
+                    style={INPUT}
+                    type="text"
+                    value={bc.color}
+                    onChange={(e) => handleProp('color', e.target.value)}
+                    placeholder="#000000"
+                  />
                 </div>
               </div>
             </div>

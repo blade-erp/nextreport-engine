@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { TextComponentSchema, TableComponentSchema, ComponentSchema } from '../index.js'
+import {
+  TextComponentSchema,
+  TableComponentSchema,
+  ImageComponentSchema,
+  BarcodeComponentSchema,
+  ComponentSchema,
+} from '../index.js'
 
 const validPosition = { x: 0, y: 0, width: 100, height: 50 }
 
@@ -132,11 +138,191 @@ describe('ComponentSchema (discriminated union)', () => {
     }
   })
 
+  it('should parse an image component', () => {
+    const result = ComponentSchema.safeParse({
+      type: 'image',
+      position: validPosition,
+      src: 'https://example.com/logo.png',
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.type).toBe('image')
+    }
+  })
+
   it('should reject an unknown component type', () => {
     const result = ComponentSchema.safeParse({
+      type: 'chart',
+      position: validPosition,
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
+describe('ImageComponentSchema', () => {
+  it('should accept a valid image with URL', () => {
+    const result = ImageComponentSchema.safeParse({
+      type: 'image',
+      position: validPosition,
+      src: 'https://example.com/logo.png',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('should accept a base64 image', () => {
+    const result = ImageComponentSchema.safeParse({
+      type: 'image',
+      position: validPosition,
+      src: 'data:image/png;base64,iVBORw0KGgo=',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('should apply defaults for optional fields', () => {
+    const result = ImageComponentSchema.safeParse({
+      type: 'image',
+      position: validPosition,
+      src: 'https://example.com/logo.png',
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.alt).toBe('')
+      expect(result.data.objectFit).toBe('contain')
+    }
+  })
+
+  it('should accept custom objectFit', () => {
+    const result = ImageComponentSchema.safeParse({
+      type: 'image',
+      position: validPosition,
+      src: 'https://example.com/logo.png',
+      objectFit: 'cover',
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.objectFit).toBe('cover')
+    }
+  })
+
+  it('should reject invalid objectFit', () => {
+    const result = ImageComponentSchema.safeParse({
+      type: 'image',
+      position: validPosition,
+      src: 'https://example.com/logo.png',
+      objectFit: 'stretch',
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('should require src', () => {
+    const result = ImageComponentSchema.safeParse({
       type: 'image',
       position: validPosition,
     })
     expect(result.success).toBe(false)
+  })
+
+  it('should accept expression in src', () => {
+    const result = ImageComponentSchema.safeParse({
+      type: 'image',
+      position: validPosition,
+      src: '{{companyLogo}}',
+    })
+    expect(result.success).toBe(true)
+  })
+})
+
+describe('BarcodeComponentSchema', () => {
+  it('should accept a valid QR code component', () => {
+    const result = BarcodeComponentSchema.safeParse({
+      type: 'barcode',
+      position: validPosition,
+      value: 'https://example.com',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('should apply defaults for optional fields', () => {
+    const result = BarcodeComponentSchema.safeParse({
+      type: 'barcode',
+      position: validPosition,
+      value: 'ABC-123',
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.format).toBe('qr')
+      expect(result.data.color).toBe('#000000')
+      expect(result.data.backgroundColor).toBe('#ffffff')
+    }
+  })
+
+  it('should accept code128 format', () => {
+    const result = BarcodeComponentSchema.safeParse({
+      type: 'barcode',
+      position: validPosition,
+      value: 'INV-2026-001',
+      format: 'code128',
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.format).toBe('code128')
+    }
+  })
+
+  it('should reject invalid format', () => {
+    const result = BarcodeComponentSchema.safeParse({
+      type: 'barcode',
+      position: validPosition,
+      value: 'test',
+      format: 'ean13',
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('should require value', () => {
+    const result = BarcodeComponentSchema.safeParse({
+      type: 'barcode',
+      position: validPosition,
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('should accept expression in value', () => {
+    const result = BarcodeComponentSchema.safeParse({
+      type: 'barcode',
+      position: validPosition,
+      value: '{{orderId}}',
+      format: 'qr',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('should accept custom colors', () => {
+    const result = BarcodeComponentSchema.safeParse({
+      type: 'barcode',
+      position: validPosition,
+      value: 'test',
+      color: '#333333',
+      backgroundColor: '#f0f0f0',
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.color).toBe('#333333')
+      expect(result.data.backgroundColor).toBe('#f0f0f0')
+    }
+  })
+})
+
+describe('ComponentSchema (barcode in union)', () => {
+  it('should parse a barcode component', () => {
+    const result = ComponentSchema.safeParse({
+      type: 'barcode',
+      position: validPosition,
+      value: 'hello',
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.type).toBe('barcode')
+    }
   })
 })

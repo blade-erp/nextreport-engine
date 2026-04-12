@@ -18,6 +18,7 @@ export const BandSchema = z.object({
   height: z.number().positive(),
   dataBinding: z.string().optional(),
   iteratorName: z.string().optional(),
+  groupBy: z.string().optional(),
   components: z.array(ComponentSchema),
 })
 export type Band = z.infer<typeof BandSchema>

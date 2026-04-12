@@ -57,6 +57,20 @@ describe('BandSchema', () => {
     }
   })
 
+  it('should accept a group-header band with groupBy', () => {
+    const result = BandSchema.safeParse({
+      type: 'group-header',
+      height: 30,
+      dataBinding: 'employees',
+      groupBy: 'department',
+      components: [validTextComponent],
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.groupBy).toBe('department')
+    }
+  })
+
   it('should reject invalid band type', () => {
     const result = BandSchema.safeParse({ type: 'sidebar', height: 50, components: [] })
     expect(result.success).toBe(false)

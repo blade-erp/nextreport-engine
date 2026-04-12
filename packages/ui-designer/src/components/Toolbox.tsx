@@ -1,5 +1,61 @@
 import React from 'react'
 import { useDesignerStore } from '../store/index.js'
+import type { Component } from '@nextreport/schema'
+
+interface ToolItem {
+  label: string
+  icon: string
+  factory: () => Component
+}
+
+const TOOLS: ToolItem[] = [
+  {
+    label: 'Text',
+    icon: 'T',
+    factory: () => ({
+      type: 'text',
+      position: { x: 10, y: 5, width: 150, height: 25 },
+      content: 'New Text',
+      fontSize: 12,
+      fontWeight: 'normal',
+      color: '#000000',
+      textAlign: 'left',
+    }),
+  },
+  {
+    label: 'Table',
+    icon: '#',
+    factory: () => ({
+      type: 'table',
+      position: { x: 10, y: 5, width: 300, height: 60 },
+      dataBinding: '',
+      columns: [],
+    }),
+  },
+  {
+    label: 'Image',
+    icon: '\u{1F5BC}',
+    factory: () => ({
+      type: 'image',
+      position: { x: 10, y: 5, width: 100, height: 80 },
+      src: '',
+      alt: '',
+      objectFit: 'contain',
+    }),
+  },
+  {
+    label: 'Barcode',
+    icon: '\u{2588}',
+    factory: () => ({
+      type: 'barcode',
+      position: { x: 10, y: 5, width: 100, height: 100 },
+      value: '',
+      format: 'qr',
+      color: '#000000',
+      backgroundColor: '#ffffff',
+    }),
+  },
+]
 
 export function Toolbox() {
   const selectedBandIndex = useDesignerStore((s) => s.selectedBandIndex)
@@ -8,29 +64,15 @@ export function Toolbox() {
 
   const disabled = selectedBandIndex === null
 
-  const handleAddText = () => {
+  const handleAdd = (tool: ToolItem) => {
     if (selectedBandIndex === null) return
     pushHistory()
-    addComponent(selectedBandIndex, {
-      type: 'text',
-      position: { x: 10, y: 5, width: 150, height: 25 },
-      content: 'New Text',
-      fontSize: 12,
-      fontWeight: 'normal',
-      color: '#000000',
-      textAlign: 'left',
-    })
+    addComponent(selectedBandIndex, tool.factory())
   }
 
-  const handleAddTable = () => {
-    if (selectedBandIndex === null) return
-    pushHistory()
-    addComponent(selectedBandIndex, {
-      type: 'table',
-      position: { x: 10, y: 5, width: 300, height: 60 },
-      dataBinding: '',
-      columns: [],
-    })
+  const handleDragStart = (e: React.DragEvent, tool: ToolItem) => {
+    e.dataTransfer.setData('application/nextreport-component', JSON.stringify(tool.factory()))
+    e.dataTransfer.effectAllowed = 'copy'
   }
 
   const sectionStyle: React.CSSProperties = {
@@ -58,7 +100,7 @@ export function Toolbox() {
     borderRadius: 4,
     color: disabled ? '#555' : '#ccc',
     fontSize: 13,
-    cursor: disabled ? 'not-allowed' : 'pointer',
+    cursor: disabled ? 'not-allowed' : 'grab',
     marginBottom: 6,
     textAlign: 'left',
     opacity: disabled ? 0.5 : 1,
@@ -70,14 +112,19 @@ export function Toolbox() {
       {disabled && (
         <div style={{ fontSize: 11, color: '#666', marginBottom: 8 }}>Select a band first</div>
       )}
-      <button style={toolBtnStyle} disabled={disabled} onClick={handleAddText}>
-        <span style={{ fontSize: 14 }}>T</span>
-        Text
-      </button>
-      <button style={toolBtnStyle} disabled={disabled} onClick={handleAddTable}>
-        <span style={{ fontSize: 14 }}>#</span>
-        Table
-      </button>
+      {TOOLS.map((tool) => (
+        <button
+          key={tool.label}
+          style={toolBtnStyle}
+          disabled={disabled}
+          draggable={!disabled}
+          onClick={() => handleAdd(tool)}
+          onDragStart={(e) => handleDragStart(e, tool)}
+        >
+          <span style={{ fontSize: 14 }}>{tool.icon}</span>
+          {tool.label}
+        </button>
+      ))}
     </div>
   )
 }

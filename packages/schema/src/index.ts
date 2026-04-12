@@ -11,9 +11,18 @@ export {
   TextComponentSchema,
   TableColumnSchema,
   TableComponentSchema,
+  ImageComponentSchema,
+  BarcodeComponentSchema,
   ComponentSchema,
 } from './component.schema.js'
-export type { TextComponent, TableColumn, TableComponent, Component } from './component.schema.js'
+export type {
+  TextComponent,
+  TableColumn,
+  TableComponent,
+  ImageComponent,
+  BarcodeComponent,
+  Component,
+} from './component.schema.js'
 
 export { BandTypeSchema, BandSchema } from './band.schema.js'
 export type { BandType, Band } from './band.schema.js'
