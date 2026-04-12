@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@types/node':
+        specifier: ^25.6.0
+        version: 25.6.0
       turbo:
         specifier: ^2.9.6
         version: 2.9.6
@@ -2234,7 +2237,6 @@ snapshots:
   '@types/node@25.6.0':
     dependencies:
       undici-types: 7.19.2
-    optional: true
 
   '@types/prop-types@15.7.15': {}
 
@@ -3045,8 +3047,7 @@ snapshots:
       buffer: 5.7.1
       through: 2.3.8
 
-  undici-types@7.19.2:
-    optional: true
+  undici-types@7.19.2: {}
 
   vite-node@3.2.4(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0):
     dependencies:
