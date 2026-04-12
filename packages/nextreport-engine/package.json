@@ -1,6 +1,6 @@
 {
   "name": "@nextreport/engine",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Modern, schema-driven document rendering engine. Design visually. Render via API. Integrate anywhere.",
   "type": "module",
   "main": "./dist/index.cjs",

@@ -1,6 +1,6 @@
 {
   "name": "@nextreport/ui-designer",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Visual report designer React component for NextReport Engine. Drag & drop, property editor, live preview.",
   "license": "MIT",
   "type": "module",
