@@ -59,19 +59,19 @@ NextReport Engine is built on the insight that **all five systems must be design
 
 ### Comparison
 
-| | NextReport | JasperReports | FastReport | Stimulsoft | ActiveReportsJS | jsreport | Syncfusion |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Open Source** | Full | Partial | No | No | No | Partial | No |
-| **Web-Native** | Yes | No (Java) | Partial | Yes | Yes | Yes (Node.js) | Partial (.NET backend) |
-| **Visual Designer** | WYSIWYG | Desktop only | Desktop + Web | Web | Web | Code-based | Web (RDL) |
-| **Modern UX** | Yes | No | Moderate | Yes | Moderate | Developer-oriented | Enterprise |
-| **API-First** | Yes | No | No | Partial | Partial | Yes | Needs .NET server |
-| **React Integration** | Native | None | None | Wrapper | Wrapper | None (standalone) | Wrapper (.NET dep) |
-| **Report Schema** | JSON | XML (JRXML) | Proprietary | Proprietary | Proprietary | HTML/Handlebars | XML (RDL/RDLC) |
-| **AI/LLM-Ready** | Yes (JSON DSL) | No | No | No | No | No | No |
-| **Pricing** | Free | Free / Paid | Paid | Paid | Paid | Free (5 templates) / Paid | Free (small teams) / Paid |
-| **Learning Curve** | Low | High | Medium | Medium | Medium | Medium | Medium-High |
-| **Self-Hosted** | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+|                       |   NextReport   | JasperReports |  FastReport   | Stimulsoft  | ActiveReportsJS |         jsreport          |        Syncfusion         |
+| --------------------- | :------------: | :-----------: | :-----------: | :---------: | :-------------: | :-----------------------: | :-----------------------: |
+| **Open Source**       |      Full      |    Partial    |      No       |     No      |       No        |          Partial          |            No             |
+| **Web-Native**        |      Yes       |   No (Java)   |    Partial    |     Yes     |       Yes       |       Yes (Node.js)       |  Partial (.NET backend)   |
+| **Visual Designer**   |    WYSIWYG     | Desktop only  | Desktop + Web |     Web     |       Web       |        Code-based         |         Web (RDL)         |
+| **Modern UX**         |      Yes       |      No       |   Moderate    |     Yes     |    Moderate     |    Developer-oriented     |        Enterprise         |
+| **API-First**         |      Yes       |      No       |      No       |   Partial   |     Partial     |            Yes            |     Needs .NET server     |
+| **React Integration** |     Native     |     None      |     None      |   Wrapper   |     Wrapper     |     None (standalone)     |    Wrapper (.NET dep)     |
+| **Report Schema**     |      JSON      |  XML (JRXML)  |  Proprietary  | Proprietary |   Proprietary   |      HTML/Handlebars      |      XML (RDL/RDLC)       |
+| **AI/LLM-Ready**      | Yes (JSON DSL) |      No       |      No       |     No      |       No        |            No             |            No             |
+| **Pricing**           |      Free      |  Free / Paid  |     Paid      |    Paid     |      Paid       | Free (5 templates) / Paid | Free (small teams) / Paid |
+| **Learning Curve**    |      Low       |     High      |    Medium     |   Medium    |     Medium      |          Medium           |        Medium-High        |
+| **Self-Hosted**       |      Yes       |      Yes      |      Yes      |     Yes     |       Yes       |            Yes            |            Yes            |
 
 **Key differences explained:**
 
@@ -156,8 +156,7 @@ Returns HTML by default. Add `"format": "pdf"` for PDF output.
 
 ```tsx
 import { ReportViewer } from '@nextreport/ui-viewer'
-
-<ReportViewer report={reportSchema} data={reportData} />
+;<ReportViewer report={reportSchema} data={reportData} />
 ```
 
 **Any Language — REST API:**
@@ -231,15 +230,15 @@ External consumers send **simple, flat JSON data** — they never need to know a
 
 ## Packages
 
-| Package | Description | Dependencies |
-|---------|-------------|-------------|
-| `@nextreport/schema` | Zod schemas, TypeScript types, JSON Schema export | None |
-| `@nextreport/engine-core` | Render pipeline: validate → expression → band → layout → IR | schema |
-| `@nextreport/renderer-html` | IR → self-contained HTML with inline styles | schema, engine-core |
-| `@nextreport/renderer-pdf` | HTML → PDF via Puppeteer | schema, engine-core, renderer-html |
-| `@nextreport/canvas` | Canvas abstraction: port interfaces + Konva adapter | schema |
-| `@nextreport/ui-designer` | Visual designer React components + Zustand store | schema, engine-core, canvas |
-| `@nextreport/ui-viewer` | Report viewer React component | schema, engine-core, renderer-html |
+| Package                     | Description                                                 | Dependencies                       |
+| --------------------------- | ----------------------------------------------------------- | ---------------------------------- |
+| `@nextreport/schema`        | Zod schemas, TypeScript types, JSON Schema export           | None                               |
+| `@nextreport/engine-core`   | Render pipeline: validate → expression → band → layout → IR | schema                             |
+| `@nextreport/renderer-html` | IR → self-contained HTML with inline styles                 | schema, engine-core                |
+| `@nextreport/renderer-pdf`  | HTML → PDF via Puppeteer                                    | schema, engine-core, renderer-html |
+| `@nextreport/canvas`        | Canvas abstraction: port interfaces + Konva adapter         | schema                             |
+| `@nextreport/ui-designer`   | Visual designer React components + Zustand store            | schema, engine-core, canvas        |
+| `@nextreport/ui-viewer`     | Report viewer React component                               | schema, engine-core, renderer-html |
 
 ### Dependency Rules
 
@@ -319,15 +318,15 @@ Reports are defined as JSON:
 
 ### Band Types
 
-| Type | Behavior | MVP |
-|------|----------|-----|
-| `header` | Rendered once at the top | Yes |
-| `detail` | Repeated for each item in `dataBinding` array | Yes |
-| `footer` | Rendered once at the bottom | Yes |
-| `group-header` | Before each group (when grouping data) | Planned |
-| `group-footer` | After each group (subtotals) | Planned |
-| `page-header` | Top of every page | Planned |
-| `page-footer` | Bottom of every page | Planned |
+| Type           | Behavior                                      | MVP     |
+| -------------- | --------------------------------------------- | ------- |
+| `header`       | Rendered once at the top                      | Yes     |
+| `detail`       | Repeated for each item in `dataBinding` array | Yes     |
+| `footer`       | Rendered once at the bottom                   | Yes     |
+| `group-header` | Before each group (when grouping data)        | Planned |
+| `group-footer` | After each group (subtotals)                  | Planned |
+| `page-header`  | Top of every page                             | Planned |
+| `page-footer`  | Bottom of every page                          | Planned |
 
 ### Expression Syntax
 
@@ -344,17 +343,17 @@ Expressions use `{{...}}` delimiters with function call syntax:
 
 **Built-in Functions:**
 
-| Function | Example | Description |
-|----------|---------|-------------|
-| `formatCurrency(value, currency)` | `formatCurrency(price, 'TRY')` | Locale-aware currency |
-| `formatDate(value, pattern)` | `formatDate(date, 'DD.MM.YYYY')` | Date formatting |
-| `formatNumber(value, decimals)` | `formatNumber(rate, 2)` | Number formatting |
-| `sum(array, field)` | `sum(items, 'price')` | Array field sum |
-| `count(array)` | `count(items)` | Array length |
-| `uppercase(value)` | `uppercase(name)` | To upper case |
-| `lowercase(value)` | `lowercase(name)` | To lower case |
-| `concat(a, b, ...)` | `concat(first, ' ', last)` | String join |
-| `if(condition, then, else)` | `if(qty > 0, 'In Stock', 'Out')` | Conditional |
+| Function                          | Example                          | Description           |
+| --------------------------------- | -------------------------------- | --------------------- |
+| `formatCurrency(value, currency)` | `formatCurrency(price, 'TRY')`   | Locale-aware currency |
+| `formatDate(value, pattern)`      | `formatDate(date, 'DD.MM.YYYY')` | Date formatting       |
+| `formatNumber(value, decimals)`   | `formatNumber(rate, 2)`          | Number formatting     |
+| `sum(array, field)`               | `sum(items, 'price')`            | Array field sum       |
+| `count(array)`                    | `count(items)`                   | Array length          |
+| `uppercase(value)`                | `uppercase(name)`                | To upper case         |
+| `lowercase(value)`                | `lowercase(name)`                | To lower case         |
+| `concat(a, b, ...)`               | `concat(first, ' ', last)`       | String join           |
+| `if(condition, then, else)`       | `if(qty > 0, 'In Stock', 'Out')` | Conditional           |
 
 ### Data Binding
 
@@ -382,6 +381,7 @@ The expression engine handles type mismatches gracefully. Java or .NET clients o
 Render a report to HTML or PDF.
 
 **Request:**
+
 ```json
 {
   "templateId": "invoice-v1",
@@ -391,6 +391,7 @@ Render a report to HTML or PDF.
 ```
 
 Or with inline template:
+
 ```json
 {
   "template": { "type": "report", ... },
@@ -400,6 +401,7 @@ Or with inline template:
 ```
 
 **Response (HTML):**
+
 ```json
 {
   "success": true,
@@ -514,9 +516,9 @@ Implement the `ComponentCoreDefinition` interface to add a new report component:
 
 ```typescript
 interface ComponentCoreDefinition {
-  type: string                    // e.g., "image"
-  displayName: string             // e.g., "Image"
-  schema: ZodSchema               // Validation schema
+  type: string // e.g., "image"
+  displayName: string // e.g., "Image"
+  schema: ZodSchema // Validation schema
   defaultProperties: Record<string, unknown>
   htmlRenderer: (element: ResolvedElement) => string
 }
@@ -534,7 +536,7 @@ import { registerFunction } from './registry.js'
 registerFunction('avg', (args) => {
   const arr = args[0] as unknown[]
   const field = String(args[1])
-  const values = arr.map(item => Number((item as Record<string, unknown>)[field]))
+  const values = arr.map((item) => Number((item as Record<string, unknown>)[field]))
   return values.reduce((a, b) => a + b, 0) / values.length
 })
 ```
@@ -588,23 +590,24 @@ pnpm run dev        # Start dev server
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Language | TypeScript |
-| Framework | Next.js (App Router) |
-| UI | React, shadcn/ui, TailwindCSS |
-| Monorepo | Turborepo + pnpm workspaces |
-| Canvas | Konva.js (via adapter) |
-| State | Zustand + Immer |
-| Schema | Zod + zod-to-json-schema |
-| PDF | Puppeteer |
-| Testing | Vitest |
+| Layer     | Technology                    |
+| --------- | ----------------------------- |
+| Language  | TypeScript                    |
+| Framework | Next.js (App Router)          |
+| UI        | React, shadcn/ui, TailwindCSS |
+| Monorepo  | Turborepo + pnpm workspaces   |
+| Canvas    | Konva.js (via adapter)        |
+| State     | Zustand + Immer               |
+| Schema    | Zod + zod-to-json-schema      |
+| PDF       | Puppeteer                     |
+| Testing   | Vitest                        |
 
 ## Roadmap
 
 See [ROADMAP.md](docs/ROADMAP.md) for the full product roadmap.
 
 **Coming next:**
+
 - Plugin system & component marketplace
 - Advanced layout (grouping, nested details, auto-height)
 - Native PDF generation (no Puppeteer dependency)

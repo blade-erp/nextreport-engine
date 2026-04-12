@@ -28,14 +28,14 @@
 
 Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 
-| Karar | MVP Durumu | İleriye Etkisi |
-|-------|-----------|---------------|
-| Engine Isolation Rule | engine-core Next.js/React/Konva bilmez | Phase 2-3'te standalone engine split'i acısız olacak |
-| Konva Adapter Pattern | Tek import noktası: adapters/konva/ | Canvas kütüphanesi değişikliği tek dizin |
-| Component Registry Pattern | Compile-time registration | Plugin marketplace'e uzanan yol |
-| Pluggable Renderers | HTML + PDF bağımsız | Yeni format eklemek core'a dokunmadan |
-| Flat Schema + Zod | Type-safe DSL | JSON Schema export ile multi-language uyum |
-| Expression Function Syntax | AI/LLM-friendly | Agent entegrasyonu için hazır zemin |
+| Karar                      | MVP Durumu                             | İleriye Etkisi                                       |
+| -------------------------- | -------------------------------------- | ---------------------------------------------------- |
+| Engine Isolation Rule      | engine-core Next.js/React/Konva bilmez | Phase 2-3'te standalone engine split'i acısız olacak |
+| Konva Adapter Pattern      | Tek import noktası: adapters/konva/    | Canvas kütüphanesi değişikliği tek dizin             |
+| Component Registry Pattern | Compile-time registration              | Plugin marketplace'e uzanan yol                      |
+| Pluggable Renderers        | HTML + PDF bağımsız                    | Yeni format eklemek core'a dokunmadan                |
+| Flat Schema + Zod          | Type-safe DSL                          | JSON Schema export ile multi-language uyum           |
+| Expression Function Syntax | AI/LLM-friendly                        | Agent entegrasyonu için hazır zemin                  |
 
 ---
 
@@ -48,6 +48,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 **Neden:** MVP'de 2 component var (Text, Table). Kullanıcılar ve topluluk yeni component'ler ekleyebilmeli.
 
 **Scope:**
+
 - Component lazy loading (dynamic import)
 - Plugin manifest format tanımı
 - Plugin discovery ve registration API
@@ -55,6 +56,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 - Plugin development SDK + documentation
 
 **Teknik:**
+
 ```
 @nextreport/plugin-sdk        → Plugin geliştirme araçları
 @nextreport/component-image   → Image component (URL, base64)
@@ -69,6 +71,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 **Neden:** MVP'de basit absolute positioning var. Gerçek dünya raporları daha karmaşık layout'lar gerektirir.
 
 **Scope:**
+
 - Group header/footer band'ları (gruplama + subtotal)
 - Nested detail band'lar (master-detail raporları)
 - Conditional band visibility (expression-based show/hide)
@@ -84,6 +87,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 **Neden:** MVP'de Puppeteer ile HTML→PDF yapılıyor. Yavaş, memory-heavy, server'da Chrome gerekli.
 
 **Scope:**
+
 - Dedicated PDF library entegrasyonu (pdfmake veya jsPDF)
 - Puppeteer fallback olarak kalır (complex CSS rendering için)
 - PDF/A compliance (arşivleme)
@@ -98,6 +102,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 **Neden:** MVP'de template'ler filesystem'de static JSON. Production'da CRUD, versioning, ve paylaşım gerekli.
 
 **Scope:**
+
 - Database entegrasyonu (PostgreSQL + Prisma)
 - Template CRUD API (create, read, update, delete, list)
 - Template versioning (v1, v2, ... + rollback)
@@ -112,6 +117,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 **Neden:** Heavy render işleri (büyük PDF'ler) Next.js process'ini bloklar.
 
 **Scope:**
+
 - BullMQ job queue
 - Worker process (ayrı Node.js instance)
 - Async render API (job ID döner, polling/webhook ile sonuç)
@@ -123,6 +129,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 ### 2.6 Designer UX İyileştirmeleri
 
 **Scope:**
+
 - Full Konva canvas integration (DOM-based preview'den geçiş)
 - Drag & drop component placement (toolbox'tan canvas'a sürükleme)
 - Resize handles (component boyutlandırma)
@@ -141,6 +148,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 ### 3.1 User Authentication & Authorization
 
 **Scope:**
+
 - NextAuth.js entegrasyonu
 - Role-based access control (admin, editor, viewer)
 - Organization/tenant support
@@ -149,6 +157,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 ### 3.2 Collaboration
 
 **Scope:**
+
 - Template paylaşım (link ile)
 - Real-time collaborative editing (CRDT veya OT-based)
 - Comment/annotation system
@@ -160,6 +169,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 **Neden:** Phase migration readiness — engine Next.js'ten tamamen bağımsız.
 
 **Scope:**
+
 - `apps/render-server` — Fastify/Hono standalone HTTP server
 - Aynı engine-core + renderer import'ları, farklı HTTP framework
 - Docker image (lightweight, Chrome-less for HTML-only, Chrome-included for PDF)
@@ -171,6 +181,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 ### 3.4 SaaS Mode
 
 **Scope:**
+
 - Subscription/billing entegrasyonu
 - Usage metering (render count, PDF size)
 - Custom domain support
@@ -186,6 +197,7 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 ### 4.1 AI Report Generation
 
 **Scope:**
+
 - Natural language → report schema generation
 - "Create an invoice report for customers" → LLM generates valid JSON schema
 - Schema suggestion engine (veri yapısını analiz edip uygun template öner)
@@ -196,12 +208,14 @@ Bu kararlar ilerideki tüm phase'leri şekillendiriyor:
 ### 4.2 MCP Server Integration
 
 **Scope:**
+
 - NextReportEngine as MCP server
 - Tools: create_report, render_report, validate_schema, list_templates
 - AI agent'lar doğrudan rapor oluşturup render edebilir
 - Claude/ChatGPT/custom agent uyumluluğu
 
 **Örnek akış:**
+
 ```
 User: "Müşteri listesinden bir fatura oluştur"
   ↓
@@ -215,6 +229,7 @@ Agent: "Faturanız hazır, indirmek için tıklayın"
 ### 4.3 Smart Data Binding
 
 **Scope:**
+
 - AI-powered field mapping (veri yapısını otomatik analiz et, field'ları template'e eşle)
 - Schema inference from data samples
 - Data transformation suggestions
@@ -223,6 +238,7 @@ Agent: "Faturanız hazır, indirmek için tıklayın"
 ### 4.4 Report Intelligence
 
 **Scope:**
+
 - Automatic formatting suggestions (data tipi analizi → uygun format önerisi)
 - Layout optimization (component'lerin otomatik düzenlenmesi)
 - Accessibility audit (kontrast, font boyutu, yapı kontrolleri)
@@ -235,12 +251,14 @@ Agent: "Faturanız hazır, indirmek için tıklayın"
 Bu phase'lere bağlı olmayan, sürekli yapılması gereken iyileştirmeler:
 
 ### Testing
+
 - [ ] E2E tests (Playwright — designer UI akışları)
 - [ ] Visual regression tests (component screenshot karşılaştırma)
 - [ ] Performance benchmarks (render time, memory usage)
 - [ ] Load testing (concurrent API requests)
 
 ### Developer Experience
+
 - [ ] Monorepo build optimization (incremental builds)
 - [ ] Hot module reload iyileştirmeleri
 - [ ] Storybook for UI components
@@ -248,12 +266,14 @@ Bu phase'lere bağlı olmayan, sürekli yapılması gereken iyileştirmeler:
 - [ ] CLI tool (`npx nextreport render template.json data.json --output report.pdf`)
 
 ### Engine-Core Discipline
+
 - [ ] Lint rule: engine-core'da yasak import tespiti (CI'da)
 - [ ] Internal module boundary enforcement (barrel exports + eslint-plugin-boundaries)
 - [ ] Package dependency graph visualization
 - [ ] Performance profiling (expression engine, layout calculator)
 
 ### Internationalization
+
 - [ ] UI i18n (designer + viewer çoklu dil)
 - [ ] RTL layout support
 - [ ] Additional locale formatters
@@ -262,15 +282,15 @@ Bu phase'lere bağlı olmayan, sürekli yapılması gereken iyileştirmeler:
 
 ## Release Cadence
 
-| Version | Phase | Tahmini Scope |
-|---------|-------|---------------|
-| v0.1 | MVP | Tamamlandı |
-| v0.2 | 2.1 + 2.2 | Plugin system + advanced layout |
-| v0.3 | 2.3 + 2.4 | PDF optimization + template versioning |
-| v0.4 | 2.5 + 2.6 | Queue/worker + designer UX |
-| v1.0 | 3.1 + 3.2 + 3.3 | Auth + collaboration + standalone engine |
-| v1.5 | 3.4 | SaaS mode |
-| v2.0 | 4.x | AI integration + MCP server |
+| Version | Phase           | Tahmini Scope                            |
+| ------- | --------------- | ---------------------------------------- |
+| v0.1    | MVP             | Tamamlandı                               |
+| v0.2    | 2.1 + 2.2       | Plugin system + advanced layout          |
+| v0.3    | 2.3 + 2.4       | PDF optimization + template versioning   |
+| v0.4    | 2.5 + 2.6       | Queue/worker + designer UX               |
+| v1.0    | 3.1 + 3.2 + 3.3 | Auth + collaboration + standalone engine |
+| v1.5    | 3.4             | SaaS mode                                |
+| v2.0    | 4.x             | AI integration + MCP server              |
 
 ---
 
@@ -285,4 +305,4 @@ Phase 2'den itibaren topluluk katkısı kabul edilecek:
 
 ---
 
-*Bu roadmap yaşayan bir doküman. Öncelikler kullanıcı feedback'ine göre değişebilir.*
+_Bu roadmap yaşayan bir doküman. Öncelikler kullanıcı feedback'ine göre değişebilir._

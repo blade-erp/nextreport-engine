@@ -94,9 +94,7 @@ describe('DataSourceSchema', () => {
         {
           name: 'address',
           type: 'array',
-          fields: [
-            { name: 'street', type: 'string' },
-          ],
+          fields: [{ name: 'street', type: 'string' }],
         },
       ],
     })

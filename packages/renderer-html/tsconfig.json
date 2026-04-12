@@ -9,8 +9,5 @@
     }
   },
   "include": ["src/**/*.ts"],
-  "references": [
-    { "path": "../schema" },
-    { "path": "../engine-core" }
-  ]
+  "references": [{ "path": "../schema" }, { "path": "../engine-core" }]
 }

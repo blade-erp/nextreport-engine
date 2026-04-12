@@ -11,9 +11,7 @@ export function renderTable(element: ResolvedElement): string {
   const { x, y, width, height } = element.position
   const props = element.properties
 
-  const columns = Array.isArray(props.columns)
-    ? (props.columns as TableColumn[])
-    : []
+  const columns = Array.isArray(props.columns) ? (props.columns as TableColumn[]) : []
 
   const style = [
     'position:absolute',

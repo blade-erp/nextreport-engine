@@ -16,5 +16,6 @@ packages/*/src/**/*.d.ts.map
 !packages/*/src/**/*.test.ts
 .playwright-mcp/
 screenshots/
+superpowers/
 
 

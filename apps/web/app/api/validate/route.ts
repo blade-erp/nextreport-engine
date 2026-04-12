@@ -3,7 +3,7 @@ import { validateReport } from '@nextreport/engine-core'
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json() as { template: Record<string, unknown> }
+    const body = (await request.json()) as { template: Record<string, unknown> }
 
     const { template } = body
     if (!template) {

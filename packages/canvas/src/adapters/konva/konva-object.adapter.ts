@@ -1,4 +1,4 @@
-import Konva from 'konva'
+import type Konva from 'konva'
 import type { CanvasObjectConfig, CanvasObjectPort } from '../../ports/canvas-object.port.js'
 
 const SELECTION_STROKE = '#0096ff'

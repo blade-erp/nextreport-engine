@@ -9,7 +9,9 @@ export class KonvaEngineAdapter implements CanvasEnginePort {
   private objects = new Map<string, KonvaObjectAdapter>()
 
   private selectionCallback: ((objectId: string | null) => void) | null = null
-  private modifiedCallback: ((objectId: string, changes: Partial<CanvasObjectConfig>) => void) | null = null
+  private modifiedCallback:
+    | ((objectId: string, changes: Partial<CanvasObjectConfig>) => void)
+    | null = null
 
   initialize(container: HTMLDivElement, width: number, height: number): void {
     this.stage = new Konva.Stage({ container, width, height })
@@ -118,7 +120,9 @@ export class KonvaEngineAdapter implements CanvasEnginePort {
     this.selectionCallback = callback
   }
 
-  onObjectModified(callback: (objectId: string, changes: Partial<CanvasObjectConfig>) => void): void {
+  onObjectModified(
+    callback: (objectId: string, changes: Partial<CanvasObjectConfig>) => void,
+  ): void {
     this.modifiedCallback = callback
   }
 

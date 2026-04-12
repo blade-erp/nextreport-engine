@@ -29,15 +29,12 @@ describe('calculateLayout', () => {
   it('calculates absolute Y positions correctly', () => {
     // header height=80, element y=10 → absolute y = marginTop(20) + currentY(0) + element.y(10) = 30
     // detail height=20, element y=0 → absolute y = marginTop(20) + currentY(80) + element.y(0) = 100
-    const bands: ProcessedBand[] = [
-      makeband('header', 80, 10),
-      makeband('detail', 20, 0),
-    ]
+    const bands: ProcessedBand[] = [makeband('header', 80, 10), makeband('detail', 20, 0)]
 
     const pages = calculateLayout(bands, pageConfig)
 
     expect(pages).toHaveLength(1)
-    expect(pages[0].elements[0].position.y).toBe(30)  // 20 + 0 + 10
+    expect(pages[0].elements[0].position.y).toBe(30) // 20 + 0 + 10
     expect(pages[0].elements[1].position.y).toBe(100) // 20 + 80 + 0
   })
 
@@ -54,9 +51,7 @@ describe('calculateLayout', () => {
     // A4 portrait: height=842, margins top=20 bottom=20, usableHeight=802
     // 40 bands × height 25 = 1000pt total → needs 2 pages
     // bands per page: floor(802/25) = 32 bands fit in first page (32*25=800 ≤ 802), 33rd would be 825 > 802
-    const bands: ProcessedBand[] = Array.from({ length: 40 }, () =>
-      makeband('detail', 25, 0)
-    )
+    const bands: ProcessedBand[] = Array.from({ length: 40 }, () => makeband('detail', 25, 0))
 
     const pages = calculateLayout(bands, pageConfig)
 
@@ -66,9 +61,7 @@ describe('calculateLayout', () => {
   })
 
   it('assigns correct page numbers', () => {
-    const bands: ProcessedBand[] = Array.from({ length: 40 }, () =>
-      makeband('detail', 25, 0)
-    )
+    const bands: ProcessedBand[] = Array.from({ length: 40 }, () => makeband('detail', 25, 0))
 
     const pages = calculateLayout(bands, pageConfig)
 

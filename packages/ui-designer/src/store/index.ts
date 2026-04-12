@@ -17,7 +17,11 @@ export type { SelectionSlice } from './selection-slice.js'
 export type { ViewportSlice } from './viewport-slice.js'
 export type { HistorySlice } from './history-slice.js'
 
-export type DesignerStore = DocumentSlice & DataSlice & SelectionSlice & ViewportSlice & HistorySlice
+export type DesignerStore = DocumentSlice &
+  DataSlice &
+  SelectionSlice &
+  ViewportSlice &
+  HistorySlice
 
 export const useDesignerStore = create<DesignerStore>()(
   immer((...a) => ({
@@ -26,5 +30,5 @@ export const useDesignerStore = create<DesignerStore>()(
     ...createSelectionSlice(...a),
     ...createViewportSlice(...a),
     ...createHistorySlice(...a),
-  }))
+  })),
 )

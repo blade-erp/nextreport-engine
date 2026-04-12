@@ -1,12 +1,7 @@
 export { PositionSchema } from './position.schema.js'
 export type { Position } from './position.schema.js'
 
-export {
-  PageSizeSchema,
-  OrientationSchema,
-  MarginsSchema,
-  PageSchema,
-} from './page.schema.js'
+export { PageSizeSchema, OrientationSchema, MarginsSchema, PageSchema } from './page.schema.js'
 export type { PageSize, Orientation, Margins, Page } from './page.schema.js'
 
 export { FieldTypeSchema, FieldSchema, DataSourceSchema } from './data-source.schema.js'
@@ -18,12 +13,7 @@ export {
   TableComponentSchema,
   ComponentSchema,
 } from './component.schema.js'
-export type {
-  TextComponent,
-  TableColumn,
-  TableComponent,
-  Component,
-} from './component.schema.js'
+export type { TextComponent, TableColumn, TableComponent, Component } from './component.schema.js'
 
 export { BandTypeSchema, BandSchema } from './band.schema.js'
 export type { BandType, Band } from './band.schema.js'

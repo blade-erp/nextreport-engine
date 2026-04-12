@@ -1,8 +1,7 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDesignerStore } from '../store/index.js'
 import type { TextComponent, TableComponent } from '@nextreport/schema'
 import type { ResolvedElement } from '@nextreport/engine-core'
-import type { RenderResult } from '@nextreport/engine-core'
 
 const BAND_COLORS: Record<string, string> = {
   header: '#4caf50',
@@ -79,30 +78,35 @@ export function CanvasArea() {
       return
     }
     let cancelled = false
-    import('@nextreport/engine-core').then(({ renderReport }) => {
-      if (cancelled) return
-      try {
-        const ir = renderReport(report, sampleData)
-        const allElements = ir.pages.flatMap((p: { elements: ResolvedElement[] }) => p.elements)
-        setResolvedMap(buildResolvedMap(allElements, report.bands as Array<{ type: string; components: unknown[] }>))
-      } catch {
-        setResolvedMap(null)
-      }
-    }).catch(() => {
-      if (!cancelled) setResolvedMap(null)
-    })
-    return () => { cancelled = true }
+    import('@nextreport/engine-core')
+      .then(({ renderReport }) => {
+        if (cancelled) return
+        try {
+          const ir = renderReport(report, sampleData)
+          const allElements = ir.pages.flatMap((p: { elements: ResolvedElement[] }) => p.elements)
+          setResolvedMap(
+            buildResolvedMap(
+              allElements,
+              report.bands as Array<{ type: string; components: unknown[] }>,
+            ),
+          )
+        } catch {
+          setResolvedMap(null)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setResolvedMap(null)
+      })
+    return () => {
+      cancelled = true
+    }
   }, [report, sampleData])
 
   /**
    * Resolve display text for a text component at the given band/comp position.
    * Prefers engine-resolved value; falls back to regex resolver.
    */
-  function resolveDisplayText(
-    bandIndex: number,
-    compIndex: number,
-    content: unknown,
-  ): string {
+  function resolveDisplayText(bandIndex: number, compIndex: number, content: unknown): string {
     if (resolvedMap) {
       const el = resolvedMap.get(`${bandIndex}:${compIndex}`)
       if (el && el.properties.content !== undefined) {
@@ -210,41 +214,43 @@ export function CanvasArea() {
                       padding: '0 2px',
                     }}
                   >
-                    {component.type === 'text' && (() => {
-                      const tc = component as TextComponent
-                      const displayText = resolveDisplayText(bandIndex, compIndex, tc.content)
-                      return (
-                        <span
-                          style={{
-                            fontSize: tc.fontSize * zoom,
-                            fontWeight: tc.fontWeight as React.CSSProperties['fontWeight'],
-                            color: tc.color,
-                            textAlign: tc.textAlign as React.CSSProperties['textAlign'],
-                            width: '100%',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            lineHeight: 1,
-                          }}
-                        >
-                          {displayText}
-                        </span>
-                      )
-                    })()}
-                    {component.type === 'table' && (() => {
-                      const tc = component as TableComponent
-                      return (
-                        <span
-                          style={{
-                            fontSize: 10 * zoom,
-                            color: '#555',
-                            fontStyle: 'italic',
-                          }}
-                        >
-                          [Table: {tc.dataBinding || 'no binding'}]
-                        </span>
-                      )
-                    })()}
+                    {component.type === 'text' &&
+                      (() => {
+                        const tc = component as TextComponent
+                        const displayText = resolveDisplayText(bandIndex, compIndex, tc.content)
+                        return (
+                          <span
+                            style={{
+                              fontSize: tc.fontSize * zoom,
+                              fontWeight: tc.fontWeight as React.CSSProperties['fontWeight'],
+                              color: tc.color,
+                              textAlign: tc.textAlign as React.CSSProperties['textAlign'],
+                              width: '100%',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              lineHeight: 1,
+                            }}
+                          >
+                            {displayText}
+                          </span>
+                        )
+                      })()}
+                    {component.type === 'table' &&
+                      (() => {
+                        const tc = component as TableComponent
+                        return (
+                          <span
+                            style={{
+                              fontSize: 10 * zoom,
+                              color: '#555',
+                              fontStyle: 'italic',
+                            }}
+                          >
+                            [Table: {tc.dataBinding || 'no binding'}]
+                          </span>
+                        )
+                      })()}
                   </div>
                 )
               })}

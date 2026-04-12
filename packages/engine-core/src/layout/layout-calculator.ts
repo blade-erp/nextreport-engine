@@ -14,12 +14,12 @@ export function calculateLayout(bands: ProcessedBand[], pageConfig: PageConfig):
   const dims = PAGE_DIMENSIONS[pageConfig.size]
   if (!dims) throw new Error(`Unknown page size: ${pageConfig.size}`)
 
-  let pageWidth = dims.width
+  let _pageWidth = dims.width
   let pageHeight = dims.height
 
   // Swap dimensions for landscape orientation
   if (pageConfig.orientation === 'landscape') {
-    pageWidth = dims.height
+    _pageWidth = dims.height
     pageHeight = dims.width
   }
 

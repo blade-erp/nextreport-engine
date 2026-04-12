@@ -40,14 +40,14 @@ Current reporting solutions suffer from:
 
 ### Market Gap
 
-| Tool | Strength | Weakness |
-|------|----------|----------|
-| JasperReports | Powerful, open source (partial) | UX from another era, JRXML, desktop-only designer |
-| FastReport | Excellent desktop UX | Closed source, .NET-locked, expensive |
-| Stimulsoft Reports.JS | Modern web UX | Closed source, per-developer pricing |
-| ActiveReportsJS | Enterprise-grade | Locked to GrapeCity ecosystem, "cold" DX |
-| jsreport | Open source, Node.js, flexible | Code-driven (no WYSIWYG), 5-template free limit |
-| Syncfusion Bold Reports | 30+ connectors, enterprise | .NET backend required, not truly web-native |
+| Tool                    | Strength                        | Weakness                                          |
+| ----------------------- | ------------------------------- | ------------------------------------------------- |
+| JasperReports           | Powerful, open source (partial) | UX from another era, JRXML, desktop-only designer |
+| FastReport              | Excellent desktop UX            | Closed source, .NET-locked, expensive             |
+| Stimulsoft Reports.JS   | Modern web UX                   | Closed source, per-developer pricing              |
+| ActiveReportsJS         | Enterprise-grade                | Locked to GrapeCity ecosystem, "cold" DX          |
+| jsreport                | Open source, Node.js, flexible  | Code-driven (no WYSIWYG), 5-template free limit   |
+| Syncfusion Bold Reports | 30+ connectors, enterprise      | .NET backend required, not truly web-native       |
 
 **Opportunity:** Pain exists + good solutions are closed/expensive + open-source gap is real.
 
@@ -55,13 +55,13 @@ Current reporting solutions suffer from:
 
 ## 3. Target Audience
 
-| Segment | Need | Why NextReport |
-|---------|------|---------------|
-| **SaaS builders** | Embedded reporting without licensing costs | Free, API-first, React-native |
-| **Internal tool teams** | Invoice generation, data exports, formatted reports | Drop-in components, 5-min integration |
-| **Startups** | Reporting beyond HTML-to-PDF hacks, within budget | Full engine, zero cost |
-| **Java/.NET migration teams** | Modern alternative to JasperReports/Crystal Reports | Web-based designer, REST API |
-| **AI/automation builders** | Structured document generation from LLM output | JSON schema = LLM function calling native format |
+| Segment                       | Need                                                | Why NextReport                                   |
+| ----------------------------- | --------------------------------------------------- | ------------------------------------------------ |
+| **SaaS builders**             | Embedded reporting without licensing costs          | Free, API-first, React-native                    |
+| **Internal tool teams**       | Invoice generation, data exports, formatted reports | Drop-in components, 5-min integration            |
+| **Startups**                  | Reporting beyond HTML-to-PDF hacks, within budget   | Full engine, zero cost                           |
+| **Java/.NET migration teams** | Modern alternative to JasperReports/Crystal Reports | Web-based designer, REST API                     |
+| **AI/automation builders**    | Structured document generation from LLM output      | JSON schema = LLM function calling native format |
 
 ---
 
@@ -95,20 +95,20 @@ Invoice / PDF generator with visual editor.
 
 ## 5. Tech Stack
 
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| Language | TypeScript | 6+ |
-| Framework | Next.js (App Router) | 16.2.3 |
-| UI Library | React | 19.2 |
-| UI Components | shadcn/ui | 4.2.0 |
-| Styling | TailwindCSS | 4.2 |
-| Monorepo | Turborepo | 2.9.6 |
-| Package Manager | pnpm | 10.33.0 |
-| Canvas | Konva.js (via abstraction adapter) | latest |
-| State Management | Zustand + Immer | latest |
-| Schema Validation | Zod + zod-to-json-schema | latest |
-| PDF Rendering | Puppeteer | latest |
-| Testing | Vitest | latest |
+| Layer             | Technology                         | Version |
+| ----------------- | ---------------------------------- | ------- |
+| Language          | TypeScript                         | 6+      |
+| Framework         | Next.js (App Router)               | 16.2.3  |
+| UI Library        | React                              | 19.2    |
+| UI Components     | shadcn/ui                          | 4.2.0   |
+| Styling           | TailwindCSS                        | 4.2     |
+| Monorepo          | Turborepo                          | 2.9.6   |
+| Package Manager   | pnpm                               | 10.33.0 |
+| Canvas            | Konva.js (via abstraction adapter) | latest  |
+| State Management  | Zustand + Immer                    | latest  |
+| Schema Validation | Zod + zod-to-json-schema           | latest  |
+| PDF Rendering     | Puppeteer                          | latest  |
+| Testing           | Vitest                             | latest  |
 
 ---
 
@@ -158,6 +158,7 @@ Hybrid approach — internal workspace packages for MVP, selective npm publish l
 **Schema-First Development** — DSL is defined first, everything else is built around it.
 
 Build order:
+
 1. Schema (Zod definitions, types)
 2. Engine Core (pipeline, expression, band processor, layout)
 3. Renderers (HTML, PDF) + API routes
@@ -187,17 +188,19 @@ apps/web → all packages
 ### 7.2 Strict Isolation Rules
 
 **Allowed:**
+
 - engine-core → schema
-- renderer-* → schema + engine-core
+- renderer-\* → schema + engine-core
 - canvas → schema (types only)
 - ui-designer → canvas + schema + engine-core
 - ui-viewer → renderer-html + schema + engine-core
 - apps/web → any package
 
 **Forbidden:**
+
 - schema → no dependencies (root of graph)
 - engine-core → canvas, renderer, UI, Next.js, React
-- renderer-* → canvas, UI, Next.js, React
+- renderer-\* → canvas, UI, Next.js, React
 - canvas → engine-core, renderer, UI
 - Any package → apps/web
 - Any package → konva (except canvas adapter)
@@ -234,10 +237,14 @@ apps/web → all packages
     "fields": [
       { "name": "companyName", "type": "string" },
       { "name": "invoiceDate", "type": "date" },
-      { "name": "items", "type": "array", "fields": [
-        { "name": "name", "type": "string" },
-        { "name": "price", "type": "number" }
-      ]}
+      {
+        "name": "items",
+        "type": "array",
+        "fields": [
+          { "name": "name", "type": "string" },
+          { "name": "price", "type": "number" }
+        ]
+      }
     ]
   },
   "bands": [
@@ -289,32 +296,33 @@ apps/web → all packages
 
 ### 8.2 Band Types
 
-| Type | Behavior | Status |
-|------|----------|--------|
-| `header` | Rendered once at the top | MVP |
-| `detail` | Repeated for each item in `dataBinding` array | MVP |
-| `footer` | Rendered once at the bottom | MVP |
-| `group-header` | Before each group (when grouping data) | Planned |
-| `group-footer` | After each group (subtotals) | Planned |
-| `page-header` | Top of every page | Planned |
-| `page-footer` | Bottom of every page | Planned |
-| `custom` | User-defined band type | Planned |
+| Type           | Behavior                                      | Status  |
+| -------------- | --------------------------------------------- | ------- |
+| `header`       | Rendered once at the top                      | MVP     |
+| `detail`       | Repeated for each item in `dataBinding` array | MVP     |
+| `footer`       | Rendered once at the bottom                   | MVP     |
+| `group-header` | Before each group (when grouping data)        | Planned |
+| `group-footer` | After each group (subtotals)                  | Planned |
+| `page-header`  | Top of every page                             | Planned |
+| `page-footer`  | Bottom of every page                          | Planned |
+| `custom`       | User-defined band type                        | Planned |
 
 Flexible band model — classic bands plus nesting (detail inside detail for master-detail reports) and custom bands for future extensibility.
 
 ### 8.3 Component Types
 
-| Component | Description | Status |
-|-----------|-------------|--------|
-| Text | Static text + expression binding with formatting | MVP |
-| Table | Data-bound rows with column definitions | MVP |
-| Image | URL or base64 image | Planned |
-| Barcode | QR, Code128, EAN13 | Planned |
-| Chart | Bar, line, pie charts | Planned |
+| Component | Description                                      | Status  |
+| --------- | ------------------------------------------------ | ------- |
+| Text      | Static text + expression binding with formatting | MVP     |
+| Table     | Data-bound rows with column definitions          | MVP     |
+| Image     | URL or base64 image                              | Planned |
+| Barcode   | QR, Code128, EAN13                               | Planned |
+| Chart     | Bar, line, pie charts                            | Planned |
 
 ### 8.4 Data Source Fields (Optional)
 
 `dataSource.fields` is **optional**. When present, it enables:
+
 - Designer data tree panel (field list with types)
 - Expression autocomplete
 - Drag & drop field binding
@@ -325,6 +333,7 @@ When absent, the engine still works — expression-level coercion handles type c
 ### 8.5 Validation Strategy
 
 **Zod + JSON Schema export:**
+
 - Development: Zod schemas provide TypeScript type inference and runtime validation
 - External consumers: `zod-to-json-schema` generates standard JSON Schema for Java/.NET
 - Single source of truth: Zod definitions in `@nextreport/schema`
@@ -347,17 +356,17 @@ Template expressions use `{{...}}` delimiters with **function call syntax** (cho
 
 ### 9.2 Built-in Functions (MVP)
 
-| Function | Example | Description |
-|----------|---------|-------------|
-| `formatCurrency` | `formatCurrency(price, 'TRY')` | Locale-aware currency |
-| `formatDate` | `formatDate(date, 'DD.MM.YYYY')` | Date formatting |
-| `formatNumber` | `formatNumber(value, 2)` | Number formatting |
-| `sum` | `sum(items, 'price')` | Array field sum |
-| `count` | `count(items)` | Array length |
-| `uppercase` | `uppercase(name)` | To upper case |
-| `lowercase` | `lowercase(name)` | To lower case |
-| `concat` | `concat(first, ' ', last)` | String join |
-| `if` | `if(qty > 0, 'In Stock', 'Out')` | Conditional |
+| Function         | Example                          | Description           |
+| ---------------- | -------------------------------- | --------------------- |
+| `formatCurrency` | `formatCurrency(price, 'TRY')`   | Locale-aware currency |
+| `formatDate`     | `formatDate(date, 'DD.MM.YYYY')` | Date formatting       |
+| `formatNumber`   | `formatNumber(value, 2)`         | Number formatting     |
+| `sum`            | `sum(items, 'price')`            | Array field sum       |
+| `count`          | `count(items)`                   | Array length          |
+| `uppercase`      | `uppercase(name)`                | To upper case         |
+| `lowercase`      | `lowercase(name)`                | To lower case         |
+| `concat`         | `concat(first, ' ', last)`       | String join           |
+| `if`             | `if(qty > 0, 'In Stock', 'Out')` | Conditional           |
 
 ### 9.3 Type Coercion
 
@@ -414,8 +423,8 @@ engine-core/src/
 ### 10.3 Public API
 
 ```typescript
-export { renderReport }     // (schema, data, options?) → RenderResult (IR)
-export { validateReport }   // (schema) → ValidationResult
+export { renderReport } // (schema, data, options?) → RenderResult (IR)
+export { validateReport } // (schema) → ValidationResult
 ```
 
 Internal modules (expression, band-processor, layout) are **not exported**.
@@ -436,7 +445,7 @@ interface Page {
 interface ResolvedElement {
   type: string
   position: { x: number; y: number; width: number; height: number }
-  properties: Record<string, unknown>  // resolved values
+  properties: Record<string, unknown> // resolved values
   bandType: string
   pageBreakBefore?: boolean
 }
@@ -482,7 +491,7 @@ interface ComponentCoreDefinition {
 interface ComponentUIDefinition extends ComponentCoreDefinition {
   icon: string
   canvasRenderer: (props, engine: CanvasEngine) => CanvasObject
-  propertyEditor: React.ComponentType<{ value, onChange }>
+  propertyEditor: React.ComponentType<{ value; onChange }>
 }
 ```
 
@@ -511,6 +520,7 @@ Three-panel layout:
 Canvas renders via Konva adapter through port interfaces. Components are drawn as objects with drag handles for resize/move.
 
 **Two view modes:**
+
 - **Data View (default):** Resolved values shown (`Acme Corp`, `₺45.000,00`)
 - **Expression View:** Raw expressions shown (`{{companyName}}`)
 
@@ -518,13 +528,13 @@ Canvas renders via Konva adapter through port interfaces. Components are drawn a
 
 Five store slices:
 
-| Slice | Responsibility |
-|-------|---------------|
-| DocumentSlice | Report schema (source of truth), component CRUD, band CRUD |
-| DataSlice | Sample data, inferred fields |
-| SelectionSlice | Selected band/component tracking |
-| ViewportSlice | Zoom, pan |
-| HistorySlice | Undo/redo (Immer snapshots) |
+| Slice          | Responsibility                                             |
+| -------------- | ---------------------------------------------------------- |
+| DocumentSlice  | Report schema (source of truth), component CRUD, band CRUD |
+| DataSlice      | Sample data, inferred fields                               |
+| SelectionSlice | Selected band/component tracking                           |
+| ViewportSlice  | Zoom, pan                                                  |
+| HistorySlice   | Undo/redo (Immer snapshots)                                |
 
 ### 13.4 Live Preview
 
@@ -560,16 +570,17 @@ Debounced (300ms) client-side rendering: schema changes → `renderReport()` + `
 
 ### 15.1 Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/render` | Render report to HTML or PDF |
-| POST | `/api/validate` | Validate report schema |
-| POST | `/api/preview` | Lightweight render (first page only) |
-| GET | `/api/templates/:id` | Load template + sample data |
+| Method | Endpoint             | Description                          |
+| ------ | -------------------- | ------------------------------------ |
+| POST   | `/api/render`        | Render report to HTML or PDF         |
+| POST   | `/api/validate`      | Validate report schema               |
+| POST   | `/api/preview`       | Lightweight render (first page only) |
+| GET    | `/api/templates/:id` | Load template + sample data          |
 
 ### 15.2 Render API
 
 **Mode 1 — Template reference (95% of use cases):**
+
 ```json
 {
   "templateId": "invoice-v1",
@@ -581,6 +592,7 @@ Debounced (300ms) client-side rendering: schema changes → `renderReport()` + `
 External consumers (Java, .NET, Python) send **simple, flat JSON data**. They never see the DSL schema.
 
 **Mode 2 — Full schema (AI agent / dynamic generation):**
+
 ```json
 {
   "template": { ... },
@@ -608,23 +620,24 @@ Route handlers are thin HTTP adapters — parse request, call engine, return res
 Engine always receives resolved plain JavaScript objects. It never fetches data. Data fetching is the caller's responsibility.
 
 ```typescript
-renderReport(schema, data)  // data = plain object, already resolved
+renderReport(schema, data) // data = plain object, already resolved
 ```
 
 ### 16.2 Data Resolvers (apps/web)
 
-| Resolver | MVP | Future |
-|----------|-----|--------|
-| Inline JSON (API body) | Yes | Yes |
-| JSON paste (wizard) | Yes | Yes |
-| Sample data (template-bundled) | Yes | Yes |
-| URL fetch | Yes | Yes |
-| Database connection | No | Phase 2 |
-| GraphQL | No | Phase 2 |
+| Resolver                       | MVP | Future  |
+| ------------------------------ | --- | ------- |
+| Inline JSON (API body)         | Yes | Yes     |
+| JSON paste (wizard)            | Yes | Yes     |
+| Sample data (template-bundled) | Yes | Yes     |
+| URL fetch                      | Yes | Yes     |
+| Database connection            | No  | Phase 2 |
+| GraphQL                        | No  | Phase 2 |
 
 ### 16.3 External Consumer Flow
 
 Java/.NET/Python clients fetch their own data and send it via REST:
+
 ```
 POST /api/render { "templateId": "invoice-v1", "data": { ... } }
 ```
@@ -663,8 +676,7 @@ Phase 2+ moves to database with CRUD API and versioning.
 
 ```tsx
 import { ReportViewer } from '@nextreport/ui-viewer'
-
-<ReportViewer report={schema} data={data} />
+;<ReportViewer report={schema} data={data} />
 ```
 
 ### Any Language via REST API
@@ -697,6 +709,7 @@ The system is designed for future AI integration:
 - **Template + data separation** means AI generates schema, caller provides data
 
 Future flow:
+
 ```
 "Create invoice report for customers"
    ↓
@@ -716,6 +729,7 @@ Planned: MCP server integration, natural language → schema generation, AI-assi
 **Report content locale only.** UI stays English.
 
 Report schema has a `locale` field. Expression functions use it:
+
 - `formatCurrency(price, 'TRY')` with `locale: "tr-TR"` → `₺45.000,00`
 - `formatDate(date, 'DD.MM.YYYY')` → locale-aware date
 
@@ -731,11 +745,11 @@ Phase 2+: UI i18n (designer and viewer in multiple languages), RTL support.
 
 **Unit + Integration tests. No E2E in MVP.**
 
-| Level | Scope | Tool |
-|-------|-------|------|
-| Unit | Per-package (schema validation, expression evaluation, rendering) | Vitest |
-| Integration | Cross-package pipeline (schema → engine → renderer) | Vitest |
-| E2E | Designer UI flows | Playwright (Phase 2) |
+| Level       | Scope                                                             | Tool                 |
+| ----------- | ----------------------------------------------------------------- | -------------------- |
+| Unit        | Per-package (schema validation, expression evaluation, rendering) | Vitest               |
+| Integration | Cross-package pipeline (schema → engine → renderer)               | Vitest               |
+| E2E         | Designer UI flows                                                 | Playwright (Phase 2) |
 
 ### Key Test Scenarios
 

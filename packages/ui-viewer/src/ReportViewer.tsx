@@ -85,14 +85,16 @@ export function ReportViewer({ report, data, mode = 'read-only' }: ReportViewerP
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#f5f5f5' }}>
+    <div
+      style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#f5f5f5' }}
+    >
       {/* Toolbar */}
       {mode !== 'embedded' && (
         <div style={toolbarStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <button
               style={currentPage <= 1 ? btnDisabledStyle : btnStyle}
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage <= 1}
             >
               Prev
@@ -102,7 +104,7 @@ export function ReportViewer({ report, data, mode = 'read-only' }: ReportViewerP
             </span>
             <button
               style={currentPage >= totalPages ? btnDisabledStyle : btnStyle}
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage >= totalPages}
             >
               Next

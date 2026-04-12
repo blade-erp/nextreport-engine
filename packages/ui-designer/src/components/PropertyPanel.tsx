@@ -124,93 +124,94 @@ export function PropertyPanel() {
       </div>
 
       {/* Text component properties */}
-      {component.type === 'text' && (() => {
-        const tc = component as TextComponent
-        return (
-          <div style={SECTION}>
-            <div style={LABEL}>Content</div>
+      {component.type === 'text' &&
+        (() => {
+          const tc = component as TextComponent
+          return (
+            <div style={SECTION}>
+              <div style={LABEL}>Content</div>
 
-            <div style={FIELD_GROUP}>
-              <label style={FIELD_LABEL}>Expression</label>
-              <input
-                style={INPUT}
-                type="text"
-                value={tc.content}
-                onChange={(e) => handleProp('content', e.target.value)}
-                placeholder="{{fieldName}} or plain text"
-              />
-            </div>
-
-            <div style={FIELD_GROUP}>
-              <label style={FIELD_LABEL}>Font Size</label>
-              <input
-                style={{ ...INPUT, width: 80 }}
-                type="number"
-                min={6}
-                max={96}
-                value={tc.fontSize}
-                onChange={(e) => handleProp('fontSize', Number(e.target.value))}
-              />
-            </div>
-
-            <div style={FIELD_GROUP}>
-              <label style={FIELD_LABEL}>Font Weight</label>
-              <div style={{ display: 'flex', gap: 4 }}>
-                <button
-                  style={TOGGLE_BTN(tc.fontWeight === 'normal')}
-                  onClick={() => handleProp('fontWeight', 'normal')}
-                >
-                  Normal
-                </button>
-                <button
-                  style={TOGGLE_BTN(tc.fontWeight === 'bold')}
-                  onClick={() => handleProp('fontWeight', 'bold')}
-                >
-                  Bold
-                </button>
-              </div>
-            </div>
-
-            <div style={FIELD_GROUP}>
-              <label style={FIELD_LABEL}>Color</label>
-              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                <span
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: 3,
-                    background: tc.color,
-                    border: '1px solid #3d3d5c',
-                    flexShrink: 0,
-                  }}
-                />
+              <div style={FIELD_GROUP}>
+                <label style={FIELD_LABEL}>Expression</label>
                 <input
                   style={INPUT}
                   type="text"
-                  value={tc.color}
-                  onChange={(e) => handleProp('color', e.target.value)}
-                  placeholder="#000000"
+                  value={tc.content}
+                  onChange={(e) => handleProp('content', e.target.value)}
+                  placeholder="{{fieldName}} or plain text"
                 />
               </div>
-            </div>
 
-            <div style={FIELD_GROUP}>
-              <label style={FIELD_LABEL}>Text Align</label>
-              <div style={{ display: 'flex', gap: 4 }}>
-                {(['left', 'center', 'right'] as const).map((align) => (
+              <div style={FIELD_GROUP}>
+                <label style={FIELD_LABEL}>Font Size</label>
+                <input
+                  style={{ ...INPUT, width: 80 }}
+                  type="number"
+                  min={6}
+                  max={96}
+                  value={tc.fontSize}
+                  onChange={(e) => handleProp('fontSize', Number(e.target.value))}
+                />
+              </div>
+
+              <div style={FIELD_GROUP}>
+                <label style={FIELD_LABEL}>Font Weight</label>
+                <div style={{ display: 'flex', gap: 4 }}>
                   <button
-                    key={align}
-                    style={TOGGLE_BTN(tc.textAlign === align)}
-                    onClick={() => handleProp('textAlign', align)}
+                    style={TOGGLE_BTN(tc.fontWeight === 'normal')}
+                    onClick={() => handleProp('fontWeight', 'normal')}
                   >
-                    {align.charAt(0).toUpperCase() + align.slice(1)}
+                    Normal
                   </button>
-                ))}
+                  <button
+                    style={TOGGLE_BTN(tc.fontWeight === 'bold')}
+                    onClick={() => handleProp('fontWeight', 'bold')}
+                  >
+                    Bold
+                  </button>
+                </div>
+              </div>
+
+              <div style={FIELD_GROUP}>
+                <label style={FIELD_LABEL}>Color</label>
+                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                  <span
+                    style={{
+                      width: 22,
+                      height: 22,
+                      borderRadius: 3,
+                      background: tc.color,
+                      border: '1px solid #3d3d5c',
+                      flexShrink: 0,
+                    }}
+                  />
+                  <input
+                    style={INPUT}
+                    type="text"
+                    value={tc.color}
+                    onChange={(e) => handleProp('color', e.target.value)}
+                    placeholder="#000000"
+                  />
+                </div>
+              </div>
+
+              <div style={FIELD_GROUP}>
+                <label style={FIELD_LABEL}>Text Align</label>
+                <div style={{ display: 'flex', gap: 4 }}>
+                  {(['left', 'center', 'right'] as const).map((align) => (
+                    <button
+                      key={align}
+                      style={TOGGLE_BTN(tc.textAlign === align)}
+                      onClick={() => handleProp('textAlign', align)}
+                    >
+                      {align.charAt(0).toUpperCase() + align.slice(1)}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )
-      })()}
+          )
+        })()}
 
       {/* Position */}
       <div style={SECTION}>

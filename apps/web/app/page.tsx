@@ -6,8 +6,18 @@ export default function Home() {
       {/* Top nav */}
       <header className="border-b border-gray-100 bg-white/80 backdrop-blur-sm">
         <div className="max-w-3xl mx-auto px-6 h-14 flex items-center gap-2">
-          <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4v-6M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+          <svg
+            className="w-5 h-5 text-blue-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 17v-2m3 2v-4m3 4v-6M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"
+            />
           </svg>
           <span className="font-semibold text-gray-800">NextReport Engine</span>
         </div>
@@ -21,12 +31,14 @@ export default function Home() {
         </div>
 
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 leading-tight tracking-tight">
-          Build beautiful reports,<br />
+          Build beautiful reports,
+          <br />
           <span className="text-blue-500">visually.</span>
         </h1>
 
         <p className="text-lg text-gray-500 mb-10 max-w-md leading-relaxed">
-          Design, preview, and export pixel-perfect reports with a visual designer and flexible data bindings.
+          Design, preview, and export pixel-perfect reports with a visual designer and flexible data
+          bindings.
         </p>
 
         {/* Primary CTA */}
@@ -34,7 +46,13 @@ export default function Home() {
           href="/new"
           className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 active:scale-95 text-white font-semibold px-7 py-3.5 rounded-xl shadow-sm hover:shadow transition-all duration-150 text-base mb-4"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           Create New Report
@@ -44,7 +62,9 @@ export default function Home() {
 
         {/* Quick links */}
         <div className="w-full max-w-2xl">
-          <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-4">Quick links</p>
+          <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-4">
+            Quick links
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <a
               href="/designer"
@@ -52,7 +72,9 @@ export default function Home() {
             >
               <span className="text-xl">✏️</span>
               <div>
-                <div className="text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">Designer</div>
+                <div className="text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">
+                  Designer
+                </div>
                 <div className="text-xs text-gray-400">Blank canvas</div>
               </div>
             </a>
@@ -63,7 +85,9 @@ export default function Home() {
             >
               <span className="text-xl">🧾</span>
               <div>
-                <div className="text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">Invoice Designer</div>
+                <div className="text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">
+                  Invoice Designer
+                </div>
                 <div className="text-xs text-gray-400">invoice-v1 template</div>
               </div>
             </a>
@@ -74,7 +98,9 @@ export default function Home() {
             >
               <span className="text-xl">👁️</span>
               <div>
-                <div className="text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">Invoice Viewer</div>
+                <div className="text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">
+                  Invoice Viewer
+                </div>
                 <div className="text-xs text-gray-400">invoice-v1 template</div>
               </div>
             </a>
@@ -83,21 +109,21 @@ export default function Home() {
 
         {/* API reference */}
         <div className="w-full max-w-2xl mt-10">
-          <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-4">API Endpoints</p>
+          <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-4">
+            API Endpoints
+          </p>
           <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden text-left">
             {[
               { method: 'POST', path: '/api/render', desc: 'Render report to HTML or PDF' },
               { method: 'POST', path: '/api/validate', desc: 'Validate report schema' },
               { method: 'POST', path: '/api/preview', desc: 'Preview first page' },
-              { method: 'GET',  path: '/api/templates/:id', desc: 'Load template + sample data' },
+              { method: 'GET', path: '/api/templates/:id', desc: 'Load template + sample data' },
             ].map(({ method, path, desc }) => (
               <div key={path} className="flex items-center gap-3 px-4 py-3">
                 <span
                   className={[
                     'text-xs font-mono font-bold w-12 text-center py-0.5 rounded',
-                    method === 'GET'
-                      ? 'bg-green-50 text-green-700'
-                      : 'bg-blue-50 text-blue-700',
+                    method === 'GET' ? 'bg-green-50 text-green-700' : 'bg-blue-50 text-blue-700',
                   ].join(' ')}
                 >
                   {method}

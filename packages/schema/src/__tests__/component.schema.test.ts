@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import {
-  TextComponentSchema,
-  TableComponentSchema,
-  ComponentSchema,
-} from '../index.js'
+import { TextComponentSchema, TableComponentSchema, ComponentSchema } from '../index.js'
 
 const validPosition = { x: 0, y: 0, width: 100, height: 50 }
 

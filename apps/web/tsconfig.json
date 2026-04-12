@@ -1,13 +1,8 @@
 {
   "compilerOptions": {
     "target": "es2025",
-    "lib": [
-      "dom",
-      "ES2025"
-    ],
-    "types": [
-      "node"
-    ],
+    "lib": ["dom", "ES2025"],
+    "types": ["node"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -24,9 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     },
     "esModuleInterop": true
   },
@@ -37,7 +30,5 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

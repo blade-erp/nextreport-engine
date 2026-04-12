@@ -24,15 +24,23 @@ export default function ViewerPage() {
       }
     } else if (templateId) {
       fetch(`/api/templates/${templateId}`)
-        .then(r => {
+        .then((r) => {
           if (!r.ok) throw new Error(`Template "${templateId}" not found`)
           return r.json()
         })
-        .then(({ template, sampleData }: { template: Report; sampleData?: Record<string, unknown> }) => {
-          setReport(template)
-          setData(sampleData ?? {})
-        })
-        .catch(err => {
+        .then(
+          ({
+            template,
+            sampleData,
+          }: {
+            template: Report
+            sampleData?: Record<string, unknown>
+          }) => {
+            setReport(template)
+            setData(sampleData ?? {})
+          },
+        )
+        .catch((err) => {
           setError(String(err))
         })
     } else {
@@ -49,11 +57,7 @@ export default function ViewerPage() {
   }
 
   if (!report) {
-    return (
-      <div style={{ padding: 24, color: '#555' }}>
-        Loading report...
-      </div>
-    )
+    return <div style={{ padding: 24, color: '#555' }}>Loading report...</div>
   }
 
   return (

@@ -13,11 +13,16 @@ function getFieldType(value: unknown): FieldType {
   if (value === null) return 'null'
   if (Array.isArray(value)) return 'array'
   switch (typeof value) {
-    case 'string': return 'string'
-    case 'number': return 'number'
-    case 'boolean': return 'boolean'
-    case 'object': return 'object'
-    default: return 'unknown'
+    case 'string':
+      return 'string'
+    case 'number':
+      return 'number'
+    case 'boolean':
+      return 'boolean'
+    case 'object':
+      return 'object'
+    default:
+      return 'unknown'
   }
 }
 
@@ -30,7 +35,12 @@ function buildFieldTree(obj: Record<string, unknown>): FieldNode[] {
       // Use first element to infer child structure
       const firstItem = arr[0]
       let children: FieldNode[] | undefined
-      if (firstItem !== null && firstItem !== undefined && typeof firstItem === 'object' && !Array.isArray(firstItem)) {
+      if (
+        firstItem !== null &&
+        firstItem !== undefined &&
+        typeof firstItem === 'object' &&
+        !Array.isArray(firstItem)
+      ) {
         children = buildFieldTree(firstItem as Record<string, unknown>)
       }
       return { key, type, children }
@@ -144,15 +154,13 @@ function FieldRow({ node, depth }: FieldRowProps) {
         </span>
 
         {/* Type label */}
-        <span style={{ fontSize: 10, color: '#555', flexShrink: 0 }}>
-          {typeLabel}
-        </span>
+        <span style={{ fontSize: 10, color: '#555', flexShrink: 0 }}>{typeLabel}</span>
       </div>
 
       {/* Children */}
-      {hasChildren && expanded && node.children!.map((child) => (
-        <FieldRow key={child.key} node={child} depth={depth + 1} />
-      ))}
+      {hasChildren &&
+        expanded &&
+        node.children!.map((child) => <FieldRow key={child.key} node={child} depth={depth + 1} />)}
     </>
   )
 }

@@ -71,7 +71,9 @@ describe('document slice — addComponent', () => {
     }
     useDesignerStore.getState().addComponent(0, component)
     expect(useDesignerStore.getState().report.bands[0].components).toHaveLength(1)
-    expect(useDesignerStore.getState().report.bands[0].components[0]).toMatchObject({ content: 'Hello' })
+    expect(useDesignerStore.getState().report.bands[0].components[0]).toMatchObject({
+      content: 'Hello',
+    })
   })
 })
 

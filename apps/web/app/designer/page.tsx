@@ -9,7 +9,7 @@ export default function DesignerPage() {
     if (!templateId) return
 
     fetch(`/api/templates/${templateId}`)
-      .then(r => r.json())
+      .then((r) => r.json())
       .then(({ template, sampleData }) => {
         if (template) useDesignerStore.getState().setReport(template)
         if (sampleData) useDesignerStore.getState().setSampleData(sampleData)

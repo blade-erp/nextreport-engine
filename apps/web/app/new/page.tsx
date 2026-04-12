@@ -57,12 +57,18 @@ function StepIndicator({ current }: { current: number }) {
                   isDone
                     ? 'bg-blue-500 text-white'
                     : isActive
-                    ? 'bg-blue-500 text-white ring-4 ring-blue-100'
-                    : 'bg-gray-100 text-gray-400 border border-gray-200',
+                      ? 'bg-blue-500 text-white ring-4 ring-blue-100'
+                      : 'bg-gray-100 text-gray-400 border border-gray-200',
                 ].join(' ')}
               >
                 {isDone ? (
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 ) : (
@@ -128,7 +134,13 @@ function StepChooseTemplate({
             >
               {isSelected && (
                 <span className="absolute top-3 right-3 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                  <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <svg
+                    className="w-3 h-3 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </span>
@@ -201,14 +213,18 @@ function StepConnectData({
     <div>
       <h2 className="text-xl font-semibold text-gray-800 mb-1">Connect Data</h2>
       <p className="text-sm text-gray-500 mb-6">
-        Choose how to supply data for <span className="font-medium text-gray-700">{template.name}</span>.
+        Choose how to supply data for{' '}
+        <span className="font-medium text-gray-700">{template.name}</span>.
       </p>
 
       <div className="space-y-3">
         {/* Sample data option — only when a real template is selected */}
         {!isBlank && (
           <button
-            onClick={() => { onDataOption('sample'); setJsonError(null) }}
+            onClick={() => {
+              onDataOption('sample')
+              setJsonError(null)
+            }}
             className={[
               'w-full text-left rounded-xl border-2 p-4 transition-all duration-150 focus:outline-none',
               'hover:shadow-sm',
@@ -277,7 +293,10 @@ function StepConnectData({
             </div>
             <textarea
               value={customJson}
-              onChange={(e) => { onCustomJson(e.target.value); setJsonError(null) }}
+              onChange={(e) => {
+                onCustomJson(e.target.value)
+                setJsonError(null)
+              }}
               placeholder={'{\n  "key": "value"\n}'}
               rows={8}
               spellCheck={false}
@@ -288,8 +307,18 @@ function StepConnectData({
             />
             {jsonError && (
               <div className="px-3 py-2 bg-red-50 border-t border-red-100 text-xs text-red-600 flex items-center gap-1.5">
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 {jsonError}
               </div>
@@ -368,14 +397,19 @@ function StepReady({
     }
   }
 
-  const dataLabel =
-    dataOption === 'sample' ? 'Template sample data' : 'Custom JSON data'
+  const dataLabel = dataOption === 'sample' ? 'Template sample data' : 'Custom JSON data'
 
   return (
     <div>
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-100 mb-4">
-          <svg className="w-7 h-7 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg
+            className="w-7 h-7 text-green-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
@@ -413,8 +447,18 @@ function StepReady({
           onClick={openDesigner}
           className="flex flex-col items-center gap-1.5 rounded-xl border-2 border-blue-500 bg-blue-500 text-white p-4 hover:bg-blue-600 hover:border-blue-600 transition-all duration-150 active:scale-95 shadow-sm hover:shadow focus:outline-none"
         >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z" />
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.8}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z"
+            />
           </svg>
           <span className="font-semibold text-sm">Open Designer</span>
           <span className="text-xs text-blue-100">Edit &amp; customize</span>
@@ -424,9 +468,23 @@ function StepReady({
           onClick={openViewer}
           className="flex flex-col items-center gap-1.5 rounded-xl border-2 border-gray-200 bg-white text-gray-700 p-4 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150 active:scale-95 shadow-sm hover:shadow focus:outline-none"
         >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.8}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+            />
           </svg>
           <span className="font-semibold text-sm">Open Viewer</span>
           <span className="text-xs text-gray-400">Preview output</span>
@@ -469,13 +527,28 @@ export default function NewReportPage() {
       {/* Top nav bar */}
       <header className="border-b border-gray-100 bg-white/80 backdrop-blur-sm">
         <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors">
-            <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4v-6M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+          <a
+            href="/"
+            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
+          >
+            <svg
+              className="w-5 h-5 text-blue-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 17v-2m3 2v-4m3 4v-6M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"
+              />
             </svg>
             <span className="font-semibold text-sm">NextReport</span>
           </a>
-          <span className="text-xs text-gray-400 font-medium tracking-wide uppercase">New Report</span>
+          <span className="text-xs text-gray-400 font-medium tracking-wide uppercase">
+            New Report
+          </span>
         </div>
       </header>
 

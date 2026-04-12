@@ -7,7 +7,7 @@ import { resolveData } from '@/lib/data-resolvers'
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json() as {
+    const body = (await request.json()) as {
       templateId?: string
       template?: Record<string, unknown>
       data?: Record<string, unknown>
@@ -23,7 +23,10 @@ export async function POST(request: NextRequest) {
     } else if (template) {
       schema = template
     } else {
-      return NextResponse.json({ success: false, error: 'Either templateId or template is required' }, { status: 400 })
+      return NextResponse.json(
+        { success: false, error: 'Either templateId or template is required' },
+        { status: 400 },
+      )
     }
 
     const sampleData = templateId ? await loadSampleData(templateId).catch(() => ({})) : {}

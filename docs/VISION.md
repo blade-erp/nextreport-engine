@@ -18,14 +18,14 @@ The answer turned out to be more interesting than the question.
 
 ### The Landscape in 2026
 
-| Tool | Strength | Weakness |
-|------|----------|----------|
-| JasperReports | Powerful, proven, large community | UX from another era, XML schemas, desktop tooling |
-| FastReport | Good desktop UX, fast rendering | Closed source, expensive licensing |
-| Stimulsoft Reports.JS | Modern web UX, good features | Closed source, per-developer pricing |
-| ActiveReportsJS | Enterprise-grade, GrapeCity ecosystem | "Cold" DX, enterprise pricing |
-| jsreport | Open source, Node.js, flexible | Code-driven (no WYSIWYG), 5-template free limit |
-| Syncfusion Bold Reports | 30+ connectors, Microsoft ecosystem | .NET backend required, not truly web-native |
+| Tool                    | Strength                              | Weakness                                          |
+| ----------------------- | ------------------------------------- | ------------------------------------------------- |
+| JasperReports           | Powerful, proven, large community     | UX from another era, XML schemas, desktop tooling |
+| FastReport              | Good desktop UX, fast rendering       | Closed source, expensive licensing                |
+| Stimulsoft Reports.JS   | Modern web UX, good features          | Closed source, per-developer pricing              |
+| ActiveReportsJS         | Enterprise-grade, GrapeCity ecosystem | "Cold" DX, enterprise pricing                     |
+| jsreport                | Open source, Node.js, flexible        | Code-driven (no WYSIWYG), 5-template free limit   |
+| Syncfusion Bold Reports | 30+ connectors, Microsoft ecosystem   | .NET backend required, not truly web-native       |
 
 **The pattern:** Pain exists + good solutions are closed/expensive + OSS gap is real = opportunity.
 
@@ -139,6 +139,7 @@ The go-to-market strategy:
 The sustainable open-source model for developer tools:
 
 **Always free (core):**
+
 - Engine (schema, pipeline, expression, renderers)
 - Designer (basic visual builder)
 - Viewer (report preview and export)
@@ -148,6 +149,7 @@ The sustainable open-source model for developer tools:
 - Self-hosting
 
 **Potentially paid (future, hypothetical):**
+
 - Cloud-hosted SaaS (managed infrastructure)
 - Real-time collaboration (multi-user editing)
 - Advanced template versioning with diff/merge
@@ -162,6 +164,7 @@ The sustainable open-source model for developer tools:
 Closed-source tools compete on features. Open-source tools compete on ecosystem.
 
 **Community contributions that compound:**
+
 - Component plugins (image, barcode, chart, signature, QR code)
 - Expression functions (domain-specific: financial, statistical, date math)
 - Renderers (Excel, DOCX, CSV, Markdown)
@@ -231,15 +234,15 @@ The technically best reporting engine that nobody uses is a failed project. Succ
 
 This is a long game:
 
-| Horizon | Focus | Measure of Success |
-|---------|-------|--------------------|
-| 0-6 months | Engine stability, docs, first adopters | 100 GitHub stars, 10 real users |
-| 6-12 months | Plugin ecosystem, community contributions | 500 stars, 5 community plugins |
-| 12-18 months | Production adoption, case studies | 2K stars, companies using in production |
-| 18-24 months | Platform features, potential sustainability | 5K stars, clear path to sustainability |
+| Horizon      | Focus                                       | Measure of Success                      |
+| ------------ | ------------------------------------------- | --------------------------------------- |
+| 0-6 months   | Engine stability, docs, first adopters      | 100 GitHub stars, 10 real users         |
+| 6-12 months  | Plugin ecosystem, community contributions   | 500 stars, 5 community plugins          |
+| 12-18 months | Production adoption, case studies           | 2K stars, companies using in production |
+| 18-24 months | Platform features, potential sustainability | 5K stars, clear path to sustainability  |
 
 These are not promises — they're calibration points. The actual pace depends on community resonance and consistent execution.
 
 ---
 
-*This document captures the strategic thinking behind NextReport Engine. It's a living document that evolves as the project grows and market understanding deepens.*
+_This document captures the strategic thinking behind NextReport Engine. It's a living document that evolves as the project grows and market understanding deepens._

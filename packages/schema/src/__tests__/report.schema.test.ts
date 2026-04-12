@@ -42,9 +42,14 @@ describe('BandSchema', () => {
 
   it('should accept all valid band types', () => {
     const types = [
-      'header', 'detail', 'footer',
-      'group-header', 'group-footer',
-      'page-header', 'page-footer', 'custom',
+      'header',
+      'detail',
+      'footer',
+      'group-header',
+      'group-footer',
+      'page-header',
+      'page-footer',
+      'custom',
     ]
     for (const type of types) {
       const result = BandSchema.safeParse({ type, height: 50, components: [] })
@@ -69,7 +74,10 @@ describe('BandSchema', () => {
 })
 
 describe('ReportSchema', () => {
-  const validDataSource = { type: 'json' as const, fields: [{ name: 'id', type: 'number' as const }] }
+  const validDataSource = {
+    type: 'json' as const,
+    fields: [{ name: 'id', type: 'number' as const }],
+  }
 
   it('should accept a complete invoice report schema', () => {
     const result = ReportSchema.safeParse({

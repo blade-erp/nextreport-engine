@@ -6,7 +6,10 @@ export interface PdfRenderOptions {
 }
 
 export async function renderToPdf(html: string, options?: PdfRenderOptions): Promise<Uint8Array> {
-  const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] })
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  })
   try {
     const page = await browser.newPage()
     await page.setContent(html, { waitUntil: 'networkidle0' })

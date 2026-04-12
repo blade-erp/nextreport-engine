@@ -79,11 +79,7 @@ export function BandManager() {
     <div style={sectionStyle}>
       <div style={labelStyle}>
         <span>Bands</span>
-        <button
-          style={addBtnStyle}
-          onClick={() => setAddOpen((v) => !v)}
-          title="Add band"
-        >
+        <button style={addBtnStyle} onClick={() => setAddOpen((v) => !v)} title="Add band">
           +
         </button>
       </div>

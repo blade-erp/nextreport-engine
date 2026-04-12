@@ -5,11 +5,15 @@ import type { DesignerStore } from './index.js'
 export interface DocumentSlice {
   report: Report
   setReport: (report: Report) => void
-  updateComponent: (bandIndex: number, componentIndex: number, changes: Record<string, unknown>) => void
+  updateComponent: (
+    bandIndex: number,
+    componentIndex: number,
+    changes: Record<string, unknown>,
+  ) => void
   updateComponentPosition: (
     bandIndex: number,
     componentIndex: number,
-    position: { x?: number; y?: number; width?: number; height?: number }
+    position: { x?: number; y?: number; width?: number; height?: number },
   ) => void
   addBand: (type: BandType, height?: number) => void
   removeBand: (index: number) => void

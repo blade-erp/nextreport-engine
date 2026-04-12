@@ -14,7 +14,7 @@ export const FieldSchema: z.ZodType<Field> = z.lazy(() =>
     name: z.string(),
     type: FieldTypeSchema,
     fields: z.array(FieldSchema).optional(),
-  })
+  }),
 )
 
 export const DataSourceSchema = z.object({

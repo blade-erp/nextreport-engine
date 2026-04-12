@@ -58,9 +58,7 @@ export function PreviewPanel() {
             Error: {error.length > 60 ? error.slice(0, 60) + '…' : error}
           </span>
         )}
-        {!error && html && (
-          <span style={{ color: '#4caf50', fontSize: 11 }}>Rendered</span>
-        )}
+        {!error && html && <span style={{ color: '#4caf50', fontSize: 11 }}>Rendered</span>}
       </div>
 
       {/* iframe content */}

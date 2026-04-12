@@ -11,7 +11,7 @@ describe('tokenizer', () => {
     ])
   })
 
-  it('tokenizes a function call with mixed args (formatCurrency(price, \'TRY\'))', () => {
+  it("tokenizes a function call with mixed args (formatCurrency(price, 'TRY'))", () => {
     const tokens = tokenize("formatCurrency(price, 'TRY')")
     expect(tokens).toEqual([
       { type: TokenType.Identifier, value: 'formatCurrency' },

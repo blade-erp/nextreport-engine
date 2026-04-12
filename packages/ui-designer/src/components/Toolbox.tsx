@@ -68,9 +68,7 @@ export function Toolbox() {
     <div style={sectionStyle}>
       <div style={labelStyle}>Components</div>
       {disabled && (
-        <div style={{ fontSize: 11, color: '#666', marginBottom: 8 }}>
-          Select a band first
-        </div>
+        <div style={{ fontSize: 11, color: '#666', marginBottom: 8 }}>Select a band first</div>
       )}
       <button style={toolBtnStyle} disabled={disabled} onClick={handleAddText}>
         <span style={{ fontSize: 14 }}>T</span>
