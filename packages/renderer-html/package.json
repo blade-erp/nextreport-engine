@@ -1,6 +1,6 @@
 {
   "name": "@nextreport/renderer-html",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "HTML renderer for NextReport Engine. Converts intermediate representation to self-contained HTML.",
   "license": "MIT",
   "type": "module",

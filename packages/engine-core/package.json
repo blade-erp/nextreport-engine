@@ -1,6 +1,6 @@
 {
   "name": "@nextreport/engine-core",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Stateless render pipeline for NextReport Engine. Schema validation, expression engine, band processing, layout calculation.",
   "license": "MIT",
   "type": "module",

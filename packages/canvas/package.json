@@ -1,6 +1,6 @@
 {
   "name": "@nextreport/canvas",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Canvas abstraction layer for NextReport Engine. Ports & adapters pattern with Konva.js implementation.",
   "type": "module",
   "main": "./dist/index.js",

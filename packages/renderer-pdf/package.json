@@ -1,6 +1,6 @@
 {
   "name": "@nextreport/renderer-pdf",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "PDF renderer for NextReport Engine. Converts HTML to PDF via Puppeteer.",
   "license": "MIT",
   "type": "module",
