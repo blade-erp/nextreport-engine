@@ -22,7 +22,7 @@
     "@nextreport/schema": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.8.3",
+    "typescript": "^6.0.2",
     "vitest": "^3.2.0"
   }
 }
