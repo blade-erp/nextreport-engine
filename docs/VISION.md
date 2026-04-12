@@ -6,7 +6,7 @@
 
 ## Origin Story
 
-This project was born from firsthand pain. Years of working with JasperReports in Java ecosystems, wrestling with JRXML schemas, fighting desktop-only designers, and watching business users struggle with tools built for a different era.
+This project was born from firsthand pain. Years of working with JasperReports in Java ecosystems — wrestling with JRXML schemas, fighting desktop-only designers, and watching business users struggle with tools built for a different era. JasperReports is open source and powerful, but the UX hasn't evolved. FastReport offered the desktop experience we wished Jasper had — intuitive drag & drop, instant preview, a designer that just worked — but it's closed source and locked to the .NET ecosystem. Neither option solved the real problem: a modern, web-native reporting engine that's both open and usable.
 
 The question was simple: **Why doesn't a modern, web-native reporting engine exist as open source?**
 
