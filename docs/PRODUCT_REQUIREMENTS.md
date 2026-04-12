@@ -672,11 +672,29 @@ Phase 2+ moves to database with CRUD API and versioning.
 
 ## 18. Integration Strategy
 
-### React / Next.js
+### npm Package
+
+```bash
+npm install @nextreport/engine
+```
+
+```typescript
+import { renderReport, renderToHtml, validateReport } from '@nextreport/engine'
+
+const ir = renderReport(schema, data)
+const html = renderToHtml(ir)
+```
+
+The `@nextreport/engine` package bundles schema, engine-core, renderer-html, and renderer-pdf into a single installable package with ESM, CJS, and full TypeScript declarations.
+
+- **npm:** https://www.npmjs.com/package/@nextreport/engine
+- **GitHub:** https://github.com/cevheri/nextreport-engine
+
+### React / Next.js (Viewer Component)
 
 ```tsx
 import { ReportViewer } from '@nextreport/ui-viewer'
-;<ReportViewer report={schema} data={data} />
+<ReportViewer report={schema} data={data} />
 ```
 
 ### Any Language via REST API

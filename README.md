@@ -101,17 +101,94 @@ Based on the market gap, NextReport is most valuable for:
 - **Type-Safe** — Written in TypeScript with Zod schemas. Full type inference from schema to render output.
 - **Locale-Aware** — Currency, date, and number formatting respects report locale. `formatCurrency(price, 'TRY')` with `locale: "tr-TR"` outputs `₺45.000,00`.
 
-## Quick Start
+## Installation
+
+```bash
+npm install @nextreport/engine
+```
+
+```bash
+pnpm add @nextreport/engine
+```
+
+```bash
+yarn add @nextreport/engine
+```
+
+**Requirements:** Node.js >= 22. For PDF generation, Puppeteer is an optional dependency — install it separately if needed: `npm install puppeteer`
+
+### Quick Usage
+
+```typescript
+import { renderReport, renderToHtml, validateReport } from '@nextreport/engine'
+
+// Define your report schema
+const schema = {
+  type: 'report' as const,
+  locale: 'en-US',
+  dataSource: { type: 'json' as const },
+  bands: [
+    {
+      type: 'header' as const, height: 60,
+      components: [
+        { type: 'text' as const, position: { x: 0, y: 10, width: 300, height: 30 },
+          content: '{{companyName}}', fontSize: 24, fontWeight: 'bold' as const }
+      ]
+    },
+    {
+      type: 'detail' as const, height: 25, dataBinding: 'items',
+      components: [
+        { type: 'text' as const, position: { x: 0, y: 0, width: 200, height: 25 },
+          content: '{{item.name}}' },
+        { type: 'text' as const, position: { x: 300, y: 0, width: 100, height: 25 },
+          content: '{{formatCurrency(item.price, "USD")}}' }
+      ]
+    },
+    {
+      type: 'footer' as const, height: 30,
+      components: [
+        { type: 'text' as const, position: { x: 300, y: 0, width: 100, height: 25 },
+          content: 'Total: {{formatCurrency(sum(items, "price"), "USD")}}', fontWeight: 'bold' as const }
+      ]
+    }
+  ]
+}
+
+// Your data
+const data = {
+  companyName: 'Acme Corp',
+  items: [
+    { name: 'Widget', price: 29.99 },
+    { name: 'Gadget', price: 49.99 },
+  ]
+}
+
+// Validate
+const validation = validateReport(schema)
+console.log(validation.valid) // true
+
+// Render to HTML
+const ir = renderReport(schema, data)
+const html = renderToHtml(ir)
+
+// Render to PDF (requires puppeteer)
+import { renderToPdf } from '@nextreport/engine'
+const pdf = await renderToPdf(html)
+```
+
+## Quick Start (Full Platform)
+
+To run the complete platform with visual designer, viewer, and API server:
 
 ### Prerequisites
 
-- Node.js >= 24
+- Node.js >= 22
 - pnpm 10.33+
 
-### Install and Run
+### Clone and Run
 
 ```bash
-git clone https://github.com/your-org/nextreport-engine.git
+git clone https://github.com/cevheri/nextreport-engine.git
 cd nextreport-engine
 pnpm install
 pnpm run dev
@@ -126,7 +203,9 @@ Open http://localhost:3000 in your browser.
 ### Run Tests
 
 ```bash
-pnpm test
+pnpm test       # 190 tests across all packages
+pnpm run lint   # ESLint with engine isolation rules
+pnpm run build  # Production build
 ```
 
 ### Render a Report via API
@@ -564,7 +643,7 @@ Create a `.json` template + `.data.json` sample data in `apps/web/templates/`. G
 ### Development Setup
 
 ```bash
-git clone https://github.com/your-org/nextreport-engine.git
+git clone https://github.com/cevheri/nextreport-engine.git
 cd nextreport-engine
 pnpm install
 pnpm test           # Run all 190 tests
