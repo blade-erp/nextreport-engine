@@ -29,6 +29,12 @@ export function renderText(element: ResolvedElement): string {
     `font-weight:${fontWeight}`,
     `color:${color}`,
     `text-align:${textAlign}`,
+    // Clip at the element bounds: bands have fixed heights, so overflowing
+    // (e.g. wrapped) text must not bleed into the band below.
+    'overflow:hidden',
+    `line-height:${height}pt`,
+    'white-space:nowrap',
+    'text-overflow:ellipsis',
   ].join(';')
 
   return `<div style="${style}">${escapeHtml(content)}</div>`
