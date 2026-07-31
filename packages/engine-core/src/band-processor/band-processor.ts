@@ -301,6 +301,33 @@ function groupBy(items: unknown[], field: string): Map<string, Record<string, un
   return groups
 }
 
+// Page variables are substituted by the layout calculator, which is the only
+// stage that knows page numbers. They are masked through expression
+// evaluation so mixed content like "Page {{pageNumber}} — {{companyName}}"
+// keeps its page variables while everything else resolves.
+const PAGE_VARIABLE_PATTERN = /\{\{\s*(pageNumber|totalPages)\s*\}\}/g
+const PAGE_VARIABLE_MASK: Record<string, string> = {
+  pageNumber: '\u0000PAGE_NUMBER\u0000',
+  totalPages: '\u0000TOTAL_PAGES\u0000',
+}
+const PAGE_VARIABLE_UNMASK: Array<[string, string]> = [
+  ['\u0000PAGE_NUMBER\u0000', '{{pageNumber}}'],
+  ['\u0000TOTAL_PAGES\u0000', '{{totalPages}}'],
+]
+
+function maskPageVariables(value: string): string {
+  return value.replace(PAGE_VARIABLE_PATTERN, (_, name: string) => PAGE_VARIABLE_MASK[name])
+}
+
+function unmaskPageVariables(value: unknown): unknown {
+  if (typeof value !== 'string') return value
+  let result = value
+  for (const [token, original] of PAGE_VARIABLE_UNMASK) {
+    result = result.split(token).join(original)
+  }
+  return result
+}
+
 function resolveComponents(
   components: Component[],
   data: Record<string, unknown>,
@@ -314,7 +341,10 @@ function resolveComponents(
     for (const [key, value] of Object.entries(compRecord)) {
       if (key === 'type' || key === 'position') continue
       if (typeof value === 'string' && value.includes('{{')) {
-        resolvedProperties[key] = evaluateExpression(value, data, locale)
+        const masked = maskPageVariables(value)
+        resolvedProperties[key] = masked.includes('{{')
+          ? unmaskPageVariables(evaluateExpression(masked, data, locale))
+          : unmaskPageVariables(masked)
       } else {
         resolvedProperties[key] = value
       }
