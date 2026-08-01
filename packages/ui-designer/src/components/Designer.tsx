@@ -7,7 +7,12 @@ import { CanvasArea } from './CanvasArea.js'
 import { PropertyPanel } from './PropertyPanel.js'
 import { PreviewPanel } from './PreviewPanel.js'
 
-export function Designer() {
+export interface DesignerProps {
+  /** Height of the designer root; defaults to filling the viewport. */
+  height?: string | number
+}
+
+export function Designer({ height = '100vh' }: DesignerProps = {}) {
   const [showPreview, setShowPreview] = useState(false)
 
   const togglePreview = () => setShowPreview((v) => !v)
@@ -17,7 +22,7 @@ export function Designer() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
+        height,
         background: '#1a1a2e',
         fontFamily: 'system-ui, -apple-system, sans-serif',
       }}
