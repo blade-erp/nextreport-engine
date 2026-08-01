@@ -39,12 +39,25 @@ export function calculateLayout(bands: ProcessedBand[], pageConfig: PageConfig):
 
   const usableHeight = pageHeight - marginTop - marginBottom - pageHeaderHeight - pageFooterHeight
 
-  // First pass: paginate content bands
+  // First pass: paginate content bands. Pages that begin a page-numbering
+  // section (a band with sectionStart, e.g. a statement's customer header)
+  // are recorded so section-relative page variables can be resolved below.
   const rawPages: ResolvedElement[][] = []
+  const sectionStartPages = new Set<number>()
   let currentY = 0
   let currentPageElements: ResolvedElement[] = []
 
   for (const band of contentBands) {
+    if (band.pageBreakBefore && currentPageElements.length > 0) {
+      rawPages.push(currentPageElements)
+      currentPageElements = []
+      currentY = 0
+    }
+
+    if (band.sectionStart) {
+      sectionStartPages.add(rawPages.length)
+    }
+
     if (currentY + band.height > usableHeight && currentPageElements.length > 0) {
       rawPages.push(currentPageElements)
       currentPageElements = []
@@ -78,6 +91,27 @@ export function calculateLayout(bands: ProcessedBand[], pageConfig: PageConfig):
 
   const totalPages = rawPages.length
 
+  // Section-relative numbering: page 0 implicitly starts section 1; every
+  // recorded section start begins a new count.
+  const sectionPageNumbers: number[] = []
+  const sectionTotals: number[] = []
+  {
+    let sectionStart = 0
+    for (let index = 0; index < totalPages; index++) {
+      if (index > 0 && sectionStartPages.has(index)) {
+        sectionStart = index
+      }
+      sectionPageNumbers[index] = index - sectionStart + 1
+    }
+    let sectionEnd = totalPages
+    for (let index = totalPages - 1; index >= 0; index--) {
+      sectionTotals[index] = sectionEnd - (index - sectionPageNumbers[index] + 1)
+      if (sectionPageNumbers[index] === 1) {
+        sectionEnd = index
+      }
+    }
+  }
+
   // Second pass: inject page-header/footer elements into each page with page variables
   const pages: Page[] = rawPages.map((elements, index) => {
     const pageNumber = index + 1
@@ -94,7 +128,13 @@ export function calculateLayout(bands: ProcessedBand[], pageConfig: PageConfig):
             x: marginLeft + element.position.x,
             y: headerY + element.position.y,
           },
-          properties: resolvePageVariables(element.properties, pageNumber, totalPages),
+          properties: resolvePageVariables(
+            element.properties,
+            pageNumber,
+            totalPages,
+            sectionPageNumbers[index],
+            sectionTotals[index],
+          ),
         })
       }
       headerY += band.height
@@ -104,7 +144,13 @@ export function calculateLayout(bands: ProcessedBand[], pageConfig: PageConfig):
     allElements.push(
       ...elements.map((el) => ({
         ...el,
-        properties: resolvePageVariables(el.properties, pageNumber, totalPages),
+        properties: resolvePageVariables(
+          el.properties,
+          pageNumber,
+          totalPages,
+          sectionPageNumbers[index],
+          sectionTotals[index],
+        ),
       })),
     )
 
@@ -119,7 +165,13 @@ export function calculateLayout(bands: ProcessedBand[], pageConfig: PageConfig):
             x: marginLeft + element.position.x,
             y: footerY + element.position.y,
           },
-          properties: resolvePageVariables(element.properties, pageNumber, totalPages),
+          properties: resolvePageVariables(
+            element.properties,
+            pageNumber,
+            totalPages,
+            sectionPageNumbers[index],
+            sectionTotals[index],
+          ),
         })
       }
       footerY += band.height
@@ -135,6 +187,8 @@ function resolvePageVariables(
   properties: Record<string, unknown>,
   pageNumber: number,
   totalPages: number,
+  sectionPageNumber: number,
+  sectionTotalPages: number,
 ): Record<string, unknown> {
   const resolved: Record<string, unknown> = {}
 
@@ -143,6 +197,8 @@ function resolvePageVariables(
       resolved[key] = value
         .replace(/\{\{pageNumber\}\}/g, String(pageNumber))
         .replace(/\{\{totalPages\}\}/g, String(totalPages))
+        .replace(/\{\{sectionPageNumber\}\}/g, String(sectionPageNumber))
+        .replace(/\{\{sectionTotalPages\}\}/g, String(sectionTotalPages))
     } else {
       resolved[key] = value
     }
