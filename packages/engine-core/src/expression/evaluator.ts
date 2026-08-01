@@ -37,11 +37,41 @@ function evaluateNode(node: Expression, data: Record<string, unknown>, locale: s
       return compare(left, right, node.operator)
     }
 
+    case 'arithmetic': {
+      const left = toOperand(evaluateNode(node.left, data, locale))
+      const right = toOperand(evaluateNode(node.right, data, locale))
+      switch (node.operator) {
+        case '+':
+          return left + right
+        case '-':
+          return left - right
+        case '*':
+          return left * right
+        case '/':
+          // Report-friendly: an empty group dividing by zero renders 0, not
+          // Infinity/NaN cascading through formatters.
+          return right === 0 ? 0 : left / right
+      }
+      break
+    }
+
     case 'template': {
       const parts = node.parts.map((part) => evaluateNode(part, data, locale))
       return parts.join('')
     }
   }
+}
+
+// Lenient numeric coercion for arithmetic: numeric strings (database decimal
+// serialization) participate; anything non-numeric contributes 0 rather than
+// NaN-poisoning the whole cell.
+function toOperand(value: unknown): number {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0
+  if (typeof value === 'string' && value.trim() !== '') {
+    const n = Number(value)
+    return Number.isNaN(n) ? 0 : n
+  }
+  return 0
 }
 
 function resolveVariable(path: string[], data: Record<string, unknown>): unknown {

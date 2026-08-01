@@ -59,8 +59,8 @@ export function tokenize(input: string): Token[] {
       }
     }
 
-    // Single-char operators: > <
-    if (ch === '>' || ch === '<') {
+    // Single-char operators: > < and arithmetic + - * /
+    if (ch === '>' || ch === '<' || ch === '+' || ch === '-' || ch === '*' || ch === '/') {
       tokens.push({ type: TokenType.Operator, value: ch })
       i++
       continue

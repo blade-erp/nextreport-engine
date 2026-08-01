@@ -24,6 +24,13 @@ export interface ComparisonNode {
   right: Expression
 }
 
+export interface ArithmeticNode {
+  type: 'arithmetic'
+  operator: '+' | '-' | '*' | '/'
+  left: Expression
+  right: Expression
+}
+
 export interface TemplateNode {
   type: 'template'
   parts: Expression[]
@@ -34,7 +41,12 @@ export type Expression =
   | VariableNode
   | FunctionCallNode
   | ComparisonNode
+  | ArithmeticNode
   | TemplateNode
+
+function isArithmeticOperator(value: string): boolean {
+  return value === '+' || value === '-' || value === '*' || value === '/'
+}
 
 // Recursive descent parser
 class Parser {
@@ -62,19 +74,63 @@ class Parser {
   }
 
   private parseComparison(): Expression {
-    const left = this.parsePrimary()
+    const left = this.parseAdditive()
     const next = this.peek()
-    if (next && next.type === TokenType.Operator) {
+    if (next && next.type === TokenType.Operator && !isArithmeticOperator(next.value)) {
       const op = this.consume().value
-      const right = this.parsePrimary()
+      const right = this.parseAdditive()
       return { type: 'comparison', operator: op, left, right }
     }
     return left
   }
 
+  private parseAdditive(): Expression {
+    let left = this.parseMultiplicative()
+    while (this.peek()?.type === TokenType.Operator && ['+', '-'].includes(this.peek()!.value)) {
+      const operator = this.consume().value as '+' | '-'
+      const right = this.parseMultiplicative()
+      left = { type: 'arithmetic', operator, left, right }
+    }
+    return left
+  }
+
+  private parseMultiplicative(): Expression {
+    let left = this.parseUnary()
+    while (this.peek()?.type === TokenType.Operator && ['*', '/'].includes(this.peek()!.value)) {
+      const operator = this.consume().value as '*' | '/'
+      const right = this.parseUnary()
+      left = { type: 'arithmetic', operator, left, right }
+    }
+    return left
+  }
+
+  private parseUnary(): Expression {
+    if (this.peek()?.type === TokenType.Operator && this.peek()!.value === '-') {
+      this.consume()
+      const operand = this.parseUnary()
+      return {
+        type: 'arithmetic',
+        operator: '-',
+        left: { type: 'literal', value: 0 },
+        right: operand,
+      }
+    }
+    return this.parsePrimary()
+  }
+
   private parsePrimary(): Expression {
     const token = this.peek()
     if (!token) throw new Error('Unexpected end of input')
+
+    if (token.type === TokenType.LParen) {
+      this.consume()
+      const inner = this.parseComparison()
+      if (this.peek()?.type !== TokenType.RParen) {
+        throw new Error('Expected closing parenthesis')
+      }
+      this.consume()
+      return inner
+    }
 
     if (token.type === TokenType.String) {
       this.consume()
