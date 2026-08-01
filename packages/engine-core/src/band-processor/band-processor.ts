@@ -6,6 +6,10 @@ export interface ProcessedBand {
   bandType: string
   height: number
   elements: ResolvedElement[]
+  /** Start a new page before this band instance. */
+  pageBreakBefore?: boolean
+  /** This band instance starts a new page-numbering section. */
+  sectionStart?: boolean
 }
 
 export function processBands(
@@ -40,6 +44,7 @@ export function processBands(
         bandType: band.type,
         height: band.height,
         elements: resolveComponents(band.components, data, band.type, locale),
+        pageBreakBefore: band.pageBreakBefore || undefined,
       })
       i++
     }
@@ -212,11 +217,15 @@ function processGroupLevel(
       _groupIndex: groupIndex,
     }
 
-    // Emit group-header
+    // Emit group-header. Page-break semantics are "between instances": the
+    // first group continues the current page (or section 1 starts at page 1).
+    const breakBefore = (header.pageBreakBefore || header.resetPageNumber) && groupIndex > 0
     result.push({
       bandType: header.type,
       height: header.height,
       elements: resolveComponents(header.components, groupContext, header.type, locale),
+      pageBreakBefore: breakBefore || undefined,
+      sectionStart: header.resetPageNumber || undefined,
     })
 
     // Emit child bands, recursing into nested groups with this partition's items
@@ -305,14 +314,19 @@ function groupBy(items: unknown[], field: string): Map<string, Record<string, un
 // stage that knows page numbers. They are masked through expression
 // evaluation so mixed content like "Page {{pageNumber}} — {{companyName}}"
 // keeps its page variables while everything else resolves.
-const PAGE_VARIABLE_PATTERN = /\{\{\s*(pageNumber|totalPages)\s*\}\}/g
+const PAGE_VARIABLE_PATTERN =
+  /\{\{\s*(pageNumber|totalPages|sectionPageNumber|sectionTotalPages)\s*\}\}/g
 const PAGE_VARIABLE_MASK: Record<string, string> = {
   pageNumber: '\u0000PAGE_NUMBER\u0000',
   totalPages: '\u0000TOTAL_PAGES\u0000',
+  sectionPageNumber: '\u0000SECTION_PAGE_NUMBER\u0000',
+  sectionTotalPages: '\u0000SECTION_TOTAL_PAGES\u0000',
 }
 const PAGE_VARIABLE_UNMASK: Array<[string, string]> = [
   ['\u0000PAGE_NUMBER\u0000', '{{pageNumber}}'],
   ['\u0000TOTAL_PAGES\u0000', '{{totalPages}}'],
+  ['\u0000SECTION_PAGE_NUMBER\u0000', '{{sectionPageNumber}}'],
+  ['\u0000SECTION_TOTAL_PAGES\u0000', '{{sectionTotalPages}}'],
 ]
 
 function maskPageVariables(value: string): string {
