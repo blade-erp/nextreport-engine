@@ -103,6 +103,18 @@ describe('renderText', () => {
     expect(html).toContain('<div')
   })
 
+  it('clips content at the element bounds so it cannot bleed into the band below', () => {
+    const el = makeTextElement()
+    const html = renderText(el)
+    expect(html).toContain('overflow:hidden')
+  })
+
+  it('does not suppress wrapping', () => {
+    const el = makeTextElement({ content: 'a much longer line of text that would wrap' })
+    const html = renderText(el)
+    expect(html).not.toContain('white-space:nowrap')
+  })
+
   it('wraps content in a div tag', () => {
     const el = makeTextElement()
     const html = renderText(el)
