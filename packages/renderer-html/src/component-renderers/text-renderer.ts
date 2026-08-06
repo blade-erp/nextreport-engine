@@ -18,6 +18,7 @@ export function renderText(element: ResolvedElement): string {
   const fontWeight = typeof props.fontWeight === 'string' ? props.fontWeight : 'normal'
   const color = typeof props.color === 'string' ? props.color : '#000000'
   const textAlign = typeof props.textAlign === 'string' ? props.textAlign : 'left'
+  const wrap = props.wrap !== false
 
   const style = [
     'position:absolute',
@@ -32,6 +33,9 @@ export function renderText(element: ResolvedElement): string {
     // Bands have fixed heights, so text that is taller than its element (long
     // content, or wrapped onto extra lines) must not bleed into the band below.
     'overflow:hidden',
+    // With wrapping off the value stays on one line, so the clipped overflow
+    // is horizontal and text-overflow can mark it with an ellipsis.
+    ...(wrap ? [] : ['white-space:nowrap', 'text-overflow:ellipsis']),
   ].join(';')
 
   return `<div style="${style}">${escapeHtml(content)}</div>`

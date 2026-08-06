@@ -109,8 +109,28 @@ describe('renderText', () => {
     expect(html).toContain('overflow:hidden')
   })
 
-  it('does not suppress wrapping', () => {
+  it('wraps by default', () => {
     const el = makeTextElement({ content: 'a much longer line of text that would wrap' })
+    const html = renderText(el)
+    expect(html).not.toContain('white-space:nowrap')
+    expect(html).not.toContain('text-overflow:ellipsis')
+  })
+
+  it('keeps text on one line with an ellipsis when wrap is false', () => {
+    const el = makeTextElement({ content: 'a much longer line of text', wrap: false })
+    const html = renderText(el)
+    expect(html).toContain('white-space:nowrap')
+    expect(html).toContain('text-overflow:ellipsis')
+  })
+
+  it('still clips at the element bounds when wrap is false', () => {
+    const el = makeTextElement({ wrap: false })
+    const html = renderText(el)
+    expect(html).toContain('overflow:hidden')
+  })
+
+  it('treats an explicit wrap:true the same as the default', () => {
+    const el = makeTextElement({ wrap: true })
     const html = renderText(el)
     expect(html).not.toContain('white-space:nowrap')
   })
