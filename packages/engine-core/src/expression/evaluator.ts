@@ -4,6 +4,7 @@ import { getFunction } from './functions/registry.js'
 // Side-effect imports to register all built-in functions
 import './functions/format.js'
 import './functions/aggregate.js'
+import './functions/math.js'
 import './functions/string.js'
 import './functions/conditional.js'
 
