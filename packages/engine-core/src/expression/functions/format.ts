@@ -30,3 +30,14 @@ registerFunction('formatDate', (args, _locale) => {
   const dd = String(date.getDate()).padStart(2, '0')
   return p.replace('YYYY', yyyy).replace('MM', mm).replace('DD', dd)
 })
+
+registerFunction('formatPercent', (args, locale) => {
+  const [value, decimals] = args
+  const num = toNumber(value)
+  const dec = decimals !== undefined ? toNumber(decimals) : 1
+  return new Intl.NumberFormat(locale, {
+    style: 'percent',
+    minimumFractionDigits: dec,
+    maximumFractionDigits: dec,
+  }).format(num)
+})

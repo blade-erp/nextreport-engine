@@ -6,6 +6,10 @@ export interface ProcessedBand {
   bandType: string
   height: number
   elements: ResolvedElement[]
+  /** Start a new page before this band instance. */
+  pageBreakBefore?: boolean
+  /** This band instance starts a new page-numbering section. */
+  sectionStart?: boolean
 }
 
 export function processBands(
@@ -40,6 +44,7 @@ export function processBands(
         bandType: band.type,
         height: band.height,
         elements: resolveComponents(band.components, data, band.type, locale),
+        pageBreakBefore: band.pageBreakBefore || undefined,
       })
       i++
     }
@@ -87,45 +92,64 @@ interface GroupSequenceResult {
   nextIndex: number
 }
 
+interface CollectedGroup {
+  header: Band
+  children: Band[]
+  footer: Band | null
+  nextIndex: number
+}
+
+/**
+ * Collects the bands belonging to the group starting at `startIndex`, tracking
+ * nesting depth so each group-footer is matched to its own group-header.
+ * Nested group-header/group-footer pairs stay inside `children` and are
+ * recursed into by `processGroupLevel`.
+ */
+function collectGroupSequence(bands: Band[], startIndex: number): CollectedGroup {
+  const header = bands[startIndex]
+  const children: Band[] = []
+  let footer: Band | null = null
+  let depth = 1
+  let i = startIndex + 1
+
+  while (i < bands.length) {
+    const band = bands[i]
+    if (band.type === 'group-header') {
+      depth++
+    } else if (band.type === 'group-footer') {
+      depth--
+      if (depth === 0) {
+        footer = band
+        i++
+        break
+      }
+    }
+    children.push(band)
+    i++
+  }
+
+  return { header, children, footer, nextIndex: i }
+}
+
 function processGroupSequence(
   bands: Band[],
   startIndex: number,
   data: Record<string, unknown>,
   locale: string,
 ): GroupSequenceResult {
-  const groupHeader = bands[startIndex]
-  const dataBinding = groupHeader.dataBinding
-  const groupByField = groupHeader.groupBy
-
-  // Collect detail bands and group-footer that follow
-  const detailBands: Band[] = []
-  let groupFooter: Band | null = null
-  let i = startIndex + 1
-
-  while (i < bands.length) {
-    const band = bands[i]
-    if (band.type === 'group-footer') {
-      groupFooter = band
-      i++
-      break
-    }
-    if (band.type === 'group-header') {
-      // Nested group — stop collecting for this level
-      break
-    }
-    detailBands.push(band)
-    i++
-  }
+  const { header, children, footer, nextIndex } = collectGroupSequence(bands, startIndex)
+  const dataBinding = header.dataBinding
+  const groupByField = header.groupBy
 
   // If no dataBinding or groupBy, just render the bands normally
   if (!dataBinding || !groupByField) {
     const result: ProcessedBand[] = []
     result.push({
-      bandType: groupHeader.type,
-      height: groupHeader.height,
-      elements: resolveComponents(groupHeader.components, data, groupHeader.type, locale),
+      bandType: header.type,
+      height: header.height,
+      elements: resolveComponents(header.components, data, header.type, locale),
     })
-    for (const band of detailBands) {
+    for (const band of children) {
       if (band.type === 'detail' && band.dataBinding) {
         result.push(...processDetailBand(band, data, locale))
       } else {
@@ -136,22 +160,48 @@ function processGroupSequence(
         })
       }
     }
-    if (groupFooter) {
+    if (footer) {
       result.push({
-        bandType: groupFooter.type,
-        height: groupFooter.height,
-        elements: resolveComponents(groupFooter.components, data, groupFooter.type, locale),
+        bandType: footer.type,
+        height: footer.height,
+        elements: resolveComponents(footer.components, data, footer.type, locale),
       })
     }
-    return { processed: result, nextIndex: i }
+    return { processed: result, nextIndex }
   }
 
   // Group the data
   const items = resolveDataBinding(dataBinding, data)
   if (!Array.isArray(items)) {
-    return { processed: [], nextIndex: i }
+    return { processed: [], nextIndex }
   }
 
+  return {
+    processed: processGroupLevel(header, children, footer, items, data, dataBinding, locale),
+    nextIndex,
+  }
+}
+
+/**
+ * Renders one grouping level: partition `items` by the header's groupBy, then
+ * for each partition emit the header, the child bands (recursing into nested
+ * group-header sequences with the partition's items), and the footer.
+ *
+ * Nested group-header bands inherit the parent partition's items; their own
+ * dataBinding, if present, is ignored. Inside a nested level the group context
+ * variables (_groupKey, _groupItems, _groupIndex) refer to the innermost
+ * group; the parent's are also available as _parentGroupKey/_parentGroupItems.
+ */
+function processGroupLevel(
+  header: Band,
+  children: Band[],
+  footer: Band | null,
+  items: Record<string, unknown>[] | unknown[],
+  context: Record<string, unknown>,
+  dataBinding: string,
+  locale: string,
+): ProcessedBand[] {
+  const groupByField = header.groupBy!
   const groups = groupBy(items, groupByField)
   const result: ProcessedBand[] = []
 
@@ -159,24 +209,52 @@ function processGroupSequence(
   for (const [groupKey, groupItems] of groups) {
     // Group context: inject _groupKey, _groupItems, _groupIndex
     const groupContext: Record<string, unknown> = {
-      ...data,
+      ...context,
+      _parentGroupKey: context._groupKey,
+      _parentGroupItems: context._groupItems,
       _groupKey: groupKey,
       _groupItems: groupItems,
       _groupIndex: groupIndex,
     }
 
-    // Emit group-header
+    // Emit group-header. Page-break semantics are "between instances": the
+    // first group continues the current page (or section 1 starts at page 1).
+    const breakBefore = (header.pageBreakBefore || header.resetPageNumber) && groupIndex > 0
     result.push({
-      bandType: groupHeader.type,
-      height: groupHeader.height,
-      elements: resolveComponents(groupHeader.components, groupContext, groupHeader.type, locale),
+      bandType: header.type,
+      height: header.height,
+      elements: resolveComponents(header.components, groupContext, header.type, locale),
+      pageBreakBefore: breakBefore || undefined,
+      sectionStart: header.resetPageNumber || undefined,
     })
 
-    // Emit detail bands for each item in the group
-    const iteratorName = detailBands[0]?.iteratorName ?? deriveIteratorName(dataBinding)
+    // Emit child bands, recursing into nested groups with this partition's items
+    let childIndex = 0
+    while (childIndex < children.length) {
+      const band = children[childIndex]
 
-    for (const band of detailBands) {
+      if (band.type === 'group-header') {
+        const nested = collectGroupSequence(children, childIndex)
+        if (nested.header.groupBy) {
+          result.push(
+            ...processGroupLevel(
+              nested.header,
+              nested.children,
+              nested.footer,
+              groupItems,
+              groupContext,
+              dataBinding,
+              locale,
+            ),
+          )
+        }
+        childIndex = nested.nextIndex
+        continue
+      }
+
       if (band.type === 'detail') {
+        const iteratorName =
+          band.iteratorName ?? deriveIteratorName(band.dataBinding ?? dataBinding)
         for (const item of groupItems) {
           const rowContext: Record<string, unknown> = {
             ...groupContext,
@@ -195,21 +273,23 @@ function processGroupSequence(
           elements: resolveComponents(band.components, groupContext, band.type, locale),
         })
       }
+
+      childIndex++
     }
 
     // Emit group-footer
-    if (groupFooter) {
+    if (footer) {
       result.push({
-        bandType: groupFooter.type,
-        height: groupFooter.height,
-        elements: resolveComponents(groupFooter.components, groupContext, groupFooter.type, locale),
+        bandType: footer.type,
+        height: footer.height,
+        elements: resolveComponents(footer.components, groupContext, footer.type, locale),
       })
     }
 
     groupIndex++
   }
 
-  return { processed: result, nextIndex: i }
+  return result
 }
 
 function groupBy(items: unknown[], field: string): Map<string, Record<string, unknown>[]> {
@@ -230,6 +310,38 @@ function groupBy(items: unknown[], field: string): Map<string, Record<string, un
   return groups
 }
 
+// Page variables are substituted by the layout calculator, which is the only
+// stage that knows page numbers. They are masked through expression
+// evaluation so mixed content like "Page {{pageNumber}} — {{companyName}}"
+// keeps its page variables while everything else resolves.
+const PAGE_VARIABLE_PATTERN =
+  /\{\{\s*(pageNumber|totalPages|sectionPageNumber|sectionTotalPages)\s*\}\}/g
+const PAGE_VARIABLE_MASK: Record<string, string> = {
+  pageNumber: '\u0000PAGE_NUMBER\u0000',
+  totalPages: '\u0000TOTAL_PAGES\u0000',
+  sectionPageNumber: '\u0000SECTION_PAGE_NUMBER\u0000',
+  sectionTotalPages: '\u0000SECTION_TOTAL_PAGES\u0000',
+}
+const PAGE_VARIABLE_UNMASK: Array<[string, string]> = [
+  ['\u0000PAGE_NUMBER\u0000', '{{pageNumber}}'],
+  ['\u0000TOTAL_PAGES\u0000', '{{totalPages}}'],
+  ['\u0000SECTION_PAGE_NUMBER\u0000', '{{sectionPageNumber}}'],
+  ['\u0000SECTION_TOTAL_PAGES\u0000', '{{sectionTotalPages}}'],
+]
+
+function maskPageVariables(value: string): string {
+  return value.replace(PAGE_VARIABLE_PATTERN, (_, name: string) => PAGE_VARIABLE_MASK[name])
+}
+
+function unmaskPageVariables(value: unknown): unknown {
+  if (typeof value !== 'string') return value
+  let result = value
+  for (const [token, original] of PAGE_VARIABLE_UNMASK) {
+    result = result.split(token).join(original)
+  }
+  return result
+}
+
 function resolveComponents(
   components: Component[],
   data: Record<string, unknown>,
@@ -243,7 +355,10 @@ function resolveComponents(
     for (const [key, value] of Object.entries(compRecord)) {
       if (key === 'type' || key === 'position') continue
       if (typeof value === 'string' && value.includes('{{')) {
-        resolvedProperties[key] = evaluateExpression(value, data, locale)
+        const masked = maskPageVariables(value)
+        resolvedProperties[key] = masked.includes('{{')
+          ? unmaskPageVariables(evaluateExpression(masked, data, locale))
+          : unmaskPageVariables(masked)
       } else {
         resolvedProperties[key] = value
       }
