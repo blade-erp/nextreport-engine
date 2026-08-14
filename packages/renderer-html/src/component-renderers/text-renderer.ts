@@ -29,6 +29,9 @@ export function renderText(element: ResolvedElement): string {
     `font-weight:${fontWeight}`,
     `color:${color}`,
     `text-align:${textAlign}`,
+    // Bands have fixed heights, so text that is taller than its element (long
+    // content, or wrapped onto extra lines) must not bleed into the band below.
+    'overflow:hidden',
   ].join(';')
 
   return `<div style="${style}">${escapeHtml(content)}</div>`

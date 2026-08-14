@@ -103,6 +103,36 @@ describe('renderText', () => {
     expect(html).toContain('<div')
   })
 
+  it('clips content at the element bounds so it cannot bleed into the band below', () => {
+    const el = makeTextElement()
+    const html = renderText(el)
+    expect(html).toContain('overflow:hidden')
+  })
+
+  it('does not suppress wrapping', () => {
+    const el = makeTextElement({ content: 'a much longer line of text that would wrap' })
+    const html = renderText(el)
+    expect(html).not.toContain('white-space:nowrap')
+  })
+
+  // Clipping is a rendering change, so it must not become a content change:
+  // the markup differs from before only by the added overflow declaration.
+  it('changes only the style, leaving the rendered content identical', () => {
+    const el = makeTextElement({ content: 'Acme & Sons <Ltd>' })
+    const html = renderText(el)
+    expect(html.replace(';overflow:hidden', '')).toBe(
+      '<div style="position:absolute;left:10pt;top:20pt;width:200pt;height:30pt;font-size:12pt;' +
+        'font-weight:normal;color:#000000;text-align:left">Acme &amp; Sons &lt;Ltd&gt;</div>',
+    )
+  })
+
+  it('does not alter the element geometry', () => {
+    const html = renderText(makeTextElement())
+    expect(html).toContain('width:200pt')
+    expect(html).toContain('height:30pt')
+    expect(html).not.toContain('line-height')
+  })
+
   it('wraps content in a div tag', () => {
     const el = makeTextElement()
     const html = renderText(el)
