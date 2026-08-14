@@ -9,6 +9,16 @@ export const TextComponentSchema = z.object({
   fontWeight: z.enum(['normal', 'bold']).default('normal'),
   color: z.string().default('#000000'),
   textAlign: z.enum(['left', 'center', 'right']).default('left'),
+  /**
+   * Whether content wraps onto additional lines. Omitted or true wraps, as
+   * text always has. Set to false to keep the text on a single line and
+   * truncate it with an ellipsis instead — useful for table cells and other
+   * fixed-height rows where a wrapped value would be clipped mid-line.
+   *
+   * Optional rather than defaulted so that adding it does not make `wrap` a
+   * required property of the inferred TextComponent type.
+   */
+  wrap: z.boolean().optional(),
 })
 export type TextComponent = z.infer<typeof TextComponentSchema>
 

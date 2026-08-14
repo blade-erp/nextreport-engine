@@ -34,6 +34,41 @@ describe('TextComponentSchema', () => {
     }
   })
 
+  it('should leave wrap unset when omitted', () => {
+    const result = TextComponentSchema.safeParse({
+      type: 'text',
+      position: validPosition,
+      content: 'Test',
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.wrap).toBeUndefined()
+    }
+  })
+
+  it('should accept wrap: false', () => {
+    const result = TextComponentSchema.safeParse({
+      type: 'text',
+      position: validPosition,
+      content: 'Truncated',
+      wrap: false,
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.wrap).toBe(false)
+    }
+  })
+
+  it('should reject a non-boolean wrap', () => {
+    const result = TextComponentSchema.safeParse({
+      type: 'text',
+      position: validPosition,
+      content: 'test',
+      wrap: 'nowrap',
+    })
+    expect(result.success).toBe(false)
+  })
+
   it('should accept custom font and alignment options', () => {
     const result = TextComponentSchema.safeParse({
       type: 'text',
