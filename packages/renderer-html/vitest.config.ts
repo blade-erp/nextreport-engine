@@ -9,6 +9,7 @@ export default defineConfig({
     },
   },
   test: {
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
     globals: true,
     coverage: {
       provider: 'v8',
