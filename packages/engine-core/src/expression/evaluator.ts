@@ -1,5 +1,5 @@
 import { parseTemplate, type Expression } from './parser.js'
-import { getFunction } from './functions/registry.js'
+import { getFunction, isNumericFunction } from './functions/registry.js'
 import { cmp, parseDecimal } from './decimal.js'
 
 // Side-effect imports to register all built-in functions
@@ -36,7 +36,8 @@ function evaluateNode(node: Expression, data: Record<string, unknown>, locale: s
     case 'comparison': {
       const left = evaluateNode(node.left, data, locale)
       const right = evaluateNode(node.right, data, locale)
-      return compare(left, right, node.operator)
+      const numeric = isNumericOperand(node.left, left) || isNumericOperand(node.right, right)
+      return compare(left, right, node.operator, numeric)
     }
 
     case 'template': {
@@ -55,16 +56,20 @@ function resolveVariable(path: string[], data: Record<string, unknown>): unknown
   return current
 }
 
-// Numeric results may be exact decimal strings (see decimal.ts toResult), so
-// ordering compares as decimals whenever both sides parse as one — otherwise
-// divide(100, 3) > divide(20, 3) would compare the strings lexicographically.
-// Equality is decimal-aware only against a number: two strings keep string
-// equality (templates compare formatted text), which is still exact for
-// computed results because their canonical strings are equal iff their values
-// are. null/''/non-numeric never parse, so `null == 0` stays false.
-function compare(left: unknown, right: unknown, operator: string): boolean {
-  const equality = operator === '==' || operator === '!='
-  if (!equality || typeof left === 'number' || typeof right === 'number') {
+// A comparison is numeric when either side is a JS number or the result of a
+// numeric function (sum, divide, …), whose results may be exact decimal
+// strings (see decimal.ts toResult). Numeric context comes from where a value
+// came from, never from a string merely looking like a number: two plain
+// strings (row codes, formatted text) keep their previous lexical semantics.
+function isNumericOperand(node: Expression, value: unknown): boolean {
+  return typeof value === 'number' || (node.type === 'functionCall' && isNumericFunction(node.name))
+}
+
+// In a numeric comparison, both sides compare as exact decimals when both parse
+// as one — so '0.00' == 0, and divide(100, 3) > divide(20, 3) even though both
+// are strings. null/''/non-numeric never parse, so `null == 0` stays false.
+function compare(left: unknown, right: unknown, operator: string, numeric: boolean): boolean {
+  if (numeric) {
     const leftDecimal = parseDecimal(left)
     const rightDecimal = parseDecimal(right)
     if (leftDecimal !== null && rightDecimal !== null) {

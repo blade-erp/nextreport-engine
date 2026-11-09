@@ -238,13 +238,20 @@ describe('decimal comparisons', () => {
     ["1 <= '1.00'", true],
     ["'1.01' <= 1", false],
     ["'0.99' >= 1", false],
-    ["'10' < '9'", false],
-    ["'10' > '9'", true],
+    // Two plain strings keep lexical ordering, exactly as before.
+    ["'10' < '9'", true],
+    ["'10' > '9'", false],
+    ["'100' < '20'", true],
     ['divide(100, 3) > divide(20, 3)', true],
     ['divide(20, 3) < divide(100, 3)', true],
     ['sum(big) > sum(small)', true],
     ["'2026-01-02' > '2026-01-01'", true],
     ["'b' > 'a'", true],
+    // Numeric functions make the comparison numeric even against a string.
+    ["sum(big) > '9.5'", true],
+    ["count(big) < '10'", true],
+    ["divide(1, 3) == '0.33333333333333333333'", true],
+    ["add('0.10', '0.20') == '0.3'", true],
     ["'0x10' == 16", false],
     ["'0x10' > 15", true],
     ['value < 1', true],
@@ -269,6 +276,16 @@ describe('decimal comparisons', () => {
       expect(evaluateExpression('{{value != 0}}', { value })).toBe(true)
     },
   )
+
+  it('keeps lexical ordering for plain string rows, so codes and comparisons stay transitive', () => {
+    const branch = (code: string) =>
+      evaluateExpression("{{if(row.code < '20', 'included', 'excluded')}}", { row: { code } })
+    expect(branch('100')).toBe('included')
+    expect(branch('3')).toBe('excluded')
+    const lt = (a: string, b: string) =>
+      evaluateExpression('{{row.a < row.b}}', { row: { a, b } }) as boolean
+    expect([lt('2', '10'), lt('10', '1A'), lt('1A', '2')]).toEqual([false, true, true])
+  })
 
   it.each([
     ['0.00', 'zero'],
