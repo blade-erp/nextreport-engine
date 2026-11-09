@@ -80,6 +80,15 @@ export function div(a: Decimal, b: Decimal, scale = 20): Decimal {
   return { coef, scale }
 }
 
+// Quotient for the expression functions: at least 20 decimal places AND at
+// least 20 significant digits, so a tiny quotient (1 / 3e18) keeps its
+// precision when later multiplied back up instead of rounding to zero.
+export function quotient(a: Decimal, b: Decimal): Decimal {
+  if (isZero(a)) return ZERO
+  const magnitude = (d: Decimal) => (d.coef < 0n ? -d.coef : d.coef).toString().length - d.scale
+  return div(a, b, Math.max(20, 20 - (magnitude(a) - magnitude(b))))
+}
+
 export function toCanonicalString(value: Decimal): string {
   if (isZero(value)) return '0'
   const negative = value.coef < 0n

@@ -1,6 +1,6 @@
 import { registerFunction } from './registry.js'
 import { toString } from '../coerce.js'
-import { ZERO, add, div, isZero, toDecimalLenient, toResult } from '../decimal.js'
+import { ZERO, add, quotient, isZero, toDecimalLenient, toResult } from '../decimal.js'
 
 // Aggregates coerce numeric strings ("5427.20" — common when rows come from a
 // database driver serializing decimals) instead of silently treating them as 0.
@@ -34,10 +34,10 @@ registerFunction('avg', (args, _locale) => {
       const record = item as Record<string, unknown>
       return add(acc, toDecimalLenient(record[fieldName]))
     }, ZERO)
-    return toResult(div(total, toDecimalLenient(array.length), 20))
+    return toResult(quotient(total, toDecimalLenient(array.length)))
   }
   const total = array.reduce((acc, item: unknown) => add(acc, toDecimalLenient(item)), ZERO)
-  return toResult(div(total, toDecimalLenient(array.length), 20))
+  return toResult(quotient(total, toDecimalLenient(array.length)))
 })
 
 // ratio(items, 'numeratorField', 'denominatorField') → sum(num) / sum(den).
@@ -56,5 +56,5 @@ registerFunction('ratio', (args, _locale) => {
     numerator = add(numerator, toDecimalLenient(record[numName]))
     denominator = add(denominator, toDecimalLenient(record[denName]))
   }
-  return isZero(denominator) ? 0 : toResult(div(numerator, denominator, 20))
+  return isZero(denominator) ? 0 : toResult(quotient(numerator, denominator))
 })

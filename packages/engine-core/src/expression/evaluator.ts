@@ -55,8 +55,16 @@ function resolveVariable(path: string[], data: Record<string, unknown>): unknown
   return current
 }
 
+// Numeric results may be exact decimal strings (see decimal.ts toResult), so
+// ordering compares as decimals whenever both sides parse as one — otherwise
+// divide(100, 3) > divide(20, 3) would compare the strings lexicographically.
+// Equality is decimal-aware only against a number: two strings keep string
+// equality (templates compare formatted text), which is still exact for
+// computed results because their canonical strings are equal iff their values
+// are. null/''/non-numeric never parse, so `null == 0` stays false.
 function compare(left: unknown, right: unknown, operator: string): boolean {
-  if (typeof left === 'number' || typeof right === 'number') {
+  const equality = operator === '==' || operator === '!='
+  if (!equality || typeof left === 'number' || typeof right === 'number') {
     const leftDecimal = parseDecimal(left)
     const rightDecimal = parseDecimal(right)
     if (leftDecimal !== null && rightDecimal !== null) {

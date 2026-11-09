@@ -108,13 +108,13 @@ describe('decimal aggregates and math', () => {
     ).toBe(0)
   })
 
-  it('rounds division to 20 places and returns simple quotients as numbers', () => {
+  it('rounds division to 20 places (20 significant digits for tiny quotients), simple quotients as numbers', () => {
     expect(evaluateExpression('{{divide(1, 3)}}', {})).toBe('0.33333333333333333333')
     expect(evaluateExpression('{{divide(2, 3)}}', {})).toBe('0.66666666666666666667')
     expect(evaluateExpression('{{divide(10, 4)}}', {})).toBe(2.5)
     expect(evaluateExpression('{{divide(x, 0)}}', { x: '100000000000000.01' })).toBe(0)
     expect(evaluateExpression("{{divide('-0.000000000000000000005', 1)}}", {})).toBe(
-      '-0.00000000000000000001',
+      '-0.000000000000000000005',
     )
     expect(evaluateExpression('{{divide(0, 1)}}', {})).toBe(0)
   })
@@ -129,6 +129,32 @@ describe('decimal aggregates and math', () => {
     for (const values of [[], null, undefined, 'abc', 1, {}]) {
       expect(evaluateExpression(expression, { values })).toBe(0)
     }
+  })
+})
+
+describe('division precision for small quotients', () => {
+  it.each(['3', '3000000000000000000', '1000000000000000000000', '7e40'])(
+    'multiplying divide(1, %s) back up still prints 1.00',
+    (d) => {
+      expect(evaluateExpression('{{formatNumber(multiply(divide(1, d), d), 2)}}', { d })).toBe(
+        '1.00',
+      )
+    },
+  )
+
+  it('keeps 20 significant digits for avg and ratio of tiny values', () => {
+    const rows = [{ n: '1', d: '3000000000000000000' }]
+    expect(
+      evaluateExpression(
+        "{{formatNumber(multiply(ratio(rows, 'n', 'd'), 3000000000000000000), 2)}}",
+        {
+          rows,
+        },
+      ),
+    ).toBe('1.00')
+    expect(evaluateExpression("{{avg(rows, 'v')}}", { rows: [{ v: '1e-30' }, { v: 0 }] })).toBe(
+      '0.0000000000000000000000000000005',
+    )
   })
 })
 
@@ -212,14 +238,28 @@ describe('decimal comparisons', () => {
     ["1 <= '1.00'", true],
     ["'1.01' <= 1", false],
     ["'0.99' >= 1", false],
-    ["'10' < '9'", true],
+    ["'10' < '9'", false],
+    ["'10' > '9'", true],
+    ['divide(100, 3) > divide(20, 3)', true],
+    ['divide(20, 3) < divide(100, 3)', true],
+    ['sum(big) > sum(small)', true],
+    ["'2026-01-02' > '2026-01-01'", true],
+    ["'b' > 'a'", true],
     ["'0x10' == 16", false],
     ["'0x10' > 15", true],
     ['value < 1', true],
     ["formatNumber(1, 2) == formatNumber('1.00', 2)", true],
     ['divide(1, 3) > 0.3333333333333333', true],
   ])('evaluates %s as %s', (expression, expected) => {
-    expect(evaluateExpression(`{{${expression}}}`, { value: null })).toBe(expected)
+    const big = [{ v: '100000000000000.01' }, { v: '0.02' }, { v: '0.001' }]
+    const small = [{ v: '9.5' }]
+    expect(
+      evaluateExpression(`{{${expression}}}`, {
+        value: null,
+        big: big.map((r) => r.v),
+        small: small.map((r) => r.v),
+      }),
+    ).toBe(expected)
   })
 
   it.each([null, undefined, '', 'abc', true, false, NaN, Infinity])(

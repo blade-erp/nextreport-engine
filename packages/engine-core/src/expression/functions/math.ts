@@ -1,5 +1,5 @@
 import { registerFunction } from './registry.js'
-import { add, sub, mul, div, isZero, toDecimalLenient, toResult } from '../decimal.js'
+import { add, sub, mul, quotient, isZero, toDecimalLenient, toResult } from '../decimal.js'
 
 // Lenient numeric coercion: numeric strings (the normal shape when a database
 // driver serializes decimals) participate, and anything non-numeric contributes
@@ -27,5 +27,5 @@ registerFunction('divide', (args, _locale) => {
   const denominator = toDecimalLenient(args[1])
   // Report-friendly: an empty group renders 0 rather than Infinity/NaN
   // cascading through the formatters.
-  return isZero(denominator) ? 0 : toResult(div(numerator, denominator, 20))
+  return isZero(denominator) ? 0 : toResult(quotient(numerator, denominator))
 })
