@@ -59,20 +59,20 @@
     "url": "https://github.com/nextreport/engine/issues"
   },
   "dependencies": {
-    "zod": "^4.3.6"
+    "zod": "^4.6.7"
   },
   "optionalDependencies": {
-    "puppeteer": "^24.40.0"
+    "puppeteer": "^25.16.0"
   },
   "peerDependencies": {
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@nextreport/schema": "workspace:*",
     "@nextreport/engine-core": "workspace:*",
     "@nextreport/renderer-html": "workspace:*",
     "@nextreport/renderer-pdf": "workspace:*",
-    "tsup": "^8.0.0",
-    "typescript": "^6.0.2"
+    "@nextreport/schema": "workspace:*",
+    "tsup": "^9.0.0",
+    "typescript": "^6.0.3"
   }
 }

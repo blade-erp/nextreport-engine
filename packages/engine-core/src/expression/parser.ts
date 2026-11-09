@@ -30,11 +30,7 @@ export interface TemplateNode {
 }
 
 export type Expression =
-  | LiteralNode
-  | VariableNode
-  | FunctionCallNode
-  | ComparisonNode
-  | TemplateNode
+  LiteralNode | VariableNode | FunctionCallNode | ComparisonNode | TemplateNode
 
 // Recursive descent parser
 class Parser {
