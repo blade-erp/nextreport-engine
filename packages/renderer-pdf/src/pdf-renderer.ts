@@ -13,7 +13,8 @@ export async function renderToPdf(html: string, options?: PdfRenderOptions): Pro
   })
   try {
     const page = await browser.newPage()
-    await page.setContent(html, { waitUntil: 'networkidle0' })
+    await page.setContent(html)
+    await page.waitForNetworkIdle()
     const pdf = await page.pdf({
       format: options?.format ?? 'A4',
       landscape: options?.landscape ?? false,

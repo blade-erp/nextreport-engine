@@ -28,25 +28,25 @@
     "lint": "eslint src/"
   },
   "dependencies": {
-    "zustand": "^5.0.0",
-    "immer": "^11.1.4",
     "@nextreport/canvas": "workspace:*",
-    "@nextreport/schema": "workspace:*",
     "@nextreport/engine-core": "workspace:*",
-    "@nextreport/renderer-html": "workspace:*"
+    "@nextreport/renderer-html": "workspace:*",
+    "@nextreport/schema": "workspace:*",
+    "immer": "^11.2.9",
+    "zustand": "^5.1.0"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@vitest/coverage-v8": "^4.1.4",
-    "typescript": "^6.0.2",
-    "vitest": "^4.1.4"
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "^5.1.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^6.0.3",
+    "vitest": "^5.1.0"
   },
   "repository": {
     "type": "git",

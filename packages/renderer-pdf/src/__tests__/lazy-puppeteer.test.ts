@@ -12,6 +12,7 @@ vi.mock('puppeteer', () => {
       launch: async () => ({
         newPage: async () => ({
           setContent: async () => {},
+          waitForNetworkIdle: async () => {},
           pdf: async () => Buffer.from('%PDF-1.4 stub'),
         }),
         close: async () => {},

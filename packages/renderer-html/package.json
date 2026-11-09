@@ -33,12 +33,12 @@
   "dependencies": {
     "@nextreport/engine-core": "workspace:*",
     "@nextreport/schema": "workspace:*",
-    "bwip-js": "^4.9.0"
+    "bwip-js": "^4.11.4"
   },
   "devDependencies": {
     "@types/bwip-js": "^3.2.3",
-    "@vitest/coverage-v8": "^4.1.4",
-    "typescript": "^6.0.2",
-    "vitest": "^4.1.4"
+    "@vitest/coverage-v8": "^5.1.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.1.0"
   }
 }

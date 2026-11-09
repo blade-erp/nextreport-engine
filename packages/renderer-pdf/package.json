@@ -31,14 +31,14 @@
     "lint": "eslint src/"
   },
   "dependencies": {
-    "@nextreport/schema": "workspace:*",
     "@nextreport/engine-core": "workspace:*",
     "@nextreport/renderer-html": "workspace:*",
-    "puppeteer": "^24.40.0"
+    "@nextreport/schema": "workspace:*",
+    "puppeteer": "^25.16.0"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.4",
-    "typescript": "^6.0.2",
-    "vitest": "^4.1.4"
+    "@vitest/coverage-v8": "^5.1.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.1.0"
   }
 }

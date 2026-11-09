@@ -10,8 +10,7 @@ export class KonvaEngineAdapter implements CanvasEnginePort {
 
   private selectionCallback: ((objectId: string | null) => void) | null = null
   private modifiedCallback:
-    | ((objectId: string, changes: Partial<CanvasObjectConfig>) => void)
-    | null = null
+    ((objectId: string, changes: Partial<CanvasObjectConfig>) => void) | null = null
 
   initialize(container: HTMLDivElement, width: number, height: number): void {
     this.stage = new Konva.Stage({ container, width, height })

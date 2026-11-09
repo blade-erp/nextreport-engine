@@ -24,21 +24,21 @@
     "lint": "eslint src/"
   },
   "dependencies": {
-    "konva": "^10.2.5",
-    "react-konva": "^19.2.3"
+    "konva": "^10.9.1",
+    "react-konva": "^19.3.2"
   },
   "peerDependencies": {
+    "@nextreport/schema": "^0.2.0",
     "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0",
-    "@nextreport/schema": "^0.2.0"
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@nextreport/schema": "workspace:*",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "typescript": "^6.0.2"
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^6.0.3"
   },
   "license": "MIT",
   "repository": {

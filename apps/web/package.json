@@ -10,23 +10,23 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@nextreport/schema": "workspace:*",
+    "@nextreport/canvas": "workspace:*",
     "@nextreport/engine-core": "workspace:*",
     "@nextreport/renderer-html": "workspace:*",
     "@nextreport/renderer-pdf": "workspace:*",
-    "@nextreport/canvas": "workspace:*",
+    "@nextreport/schema": "workspace:*",
     "@nextreport/ui-designer": "workspace:*",
     "@nextreport/ui-viewer": "workspace:*",
-    "next": "^16.2.3",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "next": "^16.4.5",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "typescript": "^6.0.2",
-    "tailwindcss": "^4.2.2",
-    "@tailwindcss/postcss": "^4.2.2",
-    "postcss": "^8.5.9"
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^6.0.3"
   }
 }
