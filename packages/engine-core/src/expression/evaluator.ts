@@ -1,5 +1,6 @@
 import { parseTemplate, type Expression } from './parser.js'
 import { getFunction } from './functions/registry.js'
+import { cmp, parseDecimal } from './decimal.js'
 
 // Side-effect imports to register all built-in functions
 import './functions/format.js'
@@ -55,6 +56,27 @@ function resolveVariable(path: string[], data: Record<string, unknown>): unknown
 }
 
 function compare(left: unknown, right: unknown, operator: string): boolean {
+  if (typeof left === 'number' || typeof right === 'number') {
+    const leftDecimal = parseDecimal(left)
+    const rightDecimal = parseDecimal(right)
+    if (leftDecimal !== null && rightDecimal !== null) {
+      const order = cmp(leftDecimal, rightDecimal)
+      switch (operator) {
+        case '>':
+          return order > 0
+        case '<':
+          return order < 0
+        case '>=':
+          return order >= 0
+        case '<=':
+          return order <= 0
+        case '==':
+          return order === 0
+        case '!=':
+          return order !== 0
+      }
+    }
+  }
   const l = left as number
   const r = right as number
   switch (operator) {
